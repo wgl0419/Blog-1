@@ -219,6 +219,3 @@ lambda表达式允许我们定义一个匿名方法，并以函数式接口的�
     	Comparator<T> comparing(Function<T, U> keyExtractor) {
   		return (c1, c2) -> keyExtractor.apply(c1).compareTo(keyExtractor.apply(c2));
 	}
-
-***
-------------本章完
