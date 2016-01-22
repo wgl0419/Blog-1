@@ -1,19 +1,9 @@
-###Java 8 Lambda介绍（第一章）
+###Java8新特性第1章(Lambda表达式)
 > 转载请注明出处：[http://www.jianshu.com/p/6e400da4a239](http://www.jianshu.com/p/6e400da4a239)
 
 ***
 
-###简介
-
-本章节主要介绍了Java8 lambda的语言特性，语言特性包括如下几点:
-
-* lambda表达式
-* 目标类型和类型推导
-* 方法引用
-* 接口中的默认方法和静态方法
-
-####1. 背景
-我们先来看只有单个方法的Interface（通常我们称之为回调接口）：
+在介绍Lambda表达式之前，我们先来看只有单个方法的Interface（通常我们称之为回调接口）：
 
 	public interface OnClickListener {
 		void onClick(View v);
@@ -43,7 +33,7 @@
 
 > 在这里补充个概念`函数式接口`；前面提到的OnClickListener接口只有一个方法，Java中大多数回调接口都有这个特征：比如Runnable和Comparator；我们把这些只拥有一个方法的接口称之为`函数式接口`。
 
-####2. Lambda表达式
+####1.Lambda表达式
 匿名内部类最大的问题在于其冗余的语法，比如前面的OnClickListener中五行代码仅有一行是在执行任务。Lambda表达式是匿名方法，前面我们也看到了它用极其轻量的语法解决了这一问题。
 
 下面给大家看几个Lambda表达式的例子：
@@ -66,7 +56,7 @@ Lambda表达式语法由`参数列表`、`->`和`函数体`组成。函数体既
 	//也可以这样写
 	new Thread(() -> {doSomething();});-->
 
-####3. 目标类型
+####2.目标类型
 通过前面的例子我们可以看到，lambda表达式没有名字，那我们怎么知道它的类型呢？答案是通过上下文推导而来的。例如，下面的表达式的类型是`OnClickListener`
 
 	OnClickListener listener = (View v) -> {v.setText("lalala");};
@@ -97,7 +87,7 @@ Lambda表达式的类型和目标类型的方法签名必须一致，编译器�
  	List<Integer> intList = Collections.emptyList>();
  	List<String> strList = new ArrayList<>();
 
-####4. 作用域
+####3.作用域
 在内部类中使用变量名和this非常容易出错。内部类通过继承得到的成员变量（包括来说object的）可能会把外部类的成员变量覆盖掉，未做限制的this引用会指向内部类自己而非外部类。
 
 而lambda表达式的语义就十分简单：它不会从父类中继承任何变量，也不用引入新的作用域。lambda表达式的参数及函数体里面的变量和它外部环境的变量具有相同的语义（this关键字也是一样）。
@@ -124,8 +114,7 @@ Lambda表达式的类型和目标类型的方法签名必须一致，编译器�
 
 总结：基于词法作用域的理念，lambda表达式不可以掩盖任何其所在上下文的局部变量。
 
-####5. 变量捕获
-
+####4.变量捕获
 在Java7中，编译器对内部类中引用的外部变量（即捕获的变量）要求非常严格：如果捕获的变量没有被声明为`final`就会产生一个编译错误。但是在Java8中放宽了这一限制--对于lambda表达式和内部类，允许在其中捕获那些符合有效只读的局部变量（如果一个局部变量在初始化后从未被修改过，那么它就是有效只读）。
 
 	Runnable getRunnable(String name){
@@ -145,7 +134,7 @@ Lambda表达式的类型和目标类型的方法签名必须一致，编译器�
 
 lambda表达式不支持修改捕获变量的另外一个原因是我们可以使用更好的方式来实现同样的效果：使用规约(condition)。java.util.stream包提供了各种规约操作，关于Java8中的`Stream API`我们放到下一章介绍。
 
-####6. 方法引用
+####5.方法引用
 lambda表达式允许我们定义一个匿名方法，并以函数式接口的方式使用它。Java8能够在已有的方法上实现同样的特性。
 
 方法引用和lambda表达式拥有相同的特性（他们都需要一个目标类型，并且需要被转化为函数式接口的实例）,不过我们不需要为方法引用提供方法体，我们可以直接通过方法名引用已有方法。
@@ -187,35 +176,3 @@ lambda表达式允许我们定义一个匿名方法，并以函数式接口的�
 * 类型上的实例方法引用：ClassName::methodName
 * 构造方法引用：Class::new
 * 数组构造方法引用：TypeName[]::new
-
-####7. 默认方法和静态接口方法
-
-在Java中一个接口一旦发布就已经被定型，除非我们能够一次性的更新所有该接口的实现，否者在接口的添加新方法将会破坏现有接口的实现。默认方法就是为了解决这一问题的，这样接口在发布之后依然能够继续演化。
-
-默认方法就是向接口增加新的行为。它是一种新的方法：接口方法可以是抽象的或者是默认的。默认方法拥有默认实现，接口实现类通过继承得到该默认实现。默认方法不是抽象的，所以我们可以放心的向函数式接口里增加默认方法，而不用担心函数式接口单抽象方法的限制。
-
-	public interface Iterator<E> {
-
-    	boolean hasNext();
-
-    	E next();
-
-    	default void remove() {
-        	throw new UnsupportedOperationException("remove");
-    	}
-
-    	default void forEachRemaining(Consumer<? super E> action) {
-        	Objects.requireNonNull(action);
-        	while (hasNext())
-           		action.accept(next());
-    	}
-	}
-
-和其他方法一样，默认方法也可以被继承。
-
-除了上面看到的默认方法，Java8中还允许我们在接口中定义静态方法。这使得我们可以从接口中直接调用它相关的辅助方法，而不是从其它的辅助类中调用（如Collections）。在做集合中元素比较的时候，我们一般需要使用静态辅助方法生成实现Comparator的比较器，在Java8中我们可以直接把该静态方法定义在Comparator接口中：
-
-	public static <T, U extends Comparable<? super U>>
-    	Comparator<T> comparing(Function<T, U> keyExtractor) {
-  		return (c1, c2) -> keyExtractor.apply(c1).compareTo(keyExtractor.apply(c2));
-	}
