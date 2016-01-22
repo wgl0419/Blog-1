@@ -1,6 +1,6 @@
 
 ###Java8新特性第3章(Stream API)
-> 转载请注明出处：[]()
+> 转载请注明出处：[http://www.jianshu.com/p/e3ba9a0b7d72](http://www.jianshu.com/p/e3ba9a0b7d72)
 
 ***
 
