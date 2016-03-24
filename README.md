@@ -1,7 +1,7 @@
 # Blog
 个人博客中的一些文章
 
-####Java8新特效
+####Java8新特性
 
 [Java8新特性第1章(Lambda表达式)](https://github.com/BaronZ88/Blog/blob/master/Java/Java8%E6%96%B0%E7%89%B9%E6%80%A7%E7%AC%AC1%E7%AB%A0\(Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F\).md)
 
