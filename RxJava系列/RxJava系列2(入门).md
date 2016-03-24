@@ -31,7 +31,7 @@
 
 Observable和Subject是两个“生产”实体，Observer和Subscriber是两个“消费”实体。说直白点`Observable`对应于观察者模式中的**被观察者**，而`Observer`和`Subscriber`对应于观察者模式中的**观察者**。`Subscriber`其实是一个实现了`Observer`的抽象类，后面我们分析源码的时候也会介绍到。`Subject`比较复杂，以后再分析。
 
-RxJava中还有个概念叫事件，观察者`Observer`和被观察者`Observable`通过`subscribe()`方法实现订阅关系。从而`Observable` 可以在需要的时候发出**事件**来通知`Observer`。
+上一篇文章中我们说到RxJava中有个关键概念：**事件**。观察者`Observer`和被观察者`Observable`通过`subscribe()`方法实现订阅关系。从而`Observable` 可以在需要的时候发出**事件**来通知`Observer`。
 
 我自己在学习一种新技术的时候通常喜欢先去了解它是怎么用的，掌握了使用方法后再去深挖其原理。那么我们现在就来说说RxJava到底该怎么用。
 
