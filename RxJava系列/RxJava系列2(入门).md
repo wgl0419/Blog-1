@@ -108,33 +108,33 @@ RxJava中添加了普通观察者模式缺失的三个功能：
 	
 连在一起写就是这样：
 
-	Observable.create(new Observable.OnSubscribe<Integer>(){
-	
-    	@Override
-        public void call(Subscriber<Integer> observer) {
-        	for(int i = 0; i < 5; i++){
-        		observer.onNext(i);
-        	}
-        	observer.onCompleted();
+    Observable.create(new Observable.OnSubscribe<Integer>() {
+
+        @Override
+        public void call(Subscriber<? super Integer> subscriber) {
+            for (int i = 0; i < 5; i++) {
+                subscriber.onNext(i);
+            }
+            subscriber.onCompleted();
         }
-        
-	}).subscribe(new Observer<Integer>() {
-	
-    	@Override
-    	public void onCompleted() {
-        	System.out.println("onCompleted");
-    	}
-    	
-    	@Override
-    	public void onError(Throwable e) {
-        	System.out.println("onError");
-    	}
-    	
-    	@Override
-    	public void onNext(Integer item) {
-        	System.out.println("Item is " + item);
-    	}
-	});
+
+    }).subscribe(new Observer<Integer>() {
+
+        @Override
+        public void onCompleted() {
+            System.out.println("onCompleted");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println("onError");
+        }
+
+        @Override
+        public void onNext(Integer item) {
+            System.out.println("Item is " + item);
+        }
+    });
 至此一个完整的RxJava调用就完成了。
 
 兄台，你叨逼叨叨逼叨的说了一大堆，可是我没搞定你特么到底在干啥啊？！！不急，我现在就来告诉你们到底发生了什么。
