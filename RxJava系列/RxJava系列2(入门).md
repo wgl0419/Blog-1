@@ -1,5 +1,12 @@
 ##RxJava系列二（入门）
-> 转载请注明出处：[]()
+> 转载请注明出处：[http://www.jianshu.com/p/ba61c047c230](http://www.jianshu.com/p/ba61c047c230)
+
+
+[RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)  
+[RxJava系列2(入门)](http://www.jianshu.com/p/ba61c047c230)  
+<u>RxJava系列3(敬请期待)</u>  
+<u>RxJava系列4(敬请期待)</u>  
+
 
 ***
 ###前言

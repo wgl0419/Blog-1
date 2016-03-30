@@ -1,5 +1,14 @@
 ##RxJava系列一（简介）
-> 转载请注明出处：[]()
+
+![喂喂喂！说你呢！！！别盯着妹纸看，好好码你的代码！](http://upload-images.jianshu.io/upload_images/1167421-9cd775f3a38139f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+> 转载请注明出处：[http://www.jianshu.com/p/ec9849f2e510](http://www.jianshu.com/p/ec9849f2e510)
+
+
+[RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)  
+[RxJava系列2(入门)](http://www.jianshu.com/p/ba61c047c230)  
+<u>RxJava系列3(敬请期待)</u>  
+<u>RxJava系列4(敬请期待)</u>  
 
 ***
 ###前言
