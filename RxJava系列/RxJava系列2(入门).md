@@ -210,6 +210,8 @@ RxJava中添加了普通观察者模式缺失的三个功能：
 
 我们重点看看hook.onSubscribeStart(observable, observable.onSubscribe).call(subscriber),前面这个hook.onSubscribeStart(observable, observable.onSubscribe)返回的是它自己括号内的第二个参数observable.onSubscribe,然后调用了它的call方法。而这个observable.onSubscribe正是create()方法中的Subscriber，这样整个流程就理顺了。看到这里是不是对RxJava的执行流程清晰了一点呢？这里也建议大家在学习新技术的时候多去翻一翻源码，知其然还要能知其所以然不是吗。
 
+> subscribe()的参数除了可以是Observer和Subscriber以外还可以是Action1、Action0；这是一种更简单的回调，只有一个call(T)方法；由于太简单这里就不做详细介绍了！
+
 ###异步
 上一篇文章中开篇就讲到RxJava就是来处理异步任务的。但是默认情况下我们在哪个线程调用subscribe()就在哪个线程生产事件，在哪个线程生产事件就在哪个线程消费事件。那怎么做到异步呢？RxJava为我们提供Scheduler用来做线程调度，我们来看看RxJava提供了哪些Scheduler。
 
