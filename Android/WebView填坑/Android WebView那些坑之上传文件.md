@@ -1,10 +1,13 @@
 ###Android WebView那些坑之上传文件
 
+> 转载请注明出处：[http://www.jianshu.com/p/48e688ce801f](http://www.jianshu.com/p/48e688ce801f)
+
 ***
+
 
 最近公司项目需要在`WebView`上调用手机系统相册来上传图片，开发过程中发现在很多机器上无法正常唤起系统相册来选择图片。
 
-解决问题之前我们先来说说WebView上传文件的逻辑：当我们在Web页面上点击选择文件的控件(`<input type="file">`)时，会回调WebChromeClient下的openFileChooser方法（5.0及以上系统回调onShowFileChooser方法）。这个时候我们在`openFileChooser`方法中通过Intent打开系统相册或者支持该intent的第三方应用来选择图片，就像这样：
+解决问题之前我们先来说说`WebView`上传文件的逻辑：当我们在Web页面上点击选择文件的控件(`<input type="file">`)时，会回调`WebChromeClient`下的`openFileChooser()`（5.0及以上系统回调`onShowFileChooser()`）。这个时候我们在`openFileChooser`方法中通过`Intent`打开系统相册或者支持该`Intent`的第三方应用来选择图片。like this：
     
     public void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType, String capture) {
     	uploadMessage = valueCallback;
@@ -33,9 +36,9 @@
         }
     }
 
-> PS:ValueCallbacks是WebView组件通过openFileChooser或者onShowFileChooser方法提供给我们的，它里面包含了一个或者一组Uri,然后我们在onActivityResult里将Uri传给ValueCallbacks的onReceiveValue()方法，这样WebView就知道我们选择了什么文件。
+> PS:`ValueCallbacks`是`WebView`组件通过`openFileChooser()`或者`onShowFileChooser()`提供给我们的，它里面包含了一个或者一组`Uri`,然后我们在`onActivityResult()`里将`Uri`传给`ValueCallbacks`的`onReceiveValue()`方法，这样`WebView`就知道我们选择了什么文件。
 
-到这里你可能要问了，说了这么多还是没解释为什么在很多机型上无法唤起系统相册或者第三方app来选择图片啊？！这是因为为了最求完美的Google攻城狮们对`openFileChooser`做了多次修改，在5.0上更是将回调方法该为了`onShowFileChooser`。所以为了解决这一问题，兼容各个版本，我们需要对`openFileChooser`进行重载，同事针对5.0及以上系统提供onShowFileChooser方法：
+到这里你可能要问了，说了这么多还是没解释为什么在很多机型上无法唤起系统相册或者第三方app来选择图片啊？！这是因为为了最求完美的Google攻城狮们对`openFileChooser`做了多次修改，在5.0上更是将回调方法该为了`onShowFileChooser`。所以为了解决这一问题，兼容各个版本，我们需要对`openFileChooser()`进行重载，同时针对5.0及以上系统提供`onShowFileChooser()`方法：
 
 	webview.setWebChromeClient(new WebChromeClient() {
 
@@ -65,9 +68,9 @@
             }
         });
      
-大家应该注意到`onShowFileChooser`方法中的`ValueCallback`包含了一组`Uri(Uri[])`,所以针对5.0及以上系统，我们还需要对`onActivityResult`做一点点处理。这不不做描述，最后我再贴上完整代码。
+大家应该注意到`onShowFileChooser()`中的`ValueCallback`包含了一组`Uri(Uri[])`,所以针对5.0及以上系统，我们还需要对`onActivityResult()`做一点点处理。这里不做描述，最后我再贴上完整代码。
 
-当处理完这些后你以为就万事大吉了？！当初我也这样天真，但当我们打好release包测试的时候却又发现没法选择图片了！！！真是坑了个爹啊！！！无赖去翻WebChromeClient的源码，发现openFileChooser是系统API，我们的release包是开启了混淆的，所以在打包的时候混淆了openFileChooser()，这就导致无法回调`openFileChooser`了。
+当处理完这些后你以为就万事大吉了？！当初我也这样天真，但当我们打好release包测试的时候却又发现没法选择图片了！！！真是坑了个爹啊！！！无奈去翻`WebChromeClient`的源码，发现`openFileChooser()`是系统API，我们的release包是开启了混淆的，所以在打包的时候混淆了`openFileChooser()`，这就导致无法回调`openFileChooser()`了。
 
     /**
      * Tell the client to open a file chooser.
@@ -87,7 +90,7 @@
         uploadFile.onReceiveValue(null);
     }
     
-解决方案也很简单，直接不混淆openFileChooser()就好了。
+解决方案也很简单，直接不混淆`openFileChooser()`就好了。
 
 	-keepclassmembers class * extends android.webkit.WebChromeClient{
    		public void openFileChooser(...);
