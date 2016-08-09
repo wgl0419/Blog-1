@@ -13,9 +13,9 @@
 ***
 前面两篇文章中我们介绍了RxJava的一些基本概念和RxJava最简单的用法。从这一章开始，我们开始聊聊RxJava中的操作符Operators，RxJava中的操作符主要分成了三类：
 
-1. **转换类操作符**（map, flatMap, concatMap, flatMapIterable, switchMap, scan, groupBy...）；
-2. **过滤类操作符**（fileter, take, takeLast, takeUntil, distinct, distinctUtilChanged, skip, skipLast...）；
-3. **组合类操作符**（merge, zip, join, combineLatest, and/when/then, switch, startSwitch...）
+1. **转换类操作符**（`map` `flatMap` `concatMap` `flatMapIterable` `switchMap` `scan` `groupBy` ...）；
+2. **过滤类操作符**（`fileter` `take` `takeLast` `takeUntil` `distinct` `distinctUntilChanged` `skip` `skipLast` ...）；
+3. **组合类操作符**（`merge` `zip` `join` `combineLatest` `and/when/then` `switch` `startSwitch` ...）
 
 这一章我们主要讲讲转换类操作符。所有这些Operators都作用于一个可观测序列，然后变换它发射的值，最后用一种新的形式返回它们。概念实在是不好理解，下面我们结合实际的例子一一介绍。
 
@@ -194,4 +194,4 @@ flatMap()的原理是这样的：
 	小区:竹园新村; 房源描述:满五唯一，黄金地段
 	小区:竹园新村; 房源描述:顶层户型，两室一厅
 	
-装换类的操作符就先介绍到这，后续还会继续介绍组合、过滤类的操作符及源码分析，敬请期待！
+转换类的操作符就先介绍到这，后续还会继续介绍组合、过滤类的操作符及源码分析，敬请期待！
