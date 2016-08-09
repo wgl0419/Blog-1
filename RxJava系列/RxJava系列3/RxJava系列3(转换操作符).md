@@ -5,8 +5,8 @@
 [RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)  
 [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)  
 <u>RxJava系列4(过滤操作符)</u>  
-<u>RxJava系列5(组合操作符)</u> 
-<u>RxJava系列6(源码分析)</u> 
+<u>RxJava系列5(组合操作符)</u>     
+<u>RxJava系列6(源码分析)</u>    
 <u>RxJava系列7(最佳实践)</u> 
 
 
@@ -15,7 +15,7 @@
 
 1. **转换类操作符**（`map` `flatMap` `concatMap` `flatMapIterable` `switchMap` `scan` `groupBy` ...）；
 2. **过滤类操作符**（`fileter` `take` `takeLast` `takeUntil` `distinct` `distinctUntilChanged` `skip` `skipLast` ...）；
-3. **组合类操作符**（`merge` `zip` `join` `combineLatest` `and/when/then` `switch` `startSwitch` ...）
+3. **组合类操作符**（`merge` `zip` `join` `combineLatest` `and/when/then` `switch` `startSwitch` ...）。
 
 这一章我们主要讲讲转换类操作符。所有这些Operators都作用于一个可观测序列，然后变换它发射的值，最后用一种新的形式返回它们。概念实在是不好理解，下面我们结合实际的例子一一介绍。
 
