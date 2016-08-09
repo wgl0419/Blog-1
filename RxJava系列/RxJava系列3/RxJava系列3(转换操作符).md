@@ -19,7 +19,7 @@
 
 这一章我们主要讲讲转换类操作符。所有这些Operators都作用于一个可观测序列，然后变换它发射的值，最后用一种新的形式返回它们。概念实在是不好理解，下面我们结合实际的例子一一介绍。
 
-####map()
+####map
 
 `map()`函数接受一个Func1类型的参数(就像这样`map(Func1<? super T, ? extends R> func)`),然后吧这个Func1应用到每一个由Observable发射的值上，将发射的只转换为我们期望的值。这种狗屁定义我相信你也听不懂，我们来看一下官方给出的原理图：
 
@@ -43,7 +43,7 @@
             
  > Func1构造函数中的两个参数分别是Observable发射值当前的类型和map转换后的类型，上面这个例子中发射值当前的类型是Integer,转换后的类型是String。
 
-####flatMap()
+####flatMap
 
 `flatMap()`函数同样也是做转换的，但是作用却不一样。flatMap不太好理解，我们直接看例子（*我们公司是个房产平台，那我就拿房子举例*）：假设我们有一组小区数据`Community[] communites`,现在我们要输出每个小区的名字；我们可以这样实现:
 
@@ -107,7 +107,7 @@ flatMap()的原理是这样的：
 最后我们来看看flatMap的原理图：
 ![flatMap](FlatMapOperator.png)
 
-####concatMap()
+####concatMap
 `concatMap()`解决了`flatMap()`的交叉问题，它能够把发射的值连续在一起，就像这样：
 ![flatMap](ConcatMapOperator.png)
 
