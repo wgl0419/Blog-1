@@ -233,38 +233,42 @@ RxJava中添加了普通观察者模式缺失的三个功能：
 | AndroidSchedulers.mainThread()| RxAndroid中新增的Scheduler，表示在Android主线程中运行。 |-->
 
 <table class="table table-striped">
-	<tr>
-		<td><div class="text" style="text-align:center;font-weight:bold;">Schedulers</div></td>
-		<td><div class="text" style="text-align:center;font-weight:bold;">作用</div></td>
-	</tr>
-	<tr>
-		<td>Schedulers.immediate()</td>
-		<td>默认的Scheduler，直接在当前线程运行</td>
-	</tr>
-	<tr>
-		<td>Schedulers.newThread()</td>
-		<td>总是开启一个新线程</td>
-	</tr>
-	<tr>
-		<td>Schedulers.io()</td>
-		<td>用于IO密集型任务，如异步阻塞IO操作，这个调度器的线程池会根据需要增长；对于普通的计算任务，请使用Schedulers.computation()；Schedulers.io()默认是一个CachedThreadScheduler，很像一个有线程缓存的新线程调度器</td>
-	</tr>
-	<tr>
-		<td>Schedulers.computation()</td>
-		<td>计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU</td>
-	</tr>
-	<tr>
-		<td>Schedulers.from(executor)</td>
-		<td>使用指定的Executor作为调度器</td>
-	</tr>
-	<tr>
-		<td>Schedulers.trampoline()</td>
-		<td>当其它排队的任务完成后，在当前线程排队开始执行</td>
-	</tr>
-	<tr>
-		<td>AndroidSchedulers.mainThread()</td>
-		<td>RxAndroid中新增的Scheduler，表示在Android的main线程中运行</td>
-	</tr>
+	<thead>
+		<tr>
+			<th>Schedulers</th>
+			<th>作用</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Schedulers.immediate()</td>
+			<td>默认的Scheduler，直接在当前线程运行</td>
+		</tr>
+		<tr>
+			<td>Schedulers.newThread()</td>
+			<td>总是开启一个新线程</td>
+		</tr>
+		<tr>
+			<td>Schedulers.io()</td>
+			<td>用于IO密集型任务，如异步阻塞IO操作，这个调度器的线程池会根据需要增长；对于普通的计算任务，请使用Schedulers.computation()；Schedulers.io()默认是一个CachedThreadScheduler，很像一个有线程缓存的新线程调度器</td>
+		</tr>
+		<tr>
+			<td>Schedulers.computation()</td>
+			<td>计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU</td>
+		</tr>
+		<tr>
+			<td>Schedulers.from(executor)</td>
+			<td>使用指定的Executor作为调度器</td>
+		</tr>
+		<tr>
+			<td>Schedulers.trampoline()</td>
+			<td>当其它排队的任务完成后，在当前线程排队开始执行</td>
+		</tr>
+		<tr>
+			<td>AndroidSchedulers.mainThread()</td>
+			<td>RxAndroid中新增的Scheduler，表示在Android的main线程中运行</td>
+		</tr>
+	</tbody>
 </table>
 
 
