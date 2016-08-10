@@ -222,13 +222,51 @@ RxJava中添加了普通观察者模式缺失的三个功能：
 上一篇文章中开篇就讲到RxJava就是来处理异步任务的。但是默认情况下我们在哪个线程调用subscribe()就在哪个线程生产事件，在哪个线程生产事件就在哪个线程消费事件。那怎么做到异步呢？RxJava为我们提供Scheduler用来做线程调度，我们来看看RxJava提供了哪些Scheduler。
 
 
-| Schedulers                    | 作用           |
+<!--| Schedulers                    | 作用           |
 | ----------------------------- | ------------- |
-| Schedulers.immediate()        | 默认的Scheduler，直接在当前线程运行。|
-| Schedulers.newThread()        | 总是启用一个新线程来运行。|
-| Schedulers.io()               | 用来做io操作的Scheduler，例如文件、DB和网络操作等。它的行为模式和newThread()差不多，区别在于io()的内部实现是是用一个无数量上限的线程池，可以重用空闲的线程，因此多数情况下 io() 比 newThread() 更有效率。不要把计算工作放在 io() 中，可以避免创建不必要的线程。| 
+| Schedulers.immediate()        | 默认的Scheduler，直接在当前线程运行|
+| Schedulers.newThread()        | 总是启用一个新线程来运行|
+| Schedulers.io()               | 用于IO密集型任务，如异步阻塞IO操作，这个调度器的线程池会根据需要增长；对于普通的计算任务，请使用Schedulers.computation()；Schedulers.io( )默认是一个CachedThreadScheduler，很像一个有线程缓存的新线程调度器| 
 | Schedulers.computation()      | 计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU。 | 
-| AndroidSchedulers.mainThread()| RxAndroid中新增的Scheduler，表示在Android主线程中运行。 |
+| Schedulers.from(executor) | 使用指定的Executor作为调度器 |
+|Schedulers.trampoline( )| 当其它排队的任务完成后，在当前线程排队开始执行 |
+| AndroidSchedulers.mainThread()| RxAndroid中新增的Scheduler，表示在Android主线程中运行。 |-->
+
+<table class="table table-striped">
+	<tr>
+		<td><div class="text" style="text-align:center;font-weight:bold;">Schedulers</div></td>
+		<td><div class="text" style="text-align:center;font-weight:bold;">作用</div></td>
+	</tr>
+	<tr>
+		<td>Schedulers.immediate()</td>
+		<td>默认的Scheduler，直接在当前线程运行</td>
+	</tr>
+	<tr>
+		<td>Schedulers.newThread()</td>
+		<td>总是开启一个新线程</td>
+	</tr>
+	<tr>
+		<td>Schedulers.io()</td>
+		<td>用于IO密集型任务，如异步阻塞IO操作，这个调度器的线程池会根据需要增长；对于普通的计算任务，请使用Schedulers.computation()；Schedulers.io()默认是一个CachedThreadScheduler，很像一个有线程缓存的新线程调度器</td>
+	</tr>
+	<tr>
+		<td>Schedulers.computation()</td>
+		<td>计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU</td>
+	</tr>
+	<tr>
+		<td>Schedulers.from(executor)</td>
+		<td>使用指定的Executor作为调度器</td>
+	</tr>
+	<tr>
+		<td>Schedulers.trampoline()</td>
+		<td>当其它排队的任务完成后，在当前线程排队开始执行</td>
+	</tr>
+	<tr>
+		<td>AndroidSchedulers.mainThread()</td>
+		<td>RxAndroid中新增的Scheduler，表示在Android的main线程中运行</td>
+	</tr>
+</table>
+
 
 同时RxJava还为我们提供了`subscribeOn()`和`observeOn()`两个方法来指定Observable和Observer运行的线程。
 

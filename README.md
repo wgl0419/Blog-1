@@ -16,7 +16,7 @@
 
 [RxJava系列3(转换操作符)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%973/RxJava%E7%B3%BB%E5%88%973\(%E8%BD%AC%E6%8D%A2%E6%93%8D%E4%BD%9C%E7%AC%A6\).md)
 
-[RxJava系列4(过滤操作符)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%974\(%E5%BA%94%E7%94%A8\).md)
+[RxJava系列4(过滤操作符)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%974/RxJava%E7%B3%BB%E5%88%974\(%E8%BF%87%E6%BB%A4%E6%93%8D%E4%BD%9C%E7%AC%A6\).md)
 
 ####设计模式
 
