@@ -78,23 +78,34 @@
 ![debounce(Func1)](DebounceFOperator.png)
 
 ###Distinct
-`distinct()`
+`distinct()`的过滤规则是只允许还没有发射过的数据通过，所有重复的数据项都只会发射一次。
 ![](DistinctOperator.png)
 
+`distinct(Func1)`参数中的Func1中的call方法会根据Observable发射的值生成一个Key，然后比较这个key来判断两个数据是不是相同；如果判定为重复则会和`distinct()`一样过滤掉重复的数据项。
+![](DistinctKeyOperator.png)
+
+
 ###DistinctUntilChanged
-`distinctUntilChanged()`
+`distinctUntilChanged()`和`distinct()`类似，只不过它判定的是Observable发射的当前数据项和前一个数据项是否相同。
 ![](DistinctUntilChangedOperator.png)
 
+`distinctUntilChanged(Func1)`和`distinct(Func1)`一样，根据Func1中call方法产生一个Key来判断两个相邻的数据项是否相同。
+![](DistinctUntilChangedKeyOperator.png)
+
 ###First
-`first()`
+`first()`顾名思义，它是的Observable只发送观测序列中的第一个数据项。
 ![](FirstOperator.png)
 
-`first(Func1)`
+`first(Func1)`只发送符合条件的第一个数据项。
 ![](FirstNOperator.png)
 
 ###Last
-`last()`
+`last()`只发射观测序列中的最后一个数据项。
 ![](LastOperator.png)
+
+`last(Func1)`只发射观测序列中符合条件的最后一个数据项。
+![](LastPOperator.png)
+
 
 
 
