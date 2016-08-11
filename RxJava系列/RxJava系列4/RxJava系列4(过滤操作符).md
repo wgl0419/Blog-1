@@ -51,6 +51,18 @@
 `takeLast(int)`同样用一个整数n作为参数，只不过它发射的是观测序列中后n个元素。
 ![takeLast(int)](TakeLastNOperator.png)
 
+获取小区列表`communities`中的后3个小区
+
+    Observable.from(communities)
+            .takeLast(3)
+            .subscribe(new Action1<Community>() {
+                @Override
+                public void call(Community community) {
+                    System.out.println(community.name);
+                }
+            });
+
+
 ###TakeUntil
 `takeUntil(Observable)`订阅并开始发射原始Observable，同时监视我们提供的第二个Observable。如果第二个Observable发射了一项数据或者发射了一个终止通知，`takeUntil()`返回的Observable会停止发射原始Observable并终止。
 ![takeUntil(Observable)](TakeUntilOperator.png)
@@ -62,7 +74,18 @@
 `skip(int)`让我们可以忽略Observable发射的前n项数据。
 ![skip(int)](SkipOperator.png)
 
-###skipLast
+过滤掉小区列表`communities`中的前5个小区
+
+    Observable.from(communities)
+            .skip(5)
+            .subscribe(new Action1<Community>() {
+                @Override
+                public void call(Community community) {
+                    System.out.println(community.name);
+                }
+            });
+
+###SkipLast
 `skipLast(int)`忽略Observable发射的后n项数据。
 ![skipLast(int)](SkipLastOperator.png)
 
@@ -79,35 +102,186 @@
 
 ###Distinct
 `distinct()`的过滤规则是只允许还没有发射过的数据通过，所有重复的数据项都只会发射一次。
-![](DistinctOperator.png)
+![distinct()](DistinctOperator.png)
+
+过滤掉一段数字中的重复项：
+
+    Observable.just(2, 1, 2, 2, 3, 4, 3, 4, 5, 5)
+            .distinct()
+            .subscribe(new Action1<Integer>() {
+                @Override
+                public void call(Integer i) {
+                    System.out.print(i + " ");
+                }
+            });
+            
+程序输出：
+	
+	2 1 3 4 5 
 
 `distinct(Func1)`参数中的Func1中的call方法会根据Observable发射的值生成一个Key，然后比较这个key来判断两个数据是不是相同；如果判定为重复则会和`distinct()`一样过滤掉重复的数据项。
-![](DistinctKeyOperator.png)
+![distinct(Func1)](DistinctKeyOperator.png)
 
+假设我们要过滤掉一堆房源中小区名重复的小区：
+
+    List<House> houses = new ArrayList<>();
+    //House构造函数中的第一个参数为该房源所属小区名，第二个参数为房源描述
+    List<House> houses = new ArrayList<>();
+    houses.add(new House("中粮·海景壹号", "中粮海景壹号新出大平层！总价4500W起"));
+    houses.add(new House("竹园新村", "满五唯一，黄金地段"));
+    houses.add(new House("竹园新村", "一楼自带小花园"));
+    houses.add(new House("中粮·海景壹号", "毗邻汤臣一品"));
+    houses.add(new House("中粮·海景壹号", "顶级住宅，给您总统般尊贵体验"));
+    houses.add(new House("竹园新村", "顶层户型，两室一厅"));
+    houses.add(new House("中粮·海景壹号", "南北通透，豪华五房"));
+    Observable.from(houses)
+            .distinct(new Func1<House, String>() {
+
+                @Override
+                public String call(House house) {
+                    return house.communityName;
+                }
+            }).subscribe(new Action1<House>() {
+                @Override
+                public void call(House house) {
+                    System.out.println("小区:" + house.communityName + "; 房源描述:" + house.desc);
+                }
+            });            
+            
+程序输出：
+
+	小区:中粮·海景壹号; 房源描述:中粮海景壹号新出大平层！总价4500W起
+	小区:竹园新村; 房源描述:满五唯一，黄金地段
 
 ###DistinctUntilChanged
 `distinctUntilChanged()`和`distinct()`类似，只不过它判定的是Observable发射的当前数据项和前一个数据项是否相同。
-![](DistinctUntilChangedOperator.png)
+![distinctUntilChanged()](DistinctUntilChangedOperator.png)
+
+同样还是上面过滤数字的例子：
+
+    Observable.just(2, 1, 2, 2, 3, 4, 3, 4, 5, 5)
+            .distinctUntilChanged()
+            .subscribe(new Action1<Integer>() {
+                @Override
+                public void call(Integer i) {
+                    System.out.print(i + " ");
+                }
+            });
+            
+程序输出：
+	
+	2 1 2 3 4 3 4 5 
 
 `distinctUntilChanged(Func1)`和`distinct(Func1)`一样，根据Func1中call方法产生一个Key来判断两个相邻的数据项是否相同。
-![](DistinctUntilChangedKeyOperator.png)
+![distinctUntilChanged(Func1)](DistinctUntilChangedKeyOperator.png)
+
+我们还是拿前面的过滤房源的例子：
+
+    Observable.from(houses)
+            .distinctUntilChanged(new Func1<House, String>() {
+
+                @Override
+                public String call(House house) {
+                    return house.communityName;
+                }
+            }).subscribe(new Action1<House>() {
+        @Override
+        public void call(House house) {
+            System.out.println("小区:" + house.communityName + "; 房源描述:" + house.desc);
+        }
+    });
+    
+程序输出：
+
+	小区:中粮·海景壹号; 房源描述:中粮海景壹号新出大平层！总价4500W起
+	小区:竹园新村; 房源描述:满五唯一，黄金地段
+	小区:中粮·海景壹号; 房源描述:毗邻汤臣一品
+	小区:竹园新村; 房源描述:顶层户型，两室一厅
+	小区:中粮·海景壹号; 房源描述:南北通透，豪华五房
+
 
 ###First
 `first()`顾名思义，它是的Observable只发送观测序列中的第一个数据项。
-![](FirstOperator.png)
+![first()](FirstOperator.png)
+
+获取房源列表`houses`中的第一套房源：
+
+    Observable.from(houses)
+            .first()
+            .subscribe(new Action1<House>() {
+                @Override
+                public void call(House house) {
+                    System.out.println("小区:" + house.communityName + "; 房源描述:" + house.desc);
+                }                
+            });
+
+程序输出：
+
+	小区:中粮·海景壹号; 房源描述:中粮海景壹号新出大平层！总价4500W起
 
 `first(Func1)`只发送符合条件的第一个数据项。
-![](FirstNOperator.png)
+![first(Func1)](FirstNOperator.png)
+
+现在我们要获取房源列表`houses`中小区名为*竹园新村*的第一套房源。
+
+    Observable.from(houses)
+            .first(new Func1<House, Boolean>() {
+                @Override
+                public Boolean call(House house) {
+                    return "竹园新村".equals(house.communityName);
+                }
+            })
+            .subscribe(new Action1<House>() {
+                @Override
+                public void call(House house) {
+                    System.out.println("小区:" + house.communityName + "; 房源描述:" + house.desc);
+                }
+            });
+            
+程序输出：
+
+	小区:竹园新村; 房源描述:满五唯一，黄金地段
 
 ###Last
 `last()`只发射观测序列中的最后一个数据项。
-![](LastOperator.png)
+![last()](LastOperator.png)
+
+获取房源列表中的最后一套房源：
+
+    Observable.from(houses)
+            .last()
+            .subscribe(new Action1<House>() {
+                @Override
+                public void call(House house) {
+                    System.out.println("小区:" + house.communityName + "; 房源描述:" + house.desc);
+                }
+            });
+            
+程序输出：
+
+	小区:中粮·海景壹号; 房源描述:南北通透，豪华五房
 
 `last(Func1)`只发射观测序列中符合条件的最后一个数据项。
-![](LastPOperator.png)
+![last(Func1)](LastPOperator.png)
 
+获取房源列表`houses`中小区名为*竹园新村*的最后一套房源：
 
+    Observable.from(houses)
+            .last(new Func1<House, Boolean>() {
+                @Override
+                public Boolean call(House house) {
+                    return "竹园新村".equals(house.communityName);
+                }
+            })
+            .subscribe(new Action1<House>() {
+                @Override
+                public void call(House house) {
+                    System.out.println("小区:" + house.communityName + "; 房源描述:" + house.desc);
+                }
+            });
+程序输出：
 
+	小区:竹园新村; 房源描述:顶层户型，两室一厅
 
 
 
