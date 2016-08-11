@@ -4,26 +4,26 @@
 [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)  
 [RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)  
 [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)  
-<u>RxJava系列4(过滤操作符)</u>  
+[RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)  
 <u>RxJava系列5(组合操作符)</u>     
 <u>RxJava系列6(源码分析)</u>    
 <u>RxJava系列7(最佳实践)</u> 
 
 
 ***
-前面两篇文章中我们介绍了RxJava的一些基本概念和RxJava最简单的用法。从这一章开始，我们开始聊聊RxJava中的操作符Operators，RxJava中的操作符主要分成了三类：
+前面两篇文章中我们介绍了RxJava的一些基本概念和RxJava最简单的用法。从这一章开始，我们开始聊聊RxJava中的操作符Operators，后面我将用三章的篇幅来分别介绍：
 
-1. **转换类操作符**(`map` `flatMap` `concatMap` `flatMapIterable` `switchMap` `scan` `groupBy` ...)；
-2. **过滤类操作符**(`fileter` `take` `takeLast` `takeUntil` `distinct` `distinctUntilChanged` `skip` `skipLast` ...)；
-3. **组合类操作符**(`merge` `zip` `join` `combineLatest` `and/when/then` `switch` `startSwitch` ...)。
+1. **转换类操作符**
+2. **过滤类操作符**
+3. **组合类操作符**
 
 这一章我们主要讲讲转换类操作符。所有这些Operators都作用于一个可观测序列，然后变换它发射的值，最后用一种新的形式返回它们。概念实在是不好理解，下面我们结合实际的例子一一介绍。
 
-####map
+####Map
 
-`map()`函数接受一个Func1类型的参数(就像这样`map(Func1<? super T, ? extends R> func)`),然后吧这个Func1应用到每一个由Observable发射的值上，将发射的只转换为我们期望的值。这种狗屁定义我相信你也听不懂，我们来看一下官方给出的原理图：
+**`map(Func1)`**函数接受一个Func1类型的参数(就像这样`map(Func1<? super T, ? extends R> func)`),然后吧这个Func1应用到每一个由Observable发射的值上，将发射的只转换为我们期望的值。这种狗屁定义我相信你也听不懂，我们来看一下官方给出的原理图：
 
-![map](MapOperator.png)
+![map(Func1)](MapOperator.png)
 
 假设我们需要将一组数字装换成字符串，我们可以通过map这样实现：
 
@@ -43,9 +43,8 @@
             
  > Func1构造函数中的两个参数分别是Observable发射值当前的类型和map转换后的类型，上面这个例子中发射值当前的类型是Integer,转换后的类型是String。
 
-####flatMap
-
-`flatMap()`函数同样也是做转换的，但是作用却不一样。flatMap不太好理解，我们直接看例子（*我们公司是个房产平台，那我就拿房子举例*）：假设我们有一组小区数据`Community[] communites`,现在我们要输出每个小区的名字；我们可以这样实现:
+####FlatMap
+**`flatMap(Func1)`**函数同样也是做转换的，但是作用却不一样。flatMap不太好理解，我们直接看例子（*我们公司是个房产平台，那我就拿房子举例*）：假设我们有一组小区数据`Community[] communites`,现在我们要输出每个小区的名字；我们可以这样实现:
 
     Observable.from(communities)
             .map(new Func1<Community, String>() {
@@ -96,7 +95,7 @@
             
 从前面的例子中我们发现，flatMap()和map()都是把传入的参数转化之后返回另一个对象。但和map()不同的是，flatMap()中返回的是Observable对象，并且这个Observable对象并不是被直接发送到 Subscriber的回调方法中。
 
-flatMap()的原理是这样的：
+flatMap(Func1)的原理是这样的：
 
 1. 将传入的事件对象装换成一个Observable对象；
 2. 这是不会直接发送这个Observable, 而是将这个Observable激活让它自己开始发送事件；
@@ -105,15 +104,15 @@ flatMap()的原理是这样的：
 这三个步骤，把事件拆成了两级，通过一组新创建的Observable将初始的对象『铺平』之后通过统一路径分发了下去。而这个『铺平』就是flatMap()所谓的flat。
 
 最后我们来看看flatMap的原理图：
-![flatMap](FlatMapOperator.png)
+![flatMap(Func1)](FlatMapOperator.png)
 
-####concatMap
-`concatMap()`解决了`flatMap()`的交叉问题，它能够把发射的值连续在一起，就像这样：
-![flatMap](ConcatMapOperator.png)
+####ConcatMap
+**`concatMap(Func1)`**解决了`flatMap()`的交叉问题，它能够把发射的值连续在一起，就像这样：
+![concatMap(Func1)](ConcatMapOperator.png)
 
 ####flatMapIterable
-`flatMapIterable()`和`flatMap()`几乎是一样的，不同的是`flatMapIterable()`它转化的多个Observable是使用Iterable作为源数据的。
-![flatMapIterable](FlatMapIterableOperator.png)
+**`flatMapIterable(Func1)`**和`flatMap()`几乎是一样的，不同的是`flatMapIterable()`它转化的多个Observable是使用Iterable作为源数据的。
+![flatMapIterable(Func1)](FlatMapIterableOperator.png)
 
     Observable.from(communities)
             .flatMapIterable(new Func1<Community, Iterable<House>>() {
@@ -130,13 +129,13 @@ flatMap()的原理是这样的：
                 }
             });
 
-####switchMap
-`switchMap()`和`flatMap()`很像，除了一点：每当源`Observable`发射一个新的数据项（Observable）时，它将取消订阅并停止监视之前那个数据项产生的`Observable`，并开始监视当前发射的这一个。
-![switchMap](SwitchMapOperator.png)
+####SwitchMap
+**`switchMap(Func1)`**和`flatMap(Func1)`很像，除了一点：每当源`Observable`发射一个新的数据项（Observable）时，它将取消订阅并停止监视之前那个数据项产生的`Observable`，并开始监视当前发射的这一个。
+![switchMap(Func1)](SwitchMapOperator.png)
 
-####scan
-`scan()`对一个序列的数据应用一个函数，并将这个函数的结果发射出去作为下个数据应用合格函数时的第一个参数使用。
-![scan](ScanOperator.png)
+####Scan
+**`scan(Func2)`**对一个序列的数据应用一个函数，并将这个函数的结果发射出去作为下个数据应用合格函数时的第一个参数使用。
+![scan(Func2)](ScanOperator.png)
 
 我们来看个简单的例子：
 
@@ -155,9 +154,9 @@ flatMap()的原理是这样的：
     
  输出结果为：1 3 6 10 15  
 
-####groupBy
-`groupBy()`将原始Observable发射的数据按照key来拆分成一些小的Observable，然后这些小Observable分别发射其所包含的的数据，和SQL中的groupBy类似。实际使用中，我们需要提供一个生成key的规则（也就是Func1中的call方法），所有key相同的数据会包含在同一个小的Observable中。另外我们还可以提供一个函数来对这些数据进行转化，有点类似于集成了flatMap。
-![groupBy](GroupByOperator.png)
+####GroupBy
+**`groupBy(Func1)`**将原始Observable发射的数据按照key来拆分成一些小的Observable，然后这些小Observable分别发射其所包含的的数据，和SQL中的groupBy类似。实际使用中，我们需要提供一个生成key的规则（也就是Func1中的call方法），所有key相同的数据会包含在同一个小的Observable中。另外我们还可以提供一个函数来对这些数据进行转化，有点类似于集成了flatMap。
+![groupBy(Func1)](GroupByOperator.png)
 
 单纯的文字描述和图片解释可能难以理解，我们来看个例子：假设我现在有一组房源`List<House> houses`,每套房子都属于某一个小区，现在我们需要根据小区名来对房源进行分类，然后依次将房源信息输出。
 

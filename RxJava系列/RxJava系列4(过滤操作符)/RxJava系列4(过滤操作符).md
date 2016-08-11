@@ -1,10 +1,10 @@
 ##RxJava系列四（过滤操作符）
-> 转载请注明出处：[]()
+> 转载请注明出处：[http://www.jianshu.com/p/3a188b995daa](http://www.jianshu.com/p/3a188b995daa)
 
 [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)  
 [RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)  
 [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)  
-[RxJava系列4(过滤操作符)]()  
+[RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)  
 <u>RxJava系列5(组合操作符)</u>     
 <u>RxJava系列6(源码分析)</u>    
 <u>RxJava系列7(最佳实践)</u> 
@@ -283,7 +283,6 @@
 
 	小区:竹园新村; 房源描述:顶层户型，两室一厅
 
-
-
+这一章我们就先聊到这，更多的过滤类操作符的介绍大家可以去查阅官方文档和源码；在下一章我们将继续介绍组合类操作符。
 
 
