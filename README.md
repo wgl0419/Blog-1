@@ -24,3 +24,8 @@
 
 [观察者模式](https://github.com/BaronZ88/Blog/blob/master/DesignPatterns/ObserverPattern/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F.md)
 
+====
+GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
+知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
+博客地址：[http://www.jianshu.com/users/cfdc52ea3399/latest_articles](http://www.jianshu.com/users/cfdc52ea3399/latest_articles)
+
