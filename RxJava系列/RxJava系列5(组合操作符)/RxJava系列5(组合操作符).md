@@ -154,7 +154,7 @@
 ![comnineLatest(Observable, Observable, Func2)](CombineLatestOperator.png)
 
 下面这张图应该更容易理解：
-![comnineLatest(Observable, Observable, Func2)](combineLatest.png)
+![comnineLatest(Observable, Observable, Func2)](CombineLatest.png)
 
     List<String> communityNames = DataSimulator.getCommunityNames();
     List<Location> locations = DataSimulator.getLocations();
