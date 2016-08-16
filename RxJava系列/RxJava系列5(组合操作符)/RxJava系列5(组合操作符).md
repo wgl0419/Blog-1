@@ -1,11 +1,11 @@
 ##RxJava系列五（组合操作符）
-> 转载请注明出处：[]()
+> 转载请注明出处：[http://www.jianshu.com/p/546fe44a6e22](http://www.jianshu.com/p/546fe44a6e22)
 
 [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)  
 [RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)  
 [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)  
 [RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)  
-[RxJava系列5(组合操作符)]()     
+[RxJava系列5(组合操作符)](http://www.jianshu.com/p/546fe44a6e22)     
 <u>RxJava系列6(源码分析)</u>    
 <u>RxJava系列7(最佳实践)</u> 
 
@@ -61,7 +61,7 @@
 
 **`startWith(Observable<T>)`**用于在源Observable发射的数据前插入另一个Observable发射的数据（这些数据会被插入到
 源Observable发射数据的前面）。官方示意图：
-![](StartWithOOperator.png)
+![startWith(Observable<T>)](StartWithOOperator.png)
 
 ###Concat
 **`concat(Observable<? extends T>, Observable<? extends T>)`** **`concat(Observable<？ extends Observable<T>>`)**用于将多个obserbavle发射的的数据进行合并发射，concat严格按照顺序发射数据，前一个Observable没发射玩是不会发射后一个Observable的数据的。它和merge、startWitch和相似，不同之处在于：
@@ -303,7 +303,7 @@ join操作符的效果类似于排列组合，把第一个数据源A作为基座
 	6-->南北通透，豪华五房
 	7-->南北通透，豪华五房
 	
-通过[转换操作符](http://www.jianshu.com/p/5970280703b9)、[过滤操作符](http://www.jianshu.com/p/3a188b995daa)、[组合操作符]()三个篇幅将RxJava主要的操作符也介绍的七七八八了。更多操作符的介绍建议大家去查阅官方文档，并自己动手实践一下。这一系列的文章也会持续更新，欢迎大家保持关注！:)
+通过[转换操作符](http://www.jianshu.com/p/5970280703b9)、[过滤操作符](http://www.jianshu.com/p/3a188b995daa)、[组合操作符](http://www.jianshu.com/p/546fe44a6e22)三个篇幅将RxJava主要的操作符也介绍的七七八八了。更多操作符的介绍建议大家去查阅官方文档，并自己动手实践一下。这一系列的文章也会持续更新，欢迎大家保持关注！:)
 
 Demo源码地址：[https://github.com/BaronZ88/HelloRxJava](https://github.com/BaronZ88/HelloRxJava)
 
