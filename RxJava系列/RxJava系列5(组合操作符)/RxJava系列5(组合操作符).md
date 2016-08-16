@@ -13,8 +13,11 @@
 这一章我们接着介绍组合操作符，这类operators可以同时处理多个Observable来创建我们所需要的Observable。组合操作符主要包含： **`Merge`** **`StartWith`** **`Concat`** **`Zip`** **`CombineLatest`**  **`SwitchOnNext`** **`Join`**等等。
 
 ###Merge
-**`merge(Observable, Observable)`**将两个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。你可以简单的将它理解为两个Obsrvable合并成了一个Observable。
+**`merge(Observable, Observable)`**将两个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。你可以简单的将它理解为两个Obsrvable合并成了一个Observable，合并后的数据是无序的。
+
 ![merge(Observable, Observable)](MergeOperator.png)
+
+我们看下面的例子，一共有两个Observable：一个用来发送字母，另一个用来发送数字；现在我们需要两连个Observable发射的数据合并。
 
     String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
     Observable<String> letterSequence = Observable.interval(300, TimeUnit.MILLISECONDS)
@@ -31,7 +34,6 @@
             .subscribe(new Observer<Serializable>() {
                 @Override
                 public void onCompleted() {
-                    System.out.println("Completed!");
                     System.exit(0);
                 }
 
@@ -48,7 +50,7 @@
             
 程序输出：
 
-	A 0 B C 1 D E 2 F 3 G H 4 Completed!
+	A 0 B C 1 D E 2 F 3 G H 4 
 
 **`merge(Observable[])`**将多个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。
 ![merge(Observable[])](MergeIOOperator.png)
@@ -69,6 +71,8 @@
 
 ![concat(Observable<? extends T>, Observable<? extends T>)、concat(Observable<？ extends Observable<T>>)](ConcatOperator.png)
 
+这里我们将前面Merge操作符的例子拿过来，并将操作符换成`Concat`，然后我们看看执行结果：
+
     String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
     Observable<String> letterSequence = Observable.interval(300, TimeUnit.MILLISECONDS)
             .map(new Func1<Long, String>() {
@@ -84,7 +88,6 @@
             .subscribe(new Observer<Serializable>() {
                 @Override
                 public void onCompleted() {
-                    System.out.println("Completed!");
                     System.exit(0);
                 }
 
@@ -101,11 +104,50 @@
             
 程序输出：
 
-	A B C D E F G H 0 1 2 3 4 Completed!
+	A B C D E F G H 0 1 2 3 4 
 
 ###Zip
-**`zip(Observable, Observable, Func2)`**用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。
+**`zip(Observable, Observable, Func2)`**用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。当其中一个Observable发送数据结束或者出现异常后，另一个Observable也将停在发射数据。
 ![zip(Observable, Observable, Func2)](ZipOperator.png)
+
+和前面的例子一样，我们将操作符换成了`zip`:
+
+    String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
+    Observable<String> letterSequence = Observable.interval(120, TimeUnit.MILLISECONDS)
+            .map(new Func1<Long, String>() {
+                @Override
+                public String call(Long position) {
+                    return letters[position.intValue()];
+                }
+            }).take(letters.length);
+
+    Observable<Long> numberSequence = Observable.interval(200, TimeUnit.MILLISECONDS).take(5);
+
+    Observable.zip(letterSequence, numberSequence, new Func2<String, Long, String>() {
+        @Override
+        public String call(String letter, Long number) {
+            return letter + number;
+        }
+    }).subscribe(new Observer<String>() {
+        @Override
+        public void onCompleted() {
+            System.exit(0);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println("Error:" + e.getMessage());
+        }
+
+        @Override
+        public void onNext(String result) {
+            System.out.print(result + " ");
+        }
+    });
+    
+程序输出：
+
+	A0 B1 C2 D3 E4
 
 ###CombineLatest
 **`comnineLatest(Observable, Observable, Func2)`**用于将两个Observale最近发射的数据已经Func2函数的规则进展组合。下面是官方提供的原理图：
@@ -143,7 +185,6 @@
             }).subscribe(new Observer<String>() {
                 @Override
                 public void onCompleted() {
-                    System.out.println("Completed!");
                     System.exit(0);
                 }
 
@@ -167,7 +208,6 @@
 	小区名:中粮·海景壹号, 经纬度:(22.273, 53.623)
 	小区名:浦江名苑, 经纬度:(22.273, 53.623)
 	小区名:南辉小区, 经纬度:(22.273, 53.623)
-	Completed!
 
 
 ###SwitchOnNext
@@ -192,7 +232,7 @@ join操作符的效果类似于排列组合，把第一个数据源A作为基座
 再看看下面的图是不是好理解了呢？！
 ![join(Observable, Func1, Func1, Func2)](JoinOperator.png)
 
-理解了上面的文字，我们再来写段代码加深理解。
+读懂了上面的文字，我们再来写段代码加深理解。
 
     final List<House> houses = DataSimulator.getHouses();//模拟的房源数据，用于测试
 
@@ -231,7 +271,6 @@ join操作符的效果类似于排列组合，把第一个数据源A作为基座
     ).subscribe(new Observer<String>() {
         @Override
         public void onCompleted() {
-            System.out.println("Completed!");
             System.exit(0);
         }
 
@@ -263,8 +302,8 @@ join操作符的效果类似于排列组合，把第一个数据源A作为基座
 	6-->顶层户型，两室一厅
 	6-->南北通透，豪华五房
 	7-->南北通透，豪华五房
-	Completed!
-
+	
+通过[转换操作符](http://www.jianshu.com/p/5970280703b9)、[过滤操作符](http://www.jianshu.com/p/3a188b995daa)、[组合操作符]()三个篇幅将RxJava主要的操作符也介绍的七七八八了。更多操作符的介绍建议大家去查阅官方文档，并自己动手实践一下。这一系列的文章也会持续更新，欢迎大家保持关注！:)
 
 Demo源码地址：[https://github.com/BaronZ88/HelloRxJava](https://github.com/BaronZ88/HelloRxJava)
 
