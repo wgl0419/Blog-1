@@ -98,6 +98,6 @@ Android平台上为已经开发者提供了AsyncTask,Handler等用来做异步�
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::addHouseInformationToScreen);
 
-简介！有美感！这才是一个有情怀的程序员应该写出来的代码。
+简洁！有美感！这才是一个有情怀的程序员应该写出来的代码。
 
 看完这篇文章大家应该能够理解RxJava为什么会越来越火了。它能极大的提高我们的开发效率和代码的可读性！当然了RxJava的学习曲线也是比较陡的，在后面的文章我会对主要的知识点做详细的介绍，敬请关注！
