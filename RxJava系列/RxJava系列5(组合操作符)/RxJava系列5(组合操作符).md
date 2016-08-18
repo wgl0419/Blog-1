@@ -52,7 +52,9 @@ Observable.merge(letterSequence, numberSequence)
             
 程序输出：
 
-	A 0 B C 1 D E 2 F 3 G H 4 
+```java
+A 0 B C 1 D E 2 F 3 G H 4 
+```
 
 **`merge(Observable[])`**将多个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。
 ![merge(Observable[])](MergeIOOperator.png)
@@ -75,6 +77,7 @@ Observable.merge(letterSequence, numberSequence)
 
 这里我们将前面Merge操作符的例子拿过来，并将操作符换成`Concat`，然后我们看看执行结果：
 
+```java
     String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
     Observable<String> letterSequence = Observable.interval(300, TimeUnit.MILLISECONDS)
             .map(new Func1<Long, String>() {
@@ -103,10 +106,13 @@ Observable.merge(letterSequence, numberSequence)
                     System.out.print(serializable.toString() + " ");
                 }
             });
-            
+```
+          
 程序输出：
 
+```java
 	A B C D E F G H 0 1 2 3 4 
+```
 
 ###Zip
 **`zip(Observable, Observable, Func2)`**用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。当其中一个Observable发送数据结束或者出现异常后，另一个Observable也将停在发射数据。
