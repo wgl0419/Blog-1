@@ -19,34 +19,36 @@
 
 我们看下面的例子，一共有两个Observable：一个用来发送字母，另一个用来发送数字；现在我们需要两连个Observable发射的数据合并。
 
-    String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
-    Observable<String> letterSequence = Observable.interval(300, TimeUnit.MILLISECONDS)
-            .map(new Func1<Long, String>() {
-                @Override
-                public String call(Long position) {
-                    return letters[position.intValue()];
-                }
-            }).take(letters.length);
+```Java
+String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
+Observable<String> letterSequence = Observable.interval(300, TimeUnit.MILLISECONDS)
+        .map(new Func1<Long, String>() {
+            @Override
+            public String call(Long position) {
+                return letters[position.intValue()];
+            }
+        }).take(letters.length);
 
-    Observable<Long> numberSequence = Observable.interval(500, TimeUnit.MILLISECONDS).take(5);
+Observable<Long> numberSequence = Observable.interval(500, TimeUnit.MILLISECONDS).take(5);
 
-    Observable.merge(letterSequence, numberSequence)
-            .subscribe(new Observer<Serializable>() {
-                @Override
-                public void onCompleted() {
-                    System.exit(0);
-                }
+Observable.merge(letterSequence, numberSequence)
+        .subscribe(new Observer<Serializable>() {
+            @Override
+            public void onCompleted() {
+                System.exit(0);
+            }
 
-                @Override
-                public void onError(Throwable e) {
-                    System.out.println("Error:" + e.getMessage());
-                }
+            @Override
+            public void onError(Throwable e) {
+                System.out.println("Error:" + e.getMessage());
+            }
 
-                @Override
-                public void onNext(Serializable serializable) {
-                    System.out.print(serializable.toString()+" ");
-                }
-            });
+            @Override
+            public void onNext(Serializable serializable) {
+                System.out.print(serializable.toString()+" ");
+            }
+        });   
+```
             
 程序输出：
 
