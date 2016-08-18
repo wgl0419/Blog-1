@@ -95,9 +95,10 @@ button.setOnClickListener(v -> v.setText("lalala"));
 ```
 	
 > ps: Java7中的泛型方法和<>构造器也是通过目标类型来进行类型推导的,如：
->  
- 	List<Integer> intList = Collections.emptyList>();
- 	List<String> strList = new ArrayList<>();
+> ```java
+> List<Integer> intList = Collections.emptyList>();
+> List<String> strList = new ArrayList<>();
+> ```
 
 ####3.作用域
 在内部类中使用变量名和this非常容易出错。内部类通过继承得到的成员变量（包括来说object的）可能会把外部类的成员变量覆盖掉，未做限制的this引用会指向内部类自己而非外部类。
