@@ -8,13 +8,17 @@ Stream作为Java8的新特性之一，他与Java IO包中的InputStream和Output
 
 假设我们需要把一个集合中的所有形状设置成红色，那么我们可以这样写
 
-	for (Shape shape : shapes){
-		shape.setColor(RED)
-	}
+```java
+for (Shape shape : shapes){
+	shape.setColor(RED)
+}
+```
 	
 如果使用Java8扩展后的集合框架则可以这样写：
 
-	shapes.foreach(s -> s.setColor(RED));
+```java
+shapes.foreach(s -> s.setColor(RED));
+```
 
 __第一种__写法我们叫外部迭代，for-each调用`shapes`的`iterator()`依次遍历集合中的元素。这种外部迭代有一些问题：
 
@@ -30,36 +34,43 @@ __第二种__写法我们叫内部迭代，两段代码虽然看起来只是语�
 ####1.什么是Stream
 Stream不是集合元素，它也不是数据结构、不能保存数据，它更像一个更高级的`Interator`。Stream提供了强大的数据集合操作功能，并被深入整合到现有的集合类和其它的JDK类型中。流的操作可以被组合成流水线（Pipeline）。拿前面的例子来说，如果我只想把蓝色改成红色：
 
-	shapes.stream()
-      	  .filter(s -> s.getColor() == BLUE)
-      	  .forEach(s -> s.setColor(RED));
+```java
+shapes.stream()
+      .filter(s -> s.getColor() == BLUE)
+      .forEach(s -> s.setColor(RED));
+```
 
 在`Collection`上调用`stream()`会生成该集合元素的流，接下来`filter()`操作会产生只包含蓝色形状的流，最后，这些蓝色形状会被`forEach`操作设为红色。
 
 如果我们想把蓝色的形状提取到新的List里，则可以：
 
-	List<Shape> blue = shapes.stream()
-							  .filter(s -> s.getColor() == BLUE)
-							  .collect(Collectors.toList());
+```java
+List<Shape> blue = shapes.stream()
+						  .filter(s -> s.getColor() == BLUE)
+						  .collect(Collectors.toList());
+```
 
 `collect()`操作会把其接收的元素聚集到一起（这里是List），`collect()`方法的参数则被用来指定如何进行聚集操作。在这里我们使用`toList()`以把元素输出到List中。
 
 如果每个形状都被保存在`Box`里，然后我们想知道哪个盒子至少包含一个蓝色形状，我们可以这么写：
 
-	Set<Box> hasBlueShape = shapes.stream()
-								   .filter(s -> s.getColor() == BLUE)
-                                  .map(s -> s.getContainingBox())
-                                  .collect(Collectors.toSet());
+```java
+Set<Box> hasBlueShape = shapes.stream()
+                               .filter(s -> s.getColor() == BLUE)
+                              .map(s -> s.getContainingBox())
+                              .collect(Collectors.toSet());
+```
                                   
 `map()`操作通过映射函数（这里的映射函数接收一个形状，然后返回包含它的盒子）对输入流里面的元素进行依次转换，然后产生新流。
 
 如果我们需要得到蓝色物体的总重量，我们可以这样表达：
 
-	int sum = shapes.stream()
-                    .filter(s -> s.getColor() == BLUE)
-                    .mapToInt(s -> s.getWeight())
-                    .sum();
-               
+```java
+int sum = shapes.stream()
+                .filter(s -> s.getColor() == BLUE)
+                .mapToInt(s -> s.getWeight())
+                .sum();
+```            
 
 ####2.Stream vs Collection
 流（Stream）和集合（Collection）的区别：
@@ -77,10 +88,12 @@ Stream不是集合元素，它也不是数据结构、不能保存数据，它�
 
 我们拿下面这段代码举例：
 
-	int sum = shapes.stream()
-                    .filter(s -> s.getColor() == BLUE)
-                    .mapToInt(s -> s.getWeight())
-                    .sum();
+```java
+int sum = shapes.stream()
+                .filter(s -> s.getColor() == BLUE)
+                .mapToInt(s -> s.getWeight())
+                .sum();
+```                
                     
 这里的`filter()`和`map()`都是惰性的，这就意味着在调用`sum()`之前不会从数据源中提取任何元素。在`sum()`操作之后才会把`filter()`、`map()`和`sum()`放在对数据源一次遍历中。这样可以大大减少维持中间结果所带来的开销。
 
@@ -102,30 +115,31 @@ Stream不是集合元素，它也不是数据结构、不能保存数据，它�
 
 我们先来看看不用Streams API如何实现：
 
-	List<Community> result = new ArrayList<>();
-    for (Community community : communities) {
-            for (House house : community.houses) {
-                if (house.area > 100) {
-                    result.add(community);
-                    break;
-                }
+```java
+List<Community> result = new ArrayList<>();
+for (Community community : communities) {
+        for (House house : community.houses) {
+            if (house.area > 100) {
+                result.add(community);
+                break;
             }
         }
-        Collections.sort(result, new Comparator<Community>() {
-            @Override
-            public int compare(Community c1, Community c2) {
-                return c1.name.compareTo(c2.name);
-            }
-        });
-        return result;
-        
-        
-        
+    }
+    Collections.sort(result, new Comparator<Community>() {
+        @Override
+        public int compare(Community c1, Community c2) {
+            return c1.name.compareTo(c2.name);
+        }
+    });
+    return result;      
+```
+       
 如果使用Streams API:
 
-	return communities.stream()
-	                  .filter(c -> c.houses.stream().anyMatch(h -> h.area>100))
-                      .sorted(Comparator.comparing(c -> c.name))
-                      .collect(Collectors.toList());
-
+```java
+return communities.stream()
+          .filter(c -> c.houses.stream().anyMatch(h -> h.area>100))
+          .sorted(Comparator.comparing(c -> c.name))
+          .collect(Collectors.toList());
+```
 
