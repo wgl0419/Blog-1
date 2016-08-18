@@ -48,23 +48,25 @@ Observable和Subject是两个“生产”实体，Observer和Subscriber是两个
 
 **第一步：创建观察者Observer**
 
-	Observer<Object> observer = new Observer<Object>() {
-	
-        @Override
-        public void onCompleted() {
+```java
+Observer<Object> observer = new Observer<Object>() {
 
-        }
+    @Override
+    public void onCompleted() {
 
-        @Override
-        public void onError(Throwable e) {
+    }
 
-        }
+    @Override
+    public void onError(Throwable e) {
 
-        @Override
-        public void onNext(Object s) {
+    }
 
-        }
-     };
+    @Override
+    public void onNext(Object s) {
+
+    }
+ };
+ ```
      
 这么简单，一个观察者Observer创建了!
         
@@ -83,72 +85,82 @@ RxJava中添加了普通观察者模式缺失的三个功能：
 
 `Observable.create()`方法可以创建一个Observable，使用`crate()`创建Observable需要一个OnSubscribe对象，这个对象继承Action1。当观察者订阅我们的Observable时，它作为一个参数传入并执行`call()`函数。 
 	
-	Observable<Object> observable = Observable.create(new 				Observable.OnSubscribe<Object>() {
-        @Override
-        public void call(Subscriber<? super Object> subscriber) {
+```java
+Observable<Object> observable = Observable.create(new 
+        	Observable.OnSubscribe<Object>() {
+    @Override
+    public void call(Subscriber<? super Object> subscriber) {
 
-        }
-    });
+    }
+});
+```
 
 除了create()，just()和from()同样可以创建Observable。看看下面两个例子：
 
 `just(T...)`将传入的参数依次发送
 
-	Observable observable = Observable.just("One", "Two", "Three");
-	//上面这行代码会依次调用
-	//onNext("One");
-	//onNext("Two");
-	//onNext("Three");
-	//onCompleted();
+```java
+Observable observable = Observable.just("One", "Two", "Three");
+//上面这行代码会依次调用
+//onNext("One");
+//onNext("Two");
+//onNext("Three");
+//onCompleted();
+```
 
 `from(T[])/from(Iterable<? extends T>)`将传入的数组或者Iterable拆分成Java对象依次发送
 
-	String[] parameters = {"One", "Two", "Three"};
-	Observable observable = Observable.from(parameters);
-	//上面这行代码会依次调用
-	//onNext("One");
-	//onNext("Two");
-	//onNext("Three");
-	//onCompleted();
+```java
+String[] parameters = {"One", "Two", "Three"};
+Observable observable = Observable.from(parameters);
+//上面这行代码会依次调用
+//onNext("One");
+//onNext("Two");
+//onNext("Three");
+//onCompleted();
+```
 
 **第三步：被观察者Observable订阅观察者Observable**（*ps:你没看错，不同于普通的观察者模式，这里是被观察者订阅观察者*）
 	
 有了观察者和被观察者，Wimbledon就可以调用subscribe()订阅事件了，就像这样：
 	
-	observable.subscribe(observer);
+observable.subscribe(observer);
 	
 
 ![observable.subscribe(observer)](subscribe.png)
 	
 连在一起写就是这样：
 
-    Observable.create(new Observable.OnSubscribe<Integer>() {
+```java
+Observable.create(new Observable.OnSubscribe<Integer>() {
 
-        @Override
-        public void call(Subscriber<? super Integer> subscriber) {
-            for (int i = 0; i < 5; i++) {
-                subscriber.onNext(i);
-            }
-            subscriber.onCompleted();
+    @Override
+    public void call(Subscriber<? super Integer> subscriber) {
+        for (int i = 0; i < 5; i++) {
+            subscriber.onNext(i);
         }
+        subscriber.onCompleted();
+    }
 
-    }).subscribe(new Observer<Integer>() {
+}).subscribe(new Observer<Integer>() {
 
-        @Override
-        public void onCompleted() {
-            System.out.println("onCompleted");
-        }
+    @Override
+    public void onCompleted() {
+        System.out.println("onCompleted");
+    }
 
-        @Override
-        public void onError(Throwable e) {
-            System.out.println("onError");
-        }
+    @Override
+    public void onError(Throwable e) {
+        System.out.println("onError");
+    }
 
-        @Override
-        public void onNext(Integer item) {
-            System.out.println("Item is " + item);
-        }
-    });
+    @Override
+    public void onNext(Integer item) {
+        System.out.println("Item is " + item);
+    }
+});
+```
+
 至此一个完整的RxJava调用就完成了。
 
 兄台，你叨逼叨叨逼叨的说了一大堆，可是我没搞定你特么到底在干啥啊？！！不急，我现在就来告诉你们到底发生了什么。
@@ -166,54 +178,65 @@ RxJava中添加了普通观察者模式缺失的三个功能：
 
 我们先看看Subscriber这个类：
 
-	public abstract class Subscriber<T> implements Observer<T>, Subscription {
-		
-		...
-	}
+```java
+public abstract class Subscriber<T> implements Observer<T>, Subscription {
+    
+    ...
+}
+```
+
 从源码中我们可以看到，Subscriber是Observer的一个抽象实现类，所以我首先可以肯定的是Subscriber和Observer类型是一致的。接着往下我们看看subscribe()这个方法：
 
-    public final Subscription subscribe(final Observer<? super T> observer) {
-    
-    	//这里的if判断对于我们要分享的问题没有关联，可以先无视
-        if (observer instanceof Subscriber) {
-            return subscribe((Subscriber<? super T>)observer);
-        }
-        return subscribe(new Subscriber<T>() {
+```java
+public final Subscription subscribe(final Observer<? super T> observer) {
 
-            @Override
-            public void onCompleted() {
-                observer.onCompleted();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                observer.onError(e);
-            }
-
-            @Override
-            public void onNext(T t) {
-                observer.onNext(t);
-            }
-
-        });
+    //这里的if判断对于我们要分享的问题没有关联，可以先无视
+    if (observer instanceof Subscriber) {
+        return subscribe((Subscriber<? super T>)observer);
     }
+    return subscribe(new Subscriber<T>() {
+
+        @Override
+        public void onCompleted() {
+            observer.onCompleted();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            observer.onError(e);
+        }
+
+        @Override
+        public void onNext(T t) {
+            observer.onNext(t);
+        }
+
+    });
+}
+```
+
 我们看到subscribe()方法内部首先将传进来的Observer做了一层代理，将它转换成了Subscriber。我们再看看这个方法内部的subscribe()方法：
 
-    public final Subscription subscribe(Subscriber<? super T> subscriber) {
-        return Observable.subscribe(subscriber, this);
-    }
+```java
+public final Subscription subscribe(Subscriber<? super T> subscriber) {
+    return Observable.subscribe(subscriber, this);
+}
+```
+
 进一步往下追踪看看return后面这段代码到底做了什么。精简掉其他无关代码后的subscribe(subscriber, this)方法是这样的：
 
-    private static <T> Subscription subscribe(Subscriber<? super T> subscriber, Observable<T> observable) {
+```java
+private static <T> Subscription subscribe(Subscriber<? super T> subscriber, 					Observable<T> observable) {
 
-        subscriber.onStart();
-        try {
-            hook.onSubscribeStart(observable, observable.onSubscribe).call(subscriber);
-            return hook.onSubscribeReturn(subscriber);
-        } catch (Throwable e) {
-            return Subscriptions.unsubscribed();
-        }
+    subscriber.onStart();
+    try {
+        hook.onSubscribeStart(observable, observable.onSubscribe).call(subscriber);
+        return hook.onSubscribeReturn(subscriber);
+    } catch (Throwable e) {
+        return Subscriptions.unsubscribed();
     }
+}
+```
 
 我们重点看看hook.onSubscribeStart(observable, observable.onSubscribe).call(subscriber),前面这个hook.onSubscribeStart(observable, observable.onSubscribe)返回的是它自己括号内的第二个参数observable.onSubscribe,然后调用了它的call方法。而这个observable.onSubscribe正是create()方法中的Subscriber，这样整个流程就理顺了。看到这里是不是对RxJava的执行流程清晰了一点呢？这里也建议大家在学习新技术的时候多去翻一翻源码，知其然还要能知其所以然不是吗。
 
@@ -270,11 +293,13 @@ RxJava中添加了普通观察者模式缺失的三个功能：
 
 同时RxJava还为我们提供了`subscribeOn()`和`observeOn()`两个方法来指定Observable和Observer运行的线程。
 
-    Observable.from(getCommunitiesFromServer())
-                .flatMap(community -> Observable.from(community.houses))
-                .filter(house -> house.price>=5000000).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::addHouseInformationToScreen);
+```java
+Observable.from(getCommunitiesFromServer())
+            .flatMap(community -> Observable.from(community.houses))
+            .filter(house -> house.price>=5000000).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::addHouseInformationToScreen);
+```
 
 上面这段代码大家应该有印象吧，没错正是我们上一篇文章中的例子。`subscribeOn(Schedulers.io())`指定了获取小区列表、处理房源信息等一系列事件都是在IO线程中运行，`observeOn(AndroidSchedulers.mainThread())`指定了在屏幕上展示房源的操作在UI线程执行。这就做到了在子线程获取房源，主线程展示房源。
 

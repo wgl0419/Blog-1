@@ -43,60 +43,66 @@ Android平台上为已经开发者提供了AsyncTask,Handler等用来做异步�
 多说无益，上代码！
 
 假设我们安居客用户App上有个需求，需要从服务端拉取上海浦东新区塘桥板块的所有小区Community[] communities，每个小区下包含多套房源List<House> houses；我们需要把塘桥板块的所有总价大于500W的房源都展示在App的房源列表页。用于从服务端拉取communities需要发起网络请求，比较耗时，因此需要在后台运行。而这些房源信息需要展示到App的页面上，因此需要在UI线程上执行。
-       
-	new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                //从服务端获取小区列表
-            	List<Community> communities = getCommunitiesFromServer();
-                for (Community community : communities) {
-                    List<House> houses = community.houses;
-                    for (House house : houses) {
-                        if (house.price >= 5000000) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //将房子的信息添加到屏幕上
-                                	addHouseInformationToScreen(house);
-                                }
-                            });
-                        }
+
+```java       
+new Thread() {
+        @Override
+        public void run() {
+            super.run();
+            //从服务端获取小区列表
+            List<Community> communities = getCommunitiesFromServer();
+            for (Community community : communities) {
+                List<House> houses = community.houses;
+                for (House house : houses) {
+                    if (house.price >= 5000000) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //将房子的信息添加到屏幕上
+                                addHouseInformationToScreen(house);
+                            }
+                        });
                     }
                 }
             }
-        }.start();
+        }
+    }.start();
+```
 
 使用RxJava的写法是这样的：
 
-    Observable.from(getCommunitiesFromServer())
-                .flatMap(new Func1<Community, Observable<House>>() {
-                    @Override
-                    public Observable<House> call(Community community) {
-                        return Observable.from(community.houses);
-                    }
-                }).filter(new Func1<House, Boolean>() {
-                    @Override
-                    public Boolean call(House house) {
-                        return house.price>=5000000;
-                    }
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<House>() {
-                    @Override
-                    public void call(House house) {
-                        //将房子的信息添加到屏幕上
-                        addHouseInformationToScreen(house);
-                    }
-                });
+```java
+Observable.from(getCommunitiesFromServer())
+            .flatMap(new Func1<Community, Observable<House>>() {
+                @Override
+                public Observable<House> call(Community community) {
+                    return Observable.from(community.houses);
+                }
+            }).filter(new Func1<House, Boolean>() {
+                @Override
+                public Boolean call(House house) {
+                    return house.price>=5000000;
+                }
+            }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Action1<House>() {
+                @Override
+                public void call(House house) {
+                    //将房子的信息添加到屏幕上
+                    addHouseInformationToScreen(house);
+                }
+            });
+```
             
 从上面这段代码我们可以看到：虽然代码量看起来变复杂了，但是RxJava的实现是一条链式调用，没有任何的嵌套；整个实现逻辑看起来异常简洁清晰，这对我们的编程实现和后期维护是有巨大帮助的。特别是对于那些回调嵌套的场景。配合Lambda表达式还可以简化成这样：
-  
-      Observable.from(getCommunitiesFromServer())
-                .flatMap(community -> Observable.from(community.houses))
-                .filter(house -> house.price>=5000000).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::addHouseInformationToScreen);
+
+```java 
+Observable.from(getCommunitiesFromServer())
+        .flatMap(community -> Observable.from(community.houses))
+        .filter(house -> house.price>=5000000).subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(this::addHouseInformationToScreen);
+```
 
 简洁！有美感！这才是一个有情怀的程序员应该写出来的代码。
 
