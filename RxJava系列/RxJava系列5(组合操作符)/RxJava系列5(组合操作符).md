@@ -52,9 +52,7 @@ Observable.merge(letterSequence, numberSequence)
             
 程序输出：
 
-```java
-A 0 B C 1 D E 2 F 3 G H 4 
-```
+	A 0 B C 1 D E 2 F 3 G H 4 
 
 **`merge(Observable[])`**将多个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。
 ![merge(Observable[])](MergeIOOperator.png)
@@ -78,41 +76,39 @@ A 0 B C 1 D E 2 F 3 G H 4
 这里我们将前面Merge操作符的例子拿过来，并将操作符换成`Concat`，然后我们看看执行结果：
 
 ```java
-    String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
-    Observable<String> letterSequence = Observable.interval(300, TimeUnit.MILLISECONDS)
-            .map(new Func1<Long, String>() {
-                @Override
-                public String call(Long position) {
-                    return letters[position.intValue()];
-                }
-            }).take(letters.length);
+String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
+Observable<String> letterSequence = Observable.interval(300, TimeUnit.MILLISECONDS)
+        .map(new Func1<Long, String>() {
+            @Override
+            public String call(Long position) {
+                return letters[position.intValue()];
+            }
+        }).take(letters.length);
 
-    Observable<Long> numberSequence = Observable.interval(500, TimeUnit.MILLISECONDS).take(5);
+Observable<Long> numberSequence = Observable.interval(500, TimeUnit.MILLISECONDS).take(5);
 
-    Observable.concat(letterSequence, numberSequence)
-            .subscribe(new Observer<Serializable>() {
-                @Override
-                public void onCompleted() {
-                    System.exit(0);
-                }
+Observable.concat(letterSequence, numberSequence)
+        .subscribe(new Observer<Serializable>() {
+            @Override
+            public void onCompleted() {
+                System.exit(0);
+            }
 
-                @Override
-                public void onError(Throwable e) {
-                    System.out.println("Error:" + e.getMessage());
-                }
+            @Override
+            public void onError(Throwable e) {
+                System.out.println("Error:" + e.getMessage());
+            }
 
-                @Override
-                public void onNext(Serializable serializable) {
-                    System.out.print(serializable.toString() + " ");
-                }
-            });
+            @Override
+            public void onNext(Serializable serializable) {
+                System.out.print(serializable.toString() + " ");
+            }
+        });
 ```
           
 程序输出：
 
-```java
 	A B C D E F G H 0 1 2 3 4 
-```
 
 ###Zip
 **`zip(Observable, Observable, Func2)`**用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。当其中一个Observable发送数据结束或者出现异常后，另一个Observable也将停在发射数据。
@@ -120,38 +116,40 @@ A 0 B C 1 D E 2 F 3 G H 4
 
 和前面的例子一样，我们将操作符换成了`zip`:
 
-    String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
-    Observable<String> letterSequence = Observable.interval(120, TimeUnit.MILLISECONDS)
-            .map(new Func1<Long, String>() {
-                @Override
-                public String call(Long position) {
-                    return letters[position.intValue()];
-                }
-            }).take(letters.length);
+```java
+String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
+Observable<String> letterSequence = Observable.interval(120, TimeUnit.MILLISECONDS)
+        .map(new Func1<Long, String>() {
+            @Override
+            public String call(Long position) {
+                return letters[position.intValue()];
+            }
+        }).take(letters.length);
 
-    Observable<Long> numberSequence = Observable.interval(200, TimeUnit.MILLISECONDS).take(5);
+Observable<Long> numberSequence = Observable.interval(200, TimeUnit.MILLISECONDS).take(5);
 
-    Observable.zip(letterSequence, numberSequence, new Func2<String, Long, String>() {
-        @Override
-        public String call(String letter, Long number) {
-            return letter + number;
-        }
-    }).subscribe(new Observer<String>() {
-        @Override
-        public void onCompleted() {
-            System.exit(0);
-        }
+Observable.zip(letterSequence, numberSequence, new Func2<String, Long, String>() {
+    @Override
+    public String call(String letter, Long number) {
+        return letter + number;
+    }
+}).subscribe(new Observer<String>() {
+    @Override
+    public void onCompleted() {
+        System.exit(0);
+    }
 
-        @Override
-        public void onError(Throwable e) {
-            System.out.println("Error:" + e.getMessage());
-        }
+    @Override
+    public void onError(Throwable e) {
+        System.out.println("Error:" + e.getMessage());
+    }
 
-        @Override
-        public void onNext(String result) {
-            System.out.print(result + " ");
-        }
-    });
+    @Override
+    public void onNext(String result) {
+        System.out.print(result + " ");
+    }
+});
+```
     
 程序输出：
 
@@ -164,49 +162,51 @@ A 0 B C 1 D E 2 F 3 G H 4
 下面这张图应该更容易理解：
 ![comnineLatest(Observable, Observable, Func2)](CombineLatest.png)
 
-    List<String> communityNames = DataSimulator.getCommunityNames();
-    List<Location> locations = DataSimulator.getLocations();
+```java
+List<String> communityNames = DataSimulator.getCommunityNames();
+List<Location> locations = DataSimulator.getLocations();
 
-    Observable<String> communityNameSequence = Observable.interval(1, TimeUnit.SECONDS)
-            .map(new Func1<Long, String>() {
-                @Override
-                public String call(Long position) {
-                    return communityNames.get(position.intValue());
-                }
-            }).take(communityNames.size());
-    Observable<Location> locationSequence = Observable.interval(1, TimeUnit.SECONDS)
-            .map(new Func1<Long, Location>() {
-                @Override
-                public Location call(Long position) {
-                    return locations.get(position.intValue());
-                }
-            }).take(locations.size());
+Observable<String> communityNameSequence = Observable.interval(1, TimeUnit.SECONDS)
+        .map(new Func1<Long, String>() {
+            @Override
+            public String call(Long position) {
+                return communityNames.get(position.intValue());
+            }
+        }).take(communityNames.size());
+Observable<Location> locationSequence = Observable.interval(1, TimeUnit.SECONDS)
+        .map(new Func1<Long, Location>() {
+            @Override
+            public Location call(Long position) {
+                return locations.get(position.intValue());
+            }
+        }).take(locations.size());
 
-    Observable.combineLatest(
-            communityNameSequence,
-            locationSequence,
-            new Func2<String, Location, String>() {
-                @Override
-                public String call(String communityName, Location location) {
-                    return "小区名:" + communityName + ", 经纬度:" + location.toString();
-                }
-            }).subscribe(new Observer<String>() {
-                @Override
-                public void onCompleted() {
-                    System.exit(0);
-                }
+Observable.combineLatest(
+        communityNameSequence,
+        locationSequence,
+        new Func2<String, Location, String>() {
+            @Override
+            public String call(String communityName, Location location) {
+                return "小区名:" + communityName + ", 经纬度:" + location.toString();
+            }
+        }).subscribe(new Observer<String>() {
+            @Override
+            public void onCompleted() {
+                System.exit(0);
+            }
 
-                @Override
-                public void onError(Throwable e) {
-                    System.out.println("Error:" + e.getMessage());
-                }
+            @Override
+            public void onError(Throwable e) {
+                System.out.println("Error:" + e.getMessage());
+            }
 
-                @Override
-                public void onNext(String s) {
-                    System.out.println(s);
-                }
-            });
-            
+            @Override
+            public void onNext(String s) {
+                System.out.println(s);
+            }
+        });
+```
+          
 程序输出：
 
 	小区名:竹园新村, 经纬度:(21.827, 23.323)
@@ -242,56 +242,58 @@ join操作符的效果类似于排列组合，把第一个数据源A作为基座
 
 读懂了上面的文字，我们再来写段代码加深理解。
 
-    final List<House> houses = DataSimulator.getHouses();//模拟的房源数据，用于测试
+```java
+final List<House> houses = DataSimulator.getHouses();//模拟的房源数据，用于测试
 
-    //用来每秒从houses总取出一套房源并发射出去
-    Observable<House> houseSequence =
-            Observable.interval(1, TimeUnit.SECONDS)
-                    .map(new Func1<Long, House>() {
-                        @Override
-                        public House call(Long position) {
-                            return houses.get(position.intValue());
-                        }
-                    }).take(houses.size());//这里的take是为了防止houses.get(position.intValue())数组越界
+//用来每秒从houses总取出一套房源并发射出去
+Observable<House> houseSequence =
+        Observable.interval(1, TimeUnit.SECONDS)
+                .map(new Func1<Long, House>() {
+                    @Override
+                    public House call(Long position) {
+                        return houses.get(position.intValue());
+                    }
+                }).take(houses.size());//这里的take是为了防止houses.get(position.intValue())数组越界
 
-    //用来实现每秒发送一个新的Long型数据
-    Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
+//用来实现每秒发送一个新的Long型数据
+Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
 
-    houseSequence.join(tictoc,
-            new Func1<House, Observable<Long>>() {
-                @Override
-                public Observable<Long> call(House house) {
-                    return Observable.timer(2, TimeUnit.SECONDS);
-                }
-            },
-            new Func1<Long, Observable<Long>>() {
-                @Override
-                public Observable<Long> call(Long aLong) {
-                    return Observable.timer(0, TimeUnit.SECONDS);
-                }
-            },
-            new Func2<House, Long, String>() {
-                @Override
-                public String call(House house, Long aLong) {
-                    return aLong + "-->" + house.getDesc();
-                }
+houseSequence.join(tictoc,
+        new Func1<House, Observable<Long>>() {
+            @Override
+            public Observable<Long> call(House house) {
+                return Observable.timer(2, TimeUnit.SECONDS);
             }
-    ).subscribe(new Observer<String>() {
-        @Override
-        public void onCompleted() {
-            System.exit(0);
+        },
+        new Func1<Long, Observable<Long>>() {
+            @Override
+            public Observable<Long> call(Long aLong) {
+                return Observable.timer(0, TimeUnit.SECONDS);
+            }
+        },
+        new Func2<House, Long, String>() {
+            @Override
+            public String call(House house, Long aLong) {
+                return aLong + "-->" + house.getDesc();
+            }
         }
+).subscribe(new Observer<String>() {
+    @Override
+    public void onCompleted() {
+        System.exit(0);
+    }
 
-        @Override
-        public void onError(Throwable e) {
-            System.out.println("Error:"+e.getMessage());
-        }
+    @Override
+    public void onError(Throwable e) {
+        System.out.println("Error:"+e.getMessage());
+    }
 
-        @Override
-        public void onNext(String s) {
-            System.out.println(s);
-        }
-    });
+    @Override
+    public void onNext(String s) {
+        System.out.println(s);
+    }
+});
+```
 
 程序输出：
 
