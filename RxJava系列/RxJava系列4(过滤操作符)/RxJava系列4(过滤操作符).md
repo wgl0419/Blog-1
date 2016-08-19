@@ -178,7 +178,7 @@ Observable.just(2, 1, 2, 2, 3, 4, 3, 4, 5, 5)
                 System.out.print(i + " ");
             }
         });
-```java
+```
       
 程序输出：
 	
