@@ -31,7 +31,7 @@
 Rx是微软.Net的一个响应式扩展，Rx借助可观测的序列提供一种简单的方式来创建异步的，基于事件驱动的程序。2012年Netflix为了应对不断增长的业务需求开始将.NET Rx迁移到JVM上面。并于13年二月份正式向外展示了RxJava。
 从语义的角度来看，RxJava就是.NET Rx。从语法的角度来看，Netflix考虑到了对应每个Rx方法,保留了Java代码规范和基本的模式。
 
-![RxJava来历](RxJava来历.png)
+![RxJava来历](http://ocjtywvav.bkt.clouddn.com/rxjava/1/RxJava%E6%9D%A5%E5%8E%86.png)
 
 ###什么是RxJava
 
@@ -107,3 +107,4 @@ Observable.from(getCommunitiesFromServer())
 简洁！有美感！这才是一个有情怀的程序员应该写出来的代码。
 
 看完这篇文章大家应该能够理解RxJava为什么会越来越火了。它能极大的提高我们的开发效率和代码的可读性！当然了RxJava的学习曲线也是比较陡的，在后面的文章我会对主要的知识点做详细的介绍，敬请关注！
+

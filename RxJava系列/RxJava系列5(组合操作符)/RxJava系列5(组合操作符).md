@@ -15,7 +15,7 @@
 ###Merge
 **`merge(Observable, Observable)`**将两个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。你可以简单的将它理解为两个Obsrvable合并成了一个Observable，合并后的数据是无序的。
 
-![merge(Observable, Observable)](MergeOperator.png)
+![merge(Observable, Observable)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/MergeOperator.png)
 
 我们看下面的例子，一共有两个Observable：一个用来发送字母，另一个用来发送数字；现在我们需要两连个Observable发射的数据合并。
 
@@ -55,15 +55,16 @@ Observable.merge(letterSequence, numberSequence)
 	A 0 B C 1 D E 2 F 3 G H 4 
 
 **`merge(Observable[])`**将多个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。
-![merge(Observable[])](MergeIOOperator.png)
+
+![merge(Observable[])](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/MergeIOOperator.png)
 
 ###StartWith
 **`startWith(T)`**用于在源Observable发射的数据前插入数据。使用**`startWith(Iterable<T>)`**我们还可以在源Observable发射的数据前插入Iterable。官方示意图：
-![startWith(T) startWith(Iterable<T>)](StartWithOperator.png)
+![startWith(T) startWith(Iterable<T>)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/StartWithOperator.png)
 
 **`startWith(Observable<T>)`**用于在源Observable发射的数据前插入另一个Observable发射的数据（这些数据会被插入到
 源Observable发射数据的前面）。官方示意图：
-![startWith(Observable<T>)](StartWithOOperator.png)
+![startWith(Observable<T>)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/StartWithOOperator.png)
 
 ###Concat
 **`concat(Observable<? extends T>, Observable<? extends T>)`** **`concat(Observable<？ extends Observable<T>>`)**用于将多个obserbavle发射的的数据进行合并发射，concat严格按照顺序发射数据，前一个Observable没发射玩是不会发射后一个Observable的数据的。它和merge、startWitch和相似，不同之处在于：
@@ -71,7 +72,7 @@ Observable.merge(letterSequence, numberSequence)
 1. merge:合并后发射的数据是无序的；
 2. startWitch:只能在源Observable发射的数据前插入数据。
 
-![concat(Observable<? extends T>, Observable<? extends T>)、concat(Observable<？ extends Observable<T>>)](ConcatOperator.png)
+![concat(Observable<? extends T>, Observable<? extends T>)、concat(Observable<？ extends Observable<T>>)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/ConcatOperator.png)
 
 这里我们将前面Merge操作符的例子拿过来，并将操作符换成`Concat`，然后我们看看执行结果：
 
@@ -112,7 +113,7 @@ Observable.concat(letterSequence, numberSequence)
 
 ###Zip
 **`zip(Observable, Observable, Func2)`**用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。当其中一个Observable发送数据结束或者出现异常后，另一个Observable也将停在发射数据。
-![zip(Observable, Observable, Func2)](ZipOperator.png)
+![zip(Observable, Observable, Func2)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/ZipOperator.png)
 
 和前面的例子一样，我们将操作符换成了`zip`:
 
@@ -157,10 +158,10 @@ Observable.zip(letterSequence, numberSequence, new Func2<String, Long, String>()
 
 ###CombineLatest
 **`comnineLatest(Observable, Observable, Func2)`**用于将两个Observale最近发射的数据已经Func2函数的规则进展组合。下面是官方提供的原理图：
-![comnineLatest(Observable, Observable, Func2)](CombineLatestOperator.png)
+![comnineLatest(Observable, Observable, Func2)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/CombineLatestOperator.png)
 
 下面这张图应该更容易理解：
-![comnineLatest(Observable, Observable, Func2)](CombineLatest.png)
+![comnineLatest(Observable, Observable, Func2)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/CombineLatest.png)
 
 ```java
 List<String> communityNames = DataSimulator.getCommunityNames();
@@ -223,7 +224,7 @@ Observable.combineLatest(
 的小Observable所发射的数据。
 
 结合下面的原理图大家应该很容易理解，我们可以看到下图中的黄色圆圈就被丢弃了。
-![switchOnNext(Observable<? extends Observable<? extends T>>)](SwitchOnNextOperator.png)
+![switchOnNext(Observable<? extends Observable<? extends T>>)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/SwitchOnNextOperator.png)
 
 ###Join
 **`join(Observable, Func1, Func1, Func2)`**我们先介绍下join操作符的4个参数：
@@ -238,7 +239,7 @@ Observable.combineLatest(
 join操作符的效果类似于排列组合，把第一个数据源A作为基座窗口，他根据自己的节奏不断发射数据元素，第二个数据源B，每发射一个数据，我们都把它和第一个数据源A中已经发射的数据进行一对一匹配；举例来说，如果某一时刻B发射了一个数据“B”,此时A已经发射了0，1，2，3共四个数据，那么我们的合并操作就会把“B”依次与0,1,2,3配对，得到四组数据： `[0, B]` `[1, B]` `[2, B]` `[3, B]`
 
 再看看下面的图是不是好理解了呢？！
-![join(Observable, Func1, Func1, Func2)](JoinOperator.png)
+![join(Observable, Func1, Func1, Func2)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/merge/JoinOperator.png)
 
 读懂了上面的文字，我们再来写段代码加深理解。
 
