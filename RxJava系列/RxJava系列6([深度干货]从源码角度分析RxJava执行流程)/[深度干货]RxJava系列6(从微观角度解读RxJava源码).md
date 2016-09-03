@@ -23,7 +23,7 @@
 
 ##一、RxJava执行流程分析
 
-在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中我们就介绍过，一个RxJava中最基本的调用是这样的：
+在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中我们介绍过，一个RxJava中最基本的调用是这样的：
 
 **示例A**
 
@@ -87,11 +87,11 @@ public static <T> Observable.OnSubscribe<T> onCreate(Observable.OnSubscribe<T> o
 
 由于我们并没调用`RxJavaHooks.initCreate()`，所以上面代码中的`onObservableCreate`为null；因此`RxJavaHooks.onCreate(f)`最终返回的就是`f`，也就是我们在`Observable.create()`的时候new出来的`OnSubscribe`。（*由于对RxJavaHooks的理解并不影响我们对RxJava执行流程的分析，因此在这里我们不做进一步的探讨。为了方便理解我们只需要知道RxJavaHooks一系列方法的返回值就是入参本身就OK了，例如这里的`RxJavaHooks.onCreate(f)`返回的就是`f`*）。
 
-至此我们做下逻辑梳理：**`Observable.create()`方法构造了一个被观察者`Observable`对象，同时将new出来的`OnSubscribe`赋值给了该Observable的成员变量`onSubscribe`。**
+至此我们做下逻辑梳理：**`Observable.create()`方法构造了一个被观察者`Observable`对象，同时将new出来的`OnSubscribe`赋值给了该`Observable`的成员变量`onSubscribe`。**
 
 ###2、Subscriber源码分析
 
-接着我们看下观察者Subscriber的源码，为了增加可读性，我去掉了源码中的注释和部分代码。
+接着我们看下观察者`Subscriber`的源码，为了增加可读性，我去掉了源码中的注释和部分代码。
 
 ```java
 public abstract class Subscriber<T> implements Observer<T>, Subscription {
@@ -313,7 +313,7 @@ public final <R> Observable<R> map(Func1<? super T, ? extends R> func) {
 }
 ```
 
-通过查看源码我们发现调用`map()`的时候实际上是创建了一个新的被观察者`Observable`，我们姑且称它为**ObservableB**；一开始通过`Observable.create()`创建的`Observable`我们称之为**ObservableA**。在创建**ObservableB**的时候同时创建了一个`OnSubscribeMap`，而**ObservableA**和变换函数Func1则作为构造`OnSubscribeMap`的参数。
+通过查看源码我们发现调用`map()`的时候实际上是创建了一个新的被观察者`Observable`，我们姑且称它为`ObservableB`；一开始通过`Observable.create()`创建的`Observable`我们称之为`ObservableA`。在创建`ObservableB`的时候同时创建了一个`OnSubscribeMap`，而`ObservableA`和变换函数`Func1`则作为构造`OnSubscribeMap`的参数。
 
 
 ```java
@@ -329,7 +329,7 @@ public final class OnSubscribeMap<T, R> implements OnSubscribe<R> {
     }
     
     @Override
-    public void call(final Subscriber<? super R> o) {//结合第一小节的分析结果，我们知道这里的入参o其实就是我们自己new的观察者subscriber。
+    public void call(final Subscriber<? super R> o) {//结合第一小节的分析结果，我们知道这里的入参o其实就是我们自己new的观察者subscriberOne。
         MapSubscriber<T, R> parent = new MapSubscriber<T, R>(o, transformer);
         o.add(parent);
         source.unsafeSubscribe(parent);
@@ -380,7 +380,7 @@ public final class OnSubscribeMap<T, R> implements OnSubscribe<R> {
 }
 ```
 
-`OnSubscribeMap`实现了`OnSubscribe`接口，因此`OnSubscribeMap`就是一个`OnSubscribe`。在调用`map()`的时候创建了一个新的被观察者`ObservableB`，然后我们用`ObservableB.subscribe(subscriber)`订阅了观察者`subscriber`。结合我们在第一小节的分析结果，所以`OnSubscribeMap.call()`中的`subscriber`就是`subscribe(subscriber)`中的`subscriber`；一旦调用了`ObservableB.subscribe(subscriber)`就会执行`OnSubscribeMap.call()`。
+`OnSubscribeMap`实现了`OnSubscribe`接口，因此`OnSubscribeMap`就是一个`OnSubscribe`。在调用`map()`的时候创建了一个新的被观察者`ObservableB`，然后我们用`ObservableB.subscribe(subscriberOne)`订阅了观察者`subscriberOne`。结合我们在第一小节的分析结果，所以`OnSubscribeMap.call(o)`中的`o`就是`subscribe(subscriberOne)`中的`subscriberOne`；一旦调用了`ObservableB.subscribe(subscriberOne)`就会执行`OnSubscribeMap.call()`。
 
 在`call()`方法中，首先通过我们的观察者`o`和转换函数`transformer`构造了一个`MapSubscriber`，最后调用了`source`也就是`observableA`的`unsafeSubscribe()`方法。即`observableA`订阅了一个观察者`MapSubscriber`。
 
@@ -396,7 +396,7 @@ public final Subscription unsafeSubscribe(Subscriber<? super T> subscriber) {
     }
 }
 ```
-上面这段代码最终执行了`onSubscribe`也就是`OnSubscribeMap`的`call()`方法，`call()`方法中的参数就是之前在`OnSubscribeMap.call()`中new出来的`MapSubscriber`。最后在`call()`方法中执行了我们自己写的两行代码：
+上面这段代码最终执行了`onSubscribe`也就是`OnSubscribeMap.call()`，`call()`方法中的参数就是之前在`OnSubscribeMap.call()`中new出来的`MapSubscriber`。最后在`call()`方法中执行了我们自己的业务代码：
 
 ```java
 subscriber.onNext(1);
@@ -417,7 +417,7 @@ public void onNext(T t) {
     actual.onNext(result);
 }
 ```
-`onNext(T t)`方法中的的`mapper`就是变换函数，`actual`就是我们在调用`subscribe()`时创建的观察者`subscriberOne`。这个`T`就是我们例子中的`Integer`，`R`就是`String`。在`onNext()`中首先调用变换函数`mapper.call()`将`T`转换成`R`。在我们的例子中就是将`Integer`类型的**1**转换成了`String`类型的**“This is 1”**；接着调用观察者`subscriberOne.onNext(String result)`。同样我们在调用`MapSubscriber.onCompleted()`时会执行`subscriberOne.onCompleted()`。这样就完成了一直完成的调用流程。
+`onNext(T t)`方法中的的`mapper`就是变换函数，`actual`就是我们在调用`subscribe()`时创建的观察者`subscriberOne`。这个`T`就是我们例子中的`Integer`，`R`就是`String`。在`onNext()`中首先调用变换函数`mapper.call()`将`T`转换成`R`。在我们的例子中就是将`Integer`类型的**1**转换成了`String`类型的**“This is 1”**；接着调用`subscriberOne.onNext(String result)`。同样在调用`MapSubscriber.onCompleted()`时会执行`subscriberOne.onCompleted()`。这样就完成了一直完成的调用流程。
 
 我承认太啰嗦了，花费了这么大的篇幅才将`map()`的转换原理解释清楚。我也是希望尽量的将每个细节都呈现出来方便大家理解，如果看我啰嗦了这么久还是没能理解，请看下面我画的这张执行流程图。
 
@@ -426,7 +426,7 @@ public void onNext(T t) {
 ##三、线程调度源码解析
 在前面的文章中我介绍过RxJava可以很方便的通过`subscribeOn()`和`observeOn()`来指定数据流的每一部分运行在哪个线程。其中`subscribeOn()`指定了处理`Observable`的全部的过程(包括发射数据和通知)的线程；`observeOn()`指定了观察者的`onNext()`, `onError()`和`onCompleted()`执行的线程。接下来我们就分析分析源码，看看线程调度是如何实现的。
 
-在分析源码前我们先看看一断常见的线程线程调度的代码：
+在分析源码前我们先看看一段常见的通过RxJava实现的线程调度代码：
 
 **示例C**
 ```java
@@ -437,7 +437,7 @@ Observable.create(new Observable.OnSubscribe<String>() {
         subscriber.onCompleted();
     }
 }).subscribeOn(Schedulers.io())
-.observeOn(Schedulers.newThread())
+.observeOn(AndroidSchedulers.mainThread())
 .subscribe(new Subscriber<String>() {
     @Override
     public void onCompleted() {
@@ -537,16 +537,17 @@ public final class OperatorSubscribeOn<T> implements OnSubscribe<T> {
 }
 ```
 
-`OperatorSubscribeOn`实现了`OnSubscribe`接口，`call()`中对`Subscriber`的处理也和OperatorMap对Subscriber的处理类似。首先通过scheduler构建了一个Worker；然后用传进来的subscriber构造了一个新的Subscriber `s`，并将`s`丢到Worker.schedule()中来处理；最后用原Observable去订阅观察者`s`。而这个Worker就是线程调度的关键。前面的例子中我们通过`subscribeOn(Schedulers.io())`指定了Observable发射处理事件以及通知观察者的一系列操作的执行线程，正是通过这个`Schedulers.io()`创建了我们前面提到的Worker。所以我们来看看`Schedulers.io()`的实现。
+`OperatorSubscribeOn`实现了`OnSubscribe`接口，`call()`中对`Subscriber`的处理也和`OperatorMap`对`Subscriber`的处理类似。首先通过`scheduler`构建了一个`Worker`；然后用传进来的`subscriber`构造了一个新的`Subscriber s`，并将`s`丢到`Worker.schedule()`中来处理；最后用原`Observable`去订阅观察者`s`；而这个`Worker`就是线程调度的关键。前面的例子中我们通过`subscribeOn(Schedulers.io())`指定了`Observable`发射处理事件以及通知观察者的一系列操作的执行线程，正是通过这个`Schedulers.io()`创建了我们前面提到的`Worker`。所以我们来看看`Schedulers.io()`的实现。
 
-首先通过`Schedulers.io()`获得了`ioScheduler`并返回，上面的`OperatorSubscribeOn`通过这个的Scheduler的`createWorker()`方法创建了我们前面提到的Worker。
+首先通过`Schedulers.io()`获得了`ioScheduler`并返回，上面的`OperatorSubscribeOn`通过这个的`Scheduler`的`createWorker()`方法创建了我们前面提到的`Worker`。
+
 ```java
 public static Scheduler io() {
     return RxJavaHooks.onIOScheduler(getInstance().ioScheduler);
 }
 ```
 
-接着我们看看这个`ioScheduler`是怎么来的，下面的代码向我们展现了是如何在Schedulers的构造函数中通过`RxJavaSchedulersHook.createIoScheduler()`初始化`ioScheduler`的。
+接着我们看看这个`ioScheduler`是怎么来的，下面的代码向我们展现了是如何在`Schedulers`的构造函数中通过`RxJavaSchedulersHook.createIoScheduler()`初始化`ioScheduler`的。
 
 ```java
 private Schedulers() {
@@ -587,7 +588,7 @@ public Worker createWorker() {
 }
 ```
 
-上面的代码向我们赤裸裸的呈现了前面`OperatorSubscribeOn`中的Worker其实就是`EventLoopWorker`。我们重点要关注的是他的`scheduleActual()`。
+上面的代码向我们赤裸裸的呈现了前面`OperatorSubscribeOn`中的`Worker`其实就是`EventLoopWorker`。我们重点要关注的是他的`scheduleActual()`。
 
 ```java
 static final class EventLoopWorker extends Scheduler.Worker implements Action0 {
@@ -623,7 +624,7 @@ static final class EventLoopWorker extends Scheduler.Worker implements Action0 {
 }
 ```
 
-通过对源码的一步步追踪，我们知道了前面`OperatorSubscribeOn.call()`中的`inner.schedule()`最终会执行到ThreadWorker的`scheduleActual()`方法。
+通过对源码的一步步追踪，我们知道了前面`OperatorSubscribeOn.call()`中的`inner.schedule()`最终会执行到`ThreadWorker`的`scheduleActual()`方法。
 
 ```java
 public ScheduledAction scheduleActual(final Action0 action, long delayTime, TimeUnit unit) {
@@ -643,7 +644,7 @@ public ScheduledAction scheduleActual(final Action0 action, long delayTime, Time
 
 ###3.2、observeOn()源码分析。
 
-`observeOn()`切换线程是通过`lift`来实现的，比起`subscribeOn()`在实现原理上相对复杂些。不过本质上最终还是创建了一个新的`Observable`。
+`observeOn()`切换线程是通过`lift`来实现的，相比`subscribeOn()`在实现原理上相对复杂些。不过本质上最终还是创建了一个新的`Observable`。
 
 ```java
 public final Observable<T> observeOn(Scheduler scheduler, boolean delayError, int bufferSize) {
@@ -655,6 +656,7 @@ public final <R> Observable<R> lift(final Operator<? extends R, ? super T> opera
     return create(new OnSubscribeLift<T, R>(onSubscribe, operator));
 }
 ```
+
 `OperatorObserveOn`作为`OnSubscribeLift`构造函数的参数用来创建了一个新的`OnSubscribeLift`对象，接下来我们看看`OnSubscribeLift`的实现：
 
 ```java
@@ -687,6 +689,7 @@ public final class OnSubscribeLift<T, R> implements OnSubscribe<R> {
     }
 }
 ```
+
 `OnSubscribeLift`继承自`OnSubscribe`，通过前面的分析我们知道一旦调用了`subscribe()`将观察者与被观察绑定后就会触发被观察者所对应的`OnSubscribe`的`call()`方法，所以这里会触发`OnSubscribeLift.call()`。在`call()`中调用了`OperatorObserveOn.call()`并返回了一个新的观察者`Subscriber st`，接着调用了前一级`Observable`对应`OnSubscriber.call(st)`。
 
 我们再看看`OperatorObserveOn.call()`的实现：
@@ -784,9 +787,10 @@ static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Actio
     ...
 }
 ```
-`ObserveOnSubscriber`继承自`Subscriber`，并实现了`Action0`接口。我们看到`ObserveOnSubscriber`的`onNext()`、`onCompleted()`、`onError()`都有个`schedule()`，这个方法就是我们线程调度的关键；通过`schedule()`将新观察者`ObserveOnSubscriber`发送给`observerOne`的所有事件都切换到了`recursiveScheduler`所对应的线程，简单的说就是把`observerOne`的`onNext()`、`onCompleted()`、`onError()`方法丢到了`recursiveScheduler`对应的线程中来执行。
 
-那么`schedule()`又是如何做到这一点的呢？他内部调用了`recursiveScheduler.schedule(this)`，`recursiveScheduler`其实就是一个`Worker`，和我们在介绍`subscribeOn()`提到的worker一样，执行`schedule()`实际上最终是创建了一个`runable`，然后把这个`runnable`丢到了特定的线程池中去执行。在`runnable`的`run()`方法中调用了`ObserveOnSubscriber.call()`，看上面的代码大家就会发现在`call()`方法中最终调用了`observerOne`的`onNext()`、`onCompleted()`、`onError()`方法。这便是它实现线程切换的原理。
+`ObserveOnSubscriber`继承自`Subscriber`，并实现了`Action0`接口。我们看到`ObserveOnSubscriber`的`onNext()`、`onCompleted()`、`onError()`都有个`schedule()`，这个方法就是我们线程调度的关键；通过`schedule()`将新观察者`ObserveOnSubscriber`发送给`subscriberOne`的所有事件都切换到了`recursiveScheduler`所对应的线程，简单的说就是把`subscriberOne`的`onNext()`、`onCompleted()`、`onError()`方法丢到了`recursiveScheduler`对应的线程中来执行。
+
+那么`schedule()`又是如何做到这一点的呢？他内部调用了`recursiveScheduler.schedule(this)`，`recursiveScheduler`其实就是一个`Worker`，和我们在介绍`subscribeOn()`提到的`worker`一样，执行`schedule()`实际上最终是创建了一个`runable`，然后把这个`runnable`丢到了特定的线程池中去执行。在`runnable`的`run()`方法中调用了`ObserveOnSubscriber.call()`，看上面的代码大家就会发现在`call()`方法中最终调用了`subscriberOne`的`onNext()`、`onCompleted()`、`onError()`方法。这便是它实现线程切换的原理。
 
 好了，我们最后再看看**示例C**对应的执行流程图，帮助大家加深理解。
 
@@ -794,7 +798,7 @@ static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Actio
 
 
 ##总结
-这一章以微观的角度从执行流程、操作符、线程调度三个方面剖析了RxJava源码。下一章将以更宏观的角度来分析整个RxJava的框架结构、设计思想。
+这一章以微观的角度从执行流程、操作符实现以及线程调度三个方面剖析了RxJava源码。下一章将以更宏观的角度来分析整个RxJava的框架结构、设计思想。
 
 > 如果大家喜欢我这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
 >   
