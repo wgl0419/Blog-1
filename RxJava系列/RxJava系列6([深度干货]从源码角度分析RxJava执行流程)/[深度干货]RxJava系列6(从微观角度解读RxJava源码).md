@@ -790,11 +790,11 @@ static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Actio
 
 `ObserveOnSubscriber`继承自`Subscriber`，并实现了`Action0`接口。我们看到`ObserveOnSubscriber`的`onNext()`、`onCompleted()`、`onError()`都有个`schedule()`，这个方法就是我们线程调度的关键；通过`schedule()`将新观察者`ObserveOnSubscriber`发送给`subscriberOne`的所有事件都切换到了`recursiveScheduler`所对应的线程，简单的说就是把`subscriberOne`的`onNext()`、`onCompleted()`、`onError()`方法丢到了`recursiveScheduler`对应的线程中来执行。
 
-那么`schedule()`又是如何做到这一点的呢？他内部调用了`recursiveScheduler.schedule(this)`，`recursiveScheduler`其实就是一个`Worker`，和我们在介绍`subscribeOn()`提到的`worker`一样，执行`schedule()`实际上最终是创建了一个`runable`，然后把这个`runnable`丢到了特定的线程池中去执行。在`runnable`的`run()`方法中调用了`ObserveOnSubscriber.call()`，看上面的代码大家就会发现在`call()`方法中最终调用了`subscriberOne`的`onNext()`、`onCompleted()`、`onError()`方法。这便是它实现线程切换的原理。
+那么`schedule()`又是如何做到这一点的呢？他内部调用了`recursiveScheduler.schedule(this)`，`recursiveScheduler`其实就是一个`Worker`，和我们在介绍`subscribeOn()`时提到的`worker`一样，执行`schedule()`实际上最终是创建了一个`runable`，然后把这个`runnable`丢到了特定的线程池中去执行。在`runnable`的`run()`方法中调用了`ObserveOnSubscriber.call()`，看上面的代码大家就会发现在`call()`方法中最终调用了`subscriberOne`的`onNext()`、`onCompleted()`、`onError()`方法。这便是它实现线程切换的原理。
 
 好了，我们最后再看看**示例C**对应的执行流程图，帮助大家加深理解。
 
-![RxJava执行流程](OperatorProcess3.jpg)
+![RxJava执行流程](OperatorProcess.jpg)
 
 
 ##总结
