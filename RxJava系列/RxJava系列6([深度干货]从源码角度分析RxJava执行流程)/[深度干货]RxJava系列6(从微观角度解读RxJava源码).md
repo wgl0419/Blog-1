@@ -1,4 +1,4 @@
-##[深度干货]RxJava系列6(从微观角度解读RxJava源码)
+#[深度干货]RxJava系列6(从微观角度解读RxJava源码)
 > 转载请注明出处：[]()
 
 * [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)
@@ -12,7 +12,7 @@
 
 ***
 
-###前言
+##前言
 通过前面五个篇幅的介绍，大家对RxJava的基本使用以及操作符应该有了一定的认识。但是知其然还要知其所以然，所以从这一章开始我们解读源码，分析RxJava的实现原理。本文我们主要从三个方面来分析RxJava的源码实现：
 
 * RxJava基本流程分析
@@ -21,7 +21,7 @@
 
 > 本章节基于**RxJava1.1.9**版本的源码
 
-###一、RxJava执行流程分析
+##一、RxJava执行流程分析
 
 在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中我们就介绍过，一个RxJava中最基本的调用是这样的：
 
@@ -49,23 +49,23 @@ Observable.create(new Observable.OnSubscribe<String>() {
 });
 ```
 
-首先调用Observable的create()方法创建一个被观察者Observable，同时创建一个OnSubscribe对象作为create()方法的入参；接着创建一个观察者Subscriber，然后通过subseribe()实现二者的订阅关系。这里涉及到三个关键对象和一个核心的方法：
+首先调用`Observable.create()`创建一个被观察者`Observable`，同时创建一个`OnSubscribe`作为`create()`方法的入参；接着创建一个观察者`Subscriber`，然后通过`subseribe()`实现二者的订阅关系。这里涉及到三个关键对象和一个核心的方法：
 
-* Observable（被观察者）
-* OnSubscribe
-* Subscriber （观察者）
-* subscribe() （实现观察者与被观察者订阅关系的方法）
+* **Observable**（被观察者）
+* **OnSubscribe**
+* **Subscriber** （观察者）
+* **subscribe()** （实现观察者与被观察者订阅关系的方法）
 
-####1、Observable.create()源码分析
+###1、Observable.create()源码分析
 
-首先我们来看下Observable.create()的源码:
+首先我们来看看`Observable.create()`的实现:
 
 ```java
 public static <T> Observable<T> create(OnSubscribe<T> f) {
 	return new Observable<T>(RxJavaHooks.onCreate(f));
 }
 ```
-这里new了一个Observable,同时将`RxJavaHooks.onCreate(f)`作为构造函数的参数，源码如下：
+这里创建了一个被观察者`Observable`，同时将`RxJavaHooks.onCreate(f)`作为构造函数的参数，源码如下：
 
 ```java
 protected Observable(OnSubscribe<T> f) {
@@ -73,7 +73,7 @@ protected Observable(OnSubscribe<T> f) {
 }
 ```
 
-我们看到源码中直接将参数`RxJavaHooks.onCreate(f)`赋值给了当前我们构造的被观察者Observable的成员变量`onSubscribe`。那么`RxJavaHooks.onCreate(f)`返回的又是什么呢？我们接着追踪源码：
+我们看到源码中直接将参数`RxJavaHooks.onCreate(f)`赋值给了当前我们构造的被观察者`Observable`的成员变量`onSubscribe`。那么`RxJavaHooks.onCreate(f)`返回的又是什么呢？我们接着往下看：
 
 ```java
 public static <T> Observable.OnSubscribe<T> onCreate(Observable.OnSubscribe<T> onSubscribe) {
@@ -85,11 +85,11 @@ public static <T> Observable.OnSubscribe<T> onCreate(Observable.OnSubscribe<T> o
 }
 ```
 
-由于我们并没调用`RxJavaHooks.initCreate()`，所以上面代码中的`onObservableCreate`为null；因此`RxJavaHooks.onCreate(f)`最终返回的就是`f`，也就是我们在`Observable.create()`的时候new出来的OnSubscribe。（*由于对RxJavaHooks的理解并不影响我们对RxJava执行流程的分析，因此在这里我们不做进一步的探讨。为了方便理解我们只需要知道RxJavaHooks一系列方法的返回值就是入参本身就OK了，例如这里的`RxJavaHooks.onCreate(f)`返回的就是`f*）。
+由于我们并没调用`RxJavaHooks.initCreate()`，所以上面代码中的`onObservableCreate`为null；因此`RxJavaHooks.onCreate(f)`最终返回的就是`f`，也就是我们在`Observable.create()`的时候new出来的`OnSubscribe`。（*由于对RxJavaHooks的理解并不影响我们对RxJava执行流程的分析，因此在这里我们不做进一步的探讨。为了方便理解我们只需要知道RxJavaHooks一系列方法的返回值就是入参本身就OK了，例如这里的`RxJavaHooks.onCreate(f)`返回的就是`f`*）。
 
-至此我们做下逻辑梳理：**`Observable.create()`方法构造了一个被观察者Observable对象，同时将new出来的OnSubscribe赋值给了该Observable的成员变量`onSubscribe`。**
+至此我们做下逻辑梳理：**`Observable.create()`方法构造了一个被观察者`Observable`对象，同时将new出来的`OnSubscribe`赋值给了该Observable的成员变量`onSubscribe`。**
 
-####2、Subscriber源码分析
+###2、Subscriber源码分析
 
 接着我们看下观察者Subscriber的源码，为了增加可读性，我去掉了源码中的注释和部分代码。
 
@@ -103,13 +103,7 @@ public abstract class Subscriber<T> implements Observer<T>, Subscription {
     private Producer producer;
     private long requested = NOT_SET;
 
-    protected Subscriber() {
-        this(null, false);
-    }
-
-    protected Subscriber(Subscriber<?> subscriber) {
-        this(subscriber, true);
-    }
+    ...
 
     protected Subscriber(Subscriber<?> subscriber, boolean shareSubscriptions) {
         this.subscriber = subscriber;
@@ -195,10 +189,10 @@ public interface Subscription {
 }
 ```
 
-Subscriber实现了Subscription接口，从而对外提供isUnsubscribed()和unsubscribe()方法。前者用于判断是否已经取消订阅；后者用于将订阅事件列表(也就是当前观察者的成员变量subscriptions)中的所有Subscription取消订阅，并且不再接受观察者Observable发送的后续事件。
+`Subscriber`实现了`Subscription`接口，从而对外提供`isUnsubscribed()`和`unsubscribe()`方法。前者用于判断是否已经取消订阅；后者用于将订阅事件列表(*也就是当前观察者的成员变量`subscriptions`*)中的所有`Subscription`取消订阅，并且不再接受观察者`Observable`发送的后续事件。
 
-####3、subscribe()源码分析
-前面我们分析了观察者和被观察者相关的源码，现在是整个订阅流程中最最关键的环节了。
+###3、subscribe()源码分析
+前面我们分析了观察者和被观察者相关的源码，那么接下来便是整个订阅流程中最最关键的环节了。
 
 ```java
 public final Subscription subscribe(Subscriber<? super T> subscriber) {
@@ -227,21 +221,22 @@ static <T> Subscription subscribe(Subscriber<? super T> subscriber, Observable<T
     }
 }
 ```
-subscribe()方法中将传进来的subscriber包装成了SafeSubscriber，SafeSubscriber其实是subscriber的一个代理，对subscriber的一系列方法做了更加严格的安全校验。保证了onCompleted()和onError()只会有一个被执行且只执行一次，一旦它们其中方法被执行过后onNext()就不在执行了。
 
-上述代码中最关键的就是`RxJavaHooks.onObservableStart(observable, observable.onSubscribe).call(subscriber)`。这里的RxJavaHooks和之前提到的一样，`RxJavaHooks.onObservableStart(observable, observable.onSubscribe)`返回的正是他的第二个入参`observable.onSubscribe`，也就是当前observable的成员变量onSubscribe。而这个成员变量我们前面提到过，它是我们在`Observable.create()`的时候new出来的。所以这段代码可以简化为`onSubscribe.call(subscriber)`。这也印证了我在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中说的，onSubscribe.call(subscriber)中的subscriber正是我们在subscribe()方法中new出来的观察者。
+`subscribe()`方法中将传进来的`subscriber`包装成了`SafeSubscriber`，`SafeSubscriber`其实是`subscriber`的一个代理，对`subscriber`的一系列方法做了更加严格的安全校验。保证了`onCompleted()`和`onError()`只会有一个被执行且只执行一次，一旦它们其中方法被执行过后`onNext()`就不在执行了。
 
-到这里，我们对RxJava的执行流程做个总结：首先我们调用crate()创建一个观察者，同时创建一个OnSubscribe作为该方法的入参；接着调用subscribe()来订阅我们自己创建的观察者Subscriber。
-一旦调用subscribe()方法后就会触发执行OnSubscribe的call方法。然后我们就可以在call方法调用观察者subscriber的`onNext()`,`onCompleted()`,`onError()`。
+上述代码中最关键的就是`RxJavaHooks.onObservableStart(observable, observable.onSubscribe).call(subscriber)`。这里的RxJavaHooks和之前提到的一样，`RxJavaHooks.onObservableStart(observable, observable.onSubscribe)`返回的正是他的第二个入参`observable.onSubscribe`，也就是当前`observable`的成员变量`onSubscribe`。而这个成员变量我们前面提到过，它是我们在`Observable.create()`的时候new出来的。所以这段代码可以简化为`onSubscribe.call(subscriber)`。这也印证了我在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中说的，`onSubscribe.call(subscriber)`中的`subscriber`正是我们在`subscribe()`方法中new出来的观察者。
+
+到这里，我们对RxJava的执行流程做个总结：首先我们调用`crate()`创建一个观察者，同时创建一个`OnSubscribe`作为该方法的入参；接着调用`subscribe()`来订阅我们自己创建的观察者`Subscriber`。
+一旦调用`subscribe()`方法后就会触发执行`OnSubscribe.call()`。然后我们就可以在call方法调用观察者`subscriber`的`onNext()`,`onCompleted()`,`onError()`。
 
 最后我用张图来总结下之前的分析结果：
 
 ![RxJava基本流程分析](CommonOperatorProcess.jpg)
 
-###二、操作符源码分析
-之前我们介绍过几十个操作符，要一一分析它们的源码显然不太现实。在这里我抛砖引玉，选取一个相对简单且常用的`map`操作符来分析源码。
+##二、操作符源码分析
+之前我们介绍过几十个操作符，要一一分析它们的源码显然不太现实。在这里我抛砖引玉，选取一个相对简单且常用的`map`操作符来z做分析。
 
-我们先来看一个map操作符的简单应用：
+我们先来看一个`map`操作符的简单应用：
 
 **示例B**
 
@@ -273,7 +268,7 @@ Observable.create(new Observable.OnSubscribe<Integer>() {
 });
 ```
 
-为了后面分析源码的时候便于表述，我将上面的代码做了如下拆解。
+为了后面分析源码的时候便于表述，我将上面的代码做了如下拆解：
 
 ```java
 Observable<Integer> observableA = Observable.create(new Observable.OnSubscribe<Integer>() {
@@ -284,7 +279,7 @@ Observable<Integer> observableA = Observable.create(new Observable.OnSubscribe<I
     }
 });
 
-Subscriber<String> mSubscriber = new Subscriber<String>() {
+Subscriber<String> subscriberOne = new Subscriber<String>() {
     @Override
     public void onCompleted() {
         System.out.println("onCompleted!");
@@ -307,17 +302,19 @@ Observable<String> observableB =
                 }
             });
 
-observableB.subscribe(mSubscriber);
+observableB.subscribe(subscriberOne);
 ```
 
-map()的源码和上一小节介绍的create()一样位于Observable这个类中。
+`map()`的源码和上一小节介绍的`create()`一样位于`Observable`这个类中。
 
 ```java
 public final <R> Observable<R> map(Func1<? super T, ? extends R> func) {
     return create(new OnSubscribeMap<T, R>(this, func));
 }
 ```
-通过源码我们发现调用map()的时候实际上是创建了一个新的Observable，我们姑且称它为ObservableB；一开始通过Observable.create()创建的Observable我们称之为ObservableA。在创建ObservableB的时候同时创建了一个OnSubscribeMap，而ObservableA和变换函数Func1则作为OnSubscribeMap构造函数的参数。
+
+通过查看源码我们发现调用`map()`的时候实际上是创建了一个新的被观察者`Observable`，我们姑且称它为**ObservableB**；一开始通过`Observable.create()`创建的`Observable`我们称之为**ObservableA**。在创建**ObservableB**的时候同时创建了一个`OnSubscribeMap`，而**ObservableA**和变换函数Func1则作为构造`OnSubscribeMap`的参数。
+
 
 ```java
 public final class OnSubscribeMap<T, R> implements OnSubscribe<R> {
@@ -352,7 +349,6 @@ public final class OnSubscribeMap<T, R> implements OnSubscribe<R> {
         @Override
         public void onNext(T t) {
             R result;
-            
             try {
                 result = mapper.call(t);
             } catch (Throwable ex) {
@@ -361,26 +357,18 @@ public final class OnSubscribeMap<T, R> implements OnSubscribe<R> {
                 onError(OnErrorThrowable.addValueAsLastCause(ex, t));
                 return;
             }
-            
             actual.onNext(result);
         }
         
         @Override
         public void onError(Throwable e) {
-            if (done) {
-                RxJavaHooks.onError(e);
-                return;
-            }
-            done = true;
-            
+            ...
             actual.onError(e);
         }
         
         @Override
         public void onCompleted() {
-            if (done) {
-                return;
-            }
+            ...
             actual.onCompleted();
         }
         
@@ -392,9 +380,9 @@ public final class OnSubscribeMap<T, R> implements OnSubscribe<R> {
 }
 ```
 
-OnSubscribeMap实现了OnSubscribe接口，因此OnSubscribeMap就是一个OnSubscribe。在调用map()的时候创建了一个新的被观察者ObservableB，然后我们用ObservableB.subscribe(subscriber)订阅了观察者subscriber。结合我们在第一小节的分析结果，所以OnSubscribeMap.call()方法中的subscriber就是subscribe(subscriber)中的subscriber；一旦调用了ObservableB.subscribe(subscriber)就会执行OnSubscribeMap的call()方法。
+`OnSubscribeMap`实现了`OnSubscribe`接口，因此`OnSubscribeMap`就是一个`OnSubscribe`。在调用`map()`的时候创建了一个新的被观察者`ObservableB`，然后我们用`ObservableB.subscribe(subscriber)`订阅了观察者`subscriber`。结合我们在第一小节的分析结果，所以`OnSubscribeMap.call()`中的`subscriber`就是`subscribe(subscriber)`中的`subscriber`；一旦调用了`ObservableB.subscribe(subscriber)`就会执行`OnSubscribeMap.call()`。
 
-在call()方法中，首先通过我们的观察者o和转换函数transformer构造了一个MapSubscriber，最后调用了source也就是observableA的unsafeSubscribe()方法。即observableA订阅了一个观察者MapSubscriber。
+在`call()`方法中，首先通过我们的观察者`o`和转换函数`transformer`构造了一个`MapSubscriber`，最后调用了`source`也就是`observableA`的`unsafeSubscribe()`方法。即`observableA`订阅了一个观察者`MapSubscriber`。
 
 ```java
 public final Subscription unsafeSubscribe(Subscriber<? super T> subscriber) {
@@ -408,14 +396,13 @@ public final Subscription unsafeSubscribe(Subscriber<? super T> subscriber) {
     }
 }
 ```
-上面这段代码最终执行了onSubscribe也就是OnSubscribeMap的call()方法，call()方法中的参数就是
-之前在OnSubscribeMap.call()中new出来的MapSubscriber。最后在call()方法中执行了我们自己写的两行代码：
+上面这段代码最终执行了`onSubscribe`也就是`OnSubscribeMap`的`call()`方法，`call()`方法中的参数就是之前在`OnSubscribeMap.call()`中new出来的`MapSubscriber`。最后在`call()`方法中执行了我们自己写的两行代码：
 
 ```java
 subscriber.onNext(1);
 subscriber.onCompleted();
 ```
-其实也就是执行了MapSubscriber的onNext()和onCompleted()。
+其实也就是执行了`MapSubscriber`的`onNext()`和`onCompleted()`。
 
 ```java
 @Override
@@ -430,14 +417,14 @@ public void onNext(T t) {
     actual.onNext(result);
 }
 ```
-onNext(T t)方法中的的mapper就是变换函数，actual就是我们在调用subscribe()时创建的观察者mSubscriber。这个T就是我们例子中的Integer，R就是String。在onNext方法中首先调用变换函数mapper的call()方法将T转换成R。在我们的例子中就是讲Integer类型的1转换成了String类型的“This is 1”；接着调用观察者mSubscriber的onNext(String result)方法。同样我们在调用MapSubscriber的onCompleted()时会执行mSubscriber的onCompleted()。这样就完成了一直完成的调用流程。
+`onNext(T t)`方法中的的`mapper`就是变换函数，`actual`就是我们在调用`subscribe()`时创建的观察者`subscriberOne`。这个`T`就是我们例子中的`Integer`，`R`就是`String`。在`onNext()`中首先调用变换函数`mapper.call()`将`T`转换成`R`。在我们的例子中就是将`Integer`类型的**1**转换成了`String`类型的**“This is 1”**；接着调用观察者`subscriberOne.onNext(String result)`。同样我们在调用`MapSubscriber.onCompleted()`时会执行`subscriberOne.onCompleted()`。这样就完成了一直完成的调用流程。
 
-我承认太啰嗦了，花费了这么大的篇幅才将map()的转换原理解释清楚。我也是希望尽量的将每个细节都呈现出来方便大家理解，如果看我啰嗦了这么久还是没能理解，请看下面我画的这张执行流程图。
+我承认太啰嗦了，花费了这么大的篇幅才将`map()`的转换原理解释清楚。我也是希望尽量的将每个细节都呈现出来方便大家理解，如果看我啰嗦了这么久还是没能理解，请看下面我画的这张执行流程图。
 
 ![加入Map操作符后的执行流程](MapOperatorProcess.jpg)
 
-###三、线程调度源码解析
-在前面的文章中我介绍过RxJava可以很方便的通过subscribeOn()和observeOn()来指定数据流的每一部分运行在哪个线程。其中subscribeOn()指定了处理Observable的全部的过程(包括发射数据和通知)的线程；observeOn()指定了观察者的onNext, onError和onCompleted方法执行的线程。接下来我们就分析分析源码，看看线程调度是如何实现的。
+##三、线程调度源码解析
+在前面的文章中我介绍过RxJava可以很方便的通过`subscribeOn()`和`observeOn()`来指定数据流的每一部分运行在哪个线程。其中`subscribeOn()`指定了处理`Observable`的全部的过程(包括发射数据和通知)的线程；`observeOn()`指定了观察者的`onNext()`, `onError()`和`onCompleted()`执行的线程。接下来我们就分析分析源码，看看线程调度是如何实现的。
 
 在分析源码前我们先看看一断常见的线程线程调度的代码：
 
@@ -446,7 +433,6 @@ onNext(T t)方法中的的mapper就是变换函数，actual就是我们在调用
 Observable.create(new Observable.OnSubscribe<String>() {
     @Override
     public void call(Subscriber<? super String> subscriber) {
-        System.out.println("call ThreadId=" + Thread.currentThread().getId());
         subscriber.onNext("Hello RxJava!");
         subscriber.onCompleted();
     }
@@ -455,7 +441,6 @@ Observable.create(new Observable.OnSubscribe<String>() {
 .subscribe(new Subscriber<String>() {
     @Override
     public void onCompleted() {
-        System.out.println("onNext ThreadId=" + Thread.currentThread().getId());
         System.out.println("completed!");
     }
 
@@ -465,13 +450,12 @@ Observable.create(new Observable.OnSubscribe<String>() {
 
     @Override
     public void onNext(String s) {
-        System.out.println("onNext ThreadId=" + Thread.currentThread().getId());
         System.out.println(s);
     }
 });
 ```
 
-####3.1、subscribeOn()源码分析。
+###3.1、subscribeOn()源码分析。
 
 ```java
 public final Observable<T> subscribeOn(Scheduler scheduler) {
@@ -480,7 +464,7 @@ public final Observable<T> subscribeOn(Scheduler scheduler) {
 }
 ```
 
-通过上面的代码我们可以看到，subscribeOn()和map()一样是创建了一个新的被观察者Observable。因此我大致就能猜到subscribeOn()的执行流程应该和map()差不多，OperatorSubscribeOn应该也是一个OnSubscribe。那我们接下来就看看OperatorSubscribeOn的源码：
+通过上面的代码我们可以看到，`subscribeOn()`和`map()`一样是创建了一个新的被观察者`Observable`。因此我大致就能猜到`subscribeOn()`的执行流程应该和`map()`差不多，`OperatorSubscribeOn`肯定也是一个`OnSubscribe`。那我们接下来就看看`OperatorSubscribeOn`的源码：
 
 ```java
 public final class OperatorSubscribeOn<T> implements OnSubscribe<T> {
@@ -553,9 +537,9 @@ public final class OperatorSubscribeOn<T> implements OnSubscribe<T> {
 }
 ```
 
-OperatorSubscribeOn实现了OnSubscribe接口，call()对Subscriber的处理也和OperatorMap对Subscriber的处理类似。首先通过scheduler构建了一个Worker；然后用传进来的subscriber构造了一个新的Subscriber s，并将s丢到Worker.schedule()中来处理；最后用原Observable去订阅观察者s。而这个Worker就是线程调度的关键。前面的例子中我们通过`subscribeOn(Schedulers.io())`指定了Observable发射处理事件以及通知观察者的一系列操作的执行线程，正是通过这个`Schedulers.io()`创建了我们前面提到的Worker。所以我们来看看`Schedulers.io()`的实现。
+`OperatorSubscribeOn`实现了`OnSubscribe`接口，`call()`中对`Subscriber`的处理也和OperatorMap对Subscriber的处理类似。首先通过scheduler构建了一个Worker；然后用传进来的subscriber构造了一个新的Subscriber `s`，并将`s`丢到Worker.schedule()中来处理；最后用原Observable去订阅观察者`s`。而这个Worker就是线程调度的关键。前面的例子中我们通过`subscribeOn(Schedulers.io())`指定了Observable发射处理事件以及通知观察者的一系列操作的执行线程，正是通过这个`Schedulers.io()`创建了我们前面提到的Worker。所以我们来看看`Schedulers.io()`的实现。
 
-首先通过Schedulers.io()获得了ioScheduler并返回，上面的`OperatorSubscribeOn`通过这个的Scheduler的createWorker()方法创建了我们前面提到的Worker。
+首先通过`Schedulers.io()`获得了`ioScheduler`并返回，上面的`OperatorSubscribeOn`通过这个的Scheduler的`createWorker()`方法创建了我们前面提到的Worker。
 ```java
 public static Scheduler io() {
     return RxJavaHooks.onIOScheduler(getInstance().ioScheduler);
@@ -595,7 +579,7 @@ public static Scheduler createIoScheduler(ThreadFactory threadFactory) {
 }
 ```
 
-到这一步既然我们知道了`ioScheduler`就是一个`CachedThreadScheduler`,那我们就要它看看`createWorker`的实现。
+到这一步既然我们知道了`ioScheduler`就是一个`CachedThreadScheduler`，那我们就来看看它的`createWorker()`的实现。
 
 ```java
 public Worker createWorker() {
@@ -603,7 +587,7 @@ public Worker createWorker() {
 }
 ```
 
-上面的代码向我们赤裸裸的呈现了前面`OperatorSubscribeOn`中的Worker其实就是`EventLoopWorker`。我们重点要关注的是他的scheduleActual()方法。
+上面的代码向我们赤裸裸的呈现了前面`OperatorSubscribeOn`中的Worker其实就是`EventLoopWorker`。我们重点要关注的是他的`scheduleActual()`。
 
 ```java
 static final class EventLoopWorker extends Scheduler.Worker implements Action0 {
@@ -622,11 +606,7 @@ static final class EventLoopWorker extends Scheduler.Worker implements Action0 {
 
     @Override
     public Subscription schedule(final Action0 action, long delayTime, TimeUnit unit) {
-        if (innerSubscription.isUnsubscribed()) {
-            // don't schedule, we are unsubscribed
-            return Subscriptions.unsubscribed();
-        }
-
+        ...
         ScheduledAction s = threadWorker.scheduleActual(new Action0() {
             @Override
             public void call() {
@@ -643,7 +623,7 @@ static final class EventLoopWorker extends Scheduler.Worker implements Action0 {
 }
 ```
 
-通过对源码的一步步追踪，我们知道了前面`OperatorSubscribeOn.call()`中的inner.schedule()最终会执行到ThreadWorker的`scheduleActual()`方法。
+通过对源码的一步步追踪，我们知道了前面`OperatorSubscribeOn.call()`中的`inner.schedule()`最终会执行到ThreadWorker的`scheduleActual()`方法。
 
 ```java
 public ScheduledAction scheduleActual(final Action0 action, long delayTime, TimeUnit unit) {
@@ -659,11 +639,11 @@ public ScheduledAction scheduleActual(final Action0 action, long delayTime, Time
     return run;
 }
 ```
-`scheduleActual()`中的`ScheduledAction`实现了Runnable接口，通过线程池`executor`最终实现了线程切换。上面便是`subscribeOn(Schedulers.io())`实现线程切换的全部过程。
+`scheduleActual()`中的`ScheduledAction`实现了`Runnable`接口，通过线程池`executor`最终实现了线程切换。上面便是`subscribeOn(Schedulers.io())`实现线程切换的全部过程。
 
-####3.2、observeOn()源码分析。
+###3.2、observeOn()源码分析。
 
-`observeOn()`切换线程是通过lift来实现的，比起subscribeOn()在实现原理上相对复杂些。不过本质上最终还是创建了一个新的Observable。
+`observeOn()`切换线程是通过`lift`来实现的，比起`subscribeOn()`在实现原理上相对复杂些。不过本质上最终还是创建了一个新的`Observable`。
 
 ```java
 public final Observable<T> observeOn(Scheduler scheduler, boolean delayError, int bufferSize) {
@@ -675,7 +655,7 @@ public final <R> Observable<R> lift(final Operator<? extends R, ? super T> opera
     return create(new OnSubscribeLift<T, R>(onSubscribe, operator));
 }
 ```
-OperatorObserveOn作为OnSubscribeLift构造函数的参数用来创建了一个新的OnSubscribeLift对象，接下来我们看看OnSubscribeLift的实现：
+`OperatorObserveOn`作为`OnSubscribeLift`构造函数的参数用来创建了一个新的`OnSubscribeLift`对象，接下来我们看看`OnSubscribeLift`的实现：
 
 ```java
 public final class OnSubscribeLift<T, R> implements OnSubscribe<R> {
@@ -707,7 +687,7 @@ public final class OnSubscribeLift<T, R> implements OnSubscribe<R> {
     }
 }
 ```
-OnSubscribeLift继承自OnSubscribe，通过前面的分析我们知道一旦调用了subscribe()方法将观察者与被观察绑定后就会触发被观察者所对应的OnSubscribe的call()方法，所以这里会触发OnSubscribeLift.call()。在call()中调用了OperatorObserveOn.call()并返回了一个新的观察者Subscriber st，接着调用了前一级Observable对应OnSubscriber.call(st)。
+`OnSubscribeLift`继承自`OnSubscribe`，通过前面的分析我们知道一旦调用了`subscribe()`将观察者与被观察绑定后就会触发被观察者所对应的`OnSubscribe`的`call()`方法，所以这里会触发`OnSubscribeLift.call()`。在`call()`中调用了`OperatorObserveOn.call()`并返回了一个新的观察者`Subscriber st`，接着调用了前一级`Observable`对应`OnSubscriber.call(st)`。
 
 我们再看看`OperatorObserveOn.call()`的实现：
 
@@ -720,7 +700,7 @@ public Subscriber<? super T> call(Subscriber<? super T> child) {
 }
 ```
 
-`OperatorObserveOn.call()`中创建了一个ObserveOnSubscriber并调用init()进行了初始化。
+`OperatorObserveOn.call()`中创建了一个`ObserveOnSubscriber`并调用`init()`进行了初始化。
 
 
 ```java
@@ -804,17 +784,17 @@ static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Actio
     ...
 }
 ```
-`ObserveOnSubscriber`继承自`Subscriber`，并实现了`Action0`接口。我们看到`ObserveOnSubscriber`的`onNext()`、`onCompleted()`、`onError()`都有个`schedule()`，这个方法就是我们线程调度的关键；通过`schedule()`将新观察者`ObserveOnSubscriber`发送给observableOne的所有事件都切换到了recursiveScheduler所对应的线程，简单的说就是把observableOne的`onNext()`、`onCompleted()`、`onError()`方法丢到了recursiveScheduler对应的线程中来执行。
+`ObserveOnSubscriber`继承自`Subscriber`，并实现了`Action0`接口。我们看到`ObserveOnSubscriber`的`onNext()`、`onCompleted()`、`onError()`都有个`schedule()`，这个方法就是我们线程调度的关键；通过`schedule()`将新观察者`ObserveOnSubscriber`发送给`observerOne`的所有事件都切换到了`recursiveScheduler`所对应的线程，简单的说就是把`observerOne`的`onNext()`、`onCompleted()`、`onError()`方法丢到了`recursiveScheduler`对应的线程中来执行。
 
-那么`schedule()`又是如何做到这一点的呢？他内部调用了`recursiveScheduler.schedule(this)`，recursiveScheduler其实就是一个Worker，和我们在介绍subscribeOn()提到的worker一样，执行schedule()实际上最终是创建了一个runable，然后把这个runnable丢到了特定的线程池中去执行。在runnable的run()方法中调用了`ObserveOnSubscriber.call()`，看上面的代码大家就会发现在call()方法中最终调用了observableOne的`onNext()`、`onCompleted()`、`onError()`方法。这便是她实现线程切换的原理。
+那么`schedule()`又是如何做到这一点的呢？他内部调用了`recursiveScheduler.schedule(this)`，`recursiveScheduler`其实就是一个`Worker`，和我们在介绍`subscribeOn()`提到的worker一样，执行`schedule()`实际上最终是创建了一个`runable`，然后把这个`runnable`丢到了特定的线程池中去执行。在`runnable`的`run()`方法中调用了`ObserveOnSubscriber.call()`，看上面的代码大家就会发现在`call()`方法中最终调用了`observerOne`的`onNext()`、`onCompleted()`、`onError()`方法。这便是它实现线程切换的原理。
 
 好了，我们最后再看看**示例C**对应的执行流程图，帮助大家加深理解。
 
 ![RxJava执行流程](RxJavaOperatorProcess.jpg)
 
 
-###总结
-这一章以微观的角度从执行流程、操作符、线程调度三个方面剖析了RxJava源码。在下一章，我将站在更宏观的角度来分析整个RxJava的框架结构、设计思想。
+##总结
+这一章以微观的角度从执行流程、操作符、线程调度三个方面剖析了RxJava源码。下一章将以更宏观的角度来分析整个RxJava的框架结构、设计思想。
 
 > 如果大家喜欢我这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
 >   
