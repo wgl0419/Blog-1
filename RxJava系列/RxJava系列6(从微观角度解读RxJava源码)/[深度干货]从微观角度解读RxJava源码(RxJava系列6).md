@@ -53,7 +53,7 @@ Observable.create(new Observable.OnSubscribe<String>() {
 首先调用`Observable.create()`创建一个被观察者`Observable`，同时创建一个`OnSubscribe`作为`create()`方法的入参；接着创建一个观察者`Subscriber`，然后通过`subseribe()`实现二者的订阅关系。这里涉及到三个关键对象和一个核心的方法：
 
 * **Observable**（被观察者）
-* **OnSubscribe** (从纯设计模式的角度来理解OnSubscribe.call()可以看做是[观察者模式](https://github.com/BaronZ88/Blog/blob/master/DesignPatterns/ObserverPattern/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F.md)中被观察者用来通知观察者的`notifyObservers()`方法)
+* **OnSubscribe** (从纯设计模式的角度来理解，`OnSubscribe.call()`可以看做是[观察者模式](https://github.com/BaronZ88/Blog/blob/master/DesignPatterns/ObserverPattern/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F.md)中被观察者用来通知观察者的`notifyObservers()`方法)
 * **Subscriber** （观察者）
 * **subscribe()** （实现观察者与被观察者订阅关系的方法）
 
