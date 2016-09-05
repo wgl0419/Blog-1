@@ -1,4 +1,4 @@
-#[深度干货]RxJava系列6(从微观角度解读RxJava源码)
+#[深度干货]从微观角度解读RxJava源码(RxJava系列6)
 > 转载请注明出处：[]()
 
 * [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)
@@ -6,14 +6,14 @@
 * [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)
 * [RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)
 * [RxJava系列5(组合操作符)](http://www.jianshu.com/p/546fe44a6e22)
-* [\[深度干货\]RxJava系列6(从微观角度解读RxJava源码)]()   
-* <u>\[深度干货\]RxJava系列7(从宏观角度解读RxJava源码)</u>  
+* [\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)]()   
+* <u>\[深度干货\]从宏观角度解读RxJava源码(RxJava系列7)</u>  
 * <u>RxJava系列8(最佳实践)</u>  
 
 ***
 
 ##前言
-通过前面五个篇幅的介绍，大家对RxJava的基本使用以及操作符应该有了一定的认识。但是知其然还要知其所以然，所以从这一章开始我们解读源码，分析RxJava的实现原理。本文我们主要从三个方面来分析RxJava的源码实现：
+通过前面五个篇幅的介绍，相信大家对RxJava的基本使用以及操作符应该有了一定的认识。但是知其然还要知其所以然；所以从这一章开始我们聊聊源码，分析RxJava的实现原理。本文我们主要从三个方面来分析RxJava的实现：
 
 * RxJava基本流程分析
 * 操作符原理分析
@@ -23,7 +23,7 @@
 
 ##一、RxJava执行流程分析
 
-在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中我们介绍过，一个RxJava中最基本的调用是这样的：
+在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中我们介绍过，一个最基本的RxJava调用是这样的：
 
 **示例A**
 
