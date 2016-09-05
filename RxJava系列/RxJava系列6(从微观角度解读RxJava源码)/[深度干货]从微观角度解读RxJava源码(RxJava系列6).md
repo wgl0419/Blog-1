@@ -399,7 +399,7 @@ Observable.create(new Observable.OnSubscribe<String>() {
 });
 ```
 
-###3.1、subscribeOn()源码分析。
+###1、subscribeOn()源码分析
 
 ```java
 public final Observable<T> subscribeOn(Scheduler scheduler) {
@@ -586,7 +586,7 @@ public ScheduledAction scheduleActual(final Action0 action, long delayTime, Time
 ```
 `scheduleActual()`中的`ScheduledAction`实现了`Runnable`接口，通过线程池`executor`最终实现了线程切换。上面便是`subscribeOn(Schedulers.io())`实现线程切换的全部过程。
 
-###3.2、observeOn()源码分析。
+###2、observeOn()源码分析
 
 `observeOn()`切换线程是通过`lift`来实现的，相比`subscribeOn()`在实现原理上相对复杂些。不过本质上最终还是创建了一个新的`Observable`。
 
