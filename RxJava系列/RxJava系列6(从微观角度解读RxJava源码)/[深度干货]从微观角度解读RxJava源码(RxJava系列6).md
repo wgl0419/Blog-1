@@ -740,7 +740,7 @@ static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Actio
 
 
 ##总结
-这一章以微观的角度从执行流程、操作符实现以及线程调度三个方面剖析了RxJava源码。下一章将以更宏观的角度来分析整个RxJava的框架结构、设计思想。
+这一章以**执行流程**、**操作符实现**以及**线程调度**三个方面为切入点剖析了RxJava源码。下一章将站在更宏观的角度来分析整个RxJava的框架结构、设计思想等等。敬请期待~~ :)
 
 > 如果大家喜欢我这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
 >   
