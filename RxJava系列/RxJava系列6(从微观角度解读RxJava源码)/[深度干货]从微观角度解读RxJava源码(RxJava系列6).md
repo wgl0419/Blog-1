@@ -96,13 +96,8 @@ public static <T> Observable.OnSubscribe<T> onCreate(Observable.OnSubscribe<T> o
 ```java
 public abstract class Subscriber<T> implements Observer<T>, Subscription {
     
-    private static final long NOT_SET = Long.MIN_VALUE;
-
-    private final SubscriptionList subscriptions;//订阅事件集
-    private final Subscriber<?> subscriber;
-    private Producer producer;
-    private long requested = NOT_SET;
-
+    private final SubscriptionList subscriptions;//订阅事件集，所有发送给当前Subscriber的事件都会保存在这里
+    
     ...
 
     protected Subscriber(Subscriber<?> subscriber, boolean shareSubscriptions) {
@@ -110,9 +105,7 @@ public abstract class Subscriber<T> implements Observer<T>, Subscription {
         this.subscriptions = shareSubscriptions && subscriber != null ? subscriber.subscriptions : new SubscriptionList();
     }
 
-    public final void add(Subscription s) {
-        subscriptions.add(s);
-    }
+    ...
 
     @Override
     public final void unsubscribe() {
@@ -127,58 +120,7 @@ public abstract class Subscriber<T> implements Observer<T>, Subscription {
     public void onStart() {
     }
     
-    protected final void request(long n) {
-        if (n < 0) {
-            throw new IllegalArgumentException("number requested cannot be negative: " + n);
-        } 
-        
-        Producer producerToRequestFrom = null;
-        synchronized (this) {
-            if (producer != null) {
-                producerToRequestFrom = producer;
-            } else {
-                addToRequested(n);
-                return;
-            }
-        }
-        producerToRequestFrom.request(n);
-    }
-
-    private void addToRequested(long n) {
-        if (requested == NOT_SET) {
-            requested = n;
-        } else { 
-            final long total = requested + n;
-            if (total < 0) {
-                requested = Long.MAX_VALUE;
-            } else {
-                requested = total;
-            }
-        }
-    }
-    
-    public void setProducer(Producer p) {
-        long toRequest;
-        boolean passToSubscriber = false;
-        synchronized (this) {
-            toRequest = requested;
-            producer = p;
-            if (subscriber != null) {
-                if (toRequest == NOT_SET) {
-                    passToSubscriber = true;
-                }
-            }
-        }
-        if (passToSubscriber) {
-            subscriber.setProducer(producer);
-        } else {
-            if (toRequest == NOT_SET) {
-                producer.request(Long.MAX_VALUE);
-            } else {
-                producer.request(toRequest);
-            }
-        }
-    }
+    ...
 }
 ```
 
@@ -234,7 +176,7 @@ static <T> Subscription subscribe(Subscriber<? super T> subscriber, Observable<T
 ![RxJava基本流程分析](OperatorProcess1.jpg)
 
 ##二、操作符源码分析
-之前我们介绍过几十个操作符，要一一分析它们的源码显然不太现实。在这里我抛砖引玉，选取一个相对简单且常用的`map`操作符来z做分析。
+之前我们介绍过几十个操作符，要一一分析它们的源码显然不太现实。在这里我抛砖引玉，选取一个相对简单且常用的`map`操作符来分析。
 
 我们先来看一个`map`操作符的简单应用：
 
@@ -268,7 +210,7 @@ Observable.create(new Observable.OnSubscribe<Integer>() {
 });
 ```
 
-为了后面分析源码的时候便于表述，我将上面的代码做了如下拆解：
+为了便于表述，我将上面的代码做了如下拆解：
 
 ```java
 Observable<Integer> observableA = Observable.create(new Observable.OnSubscribe<Integer>() {
@@ -396,12 +338,13 @@ public final Subscription unsafeSubscribe(Subscriber<? super T> subscriber) {
     }
 }
 ```
-上面这段代码最终执行了`onSubscribe`也就是`OnSubscribeMap.call()`，`call()`方法中的参数就是之前在`OnSubscribeMap.call()`中new出来的`MapSubscriber`。最后在`call()`方法中执行了我们自己的业务代码：
+上面这段代码最终执行了`onSubscribe`也就是`OnSubscribeMap`的`call()`方法，`call()`方法中的参数就是之前在`OnSubscribeMap.call()`中new出来的`MapSubscriber`。最后在`call()`方法中执行了我们自己的业务代码：
 
 ```java
 subscriber.onNext(1);
 subscriber.onCompleted();
 ```
+
 其实也就是执行了`MapSubscriber`的`onNext()`和`onCompleted()`。
 
 ```java
@@ -417,7 +360,8 @@ public void onNext(T t) {
     actual.onNext(result);
 }
 ```
-`onNext(T t)`方法中的的`mapper`就是变换函数，`actual`就是我们在调用`subscribe()`时创建的观察者`subscriberOne`。这个`T`就是我们例子中的`Integer`，`R`就是`String`。在`onNext()`中首先调用变换函数`mapper.call()`将`T`转换成`R`。在我们的例子中就是将`Integer`类型的**1**转换成了`String`类型的**“This is 1”**；接着调用`subscriberOne.onNext(String result)`。同样在调用`MapSubscriber.onCompleted()`时会执行`subscriberOne.onCompleted()`。这样就完成了一直完成的调用流程。
+
+`onNext(T t)`方法中的的`mapper`就是变换函数，`actual`就是我们在调用`subscribe()`时创建的观察者`subscriberOne`。这个`T`就是我们例子中的`Integer`，`R`就是`String`。在`onNext()`中首先调用变换函数`mapper.call()`将`T`转换成`R`(在我们的例子中就是将`Integer`类型的**1**转换成了`String`类型的**“This is 1”**)；接着调用`subscriberOne.onNext(String result)`。同样在调用`MapSubscriber.onCompleted()`时会执行`subscriberOne.onCompleted()`。这样就完成了一直完成的调用流程。
 
 我承认太啰嗦了，花费了这么大的篇幅才将`map()`的转换原理解释清楚。我也是希望尽量的将每个细节都呈现出来方便大家理解，如果看我啰嗦了这么久还是没能理解，请看下面我画的这张执行流程图。
 
@@ -429,6 +373,7 @@ public void onNext(T t) {
 在分析源码前我们先看看一段常见的通过RxJava实现的线程调度代码：
 
 **示例C**
+
 ```java
 Observable.create(new Observable.OnSubscribe<String>() {
     @Override
@@ -443,11 +388,9 @@ Observable.create(new Observable.OnSubscribe<String>() {
     public void onCompleted() {
         System.out.println("completed!");
     }
-
     @Override
     public void onError(Throwable e) {
     }
-
     @Override
     public void onNext(String s) {
         System.out.println(s);
@@ -469,7 +412,7 @@ public final Observable<T> subscribeOn(Scheduler scheduler) {
 ```java
 public final class OperatorSubscribeOn<T> implements OnSubscribe<T> {
 
-    final Scheduler scheduler;
+    final Scheduler scheduler;//线程调度器，用来指定订阅事件发送、处理等所在的线程
     final Observable<T> source;
 
     public OperatorSubscribeOn(Observable<T> source, Scheduler scheduler) {
@@ -537,7 +480,7 @@ public final class OperatorSubscribeOn<T> implements OnSubscribe<T> {
 }
 ```
 
-`OperatorSubscribeOn`实现了`OnSubscribe`接口，`call()`中对`Subscriber`的处理也和`OperatorMap`对`Subscriber`的处理类似。首先通过`scheduler`构建了一个`Worker`；然后用传进来的`subscriber`构造了一个新的`Subscriber s`，并将`s`丢到`Worker.schedule()`中来处理；最后用原`Observable`去订阅观察者`s`；而这个`Worker`就是线程调度的关键。前面的例子中我们通过`subscribeOn(Schedulers.io())`指定了`Observable`发射处理事件以及通知观察者的一系列操作的执行线程，正是通过这个`Schedulers.io()`创建了我们前面提到的`Worker`。所以我们来看看`Schedulers.io()`的实现。
+`OperatorSubscribeOn`实现了`OnSubscribe`接口，`call()`中对`Subscriber`的处理也和`OperatorMap`对`Subscriber`的处理类似。首先通过`scheduler`构建了一个`Worker`；然后用传进来的`subscriber`构造了一个新的`Subscriber s`，并将`s`丢到`Worker.schedule()`中来处理；最后用原`Observable`去订阅观察者`s`。而这个`Worker`就是线程调度的关键！前面的例子中我们通过`subscribeOn(Schedulers.io())`指定了`Observable`发射处理事件以及通知观察者的一系列操作的执行线程，正是通过这个`Schedulers.io()`创建了我们前面提到的`Worker`。所以我们来看看`Schedulers.io()`的实现。
 
 首先通过`Schedulers.io()`获得了`ioScheduler`并返回，上面的`OperatorSubscribeOn`通过这个的`Scheduler`的`createWorker()`方法创建了我们前面提到的`Worker`。
 
@@ -547,7 +490,7 @@ public static Scheduler io() {
 }
 ```
 
-接着我们看看这个`ioScheduler`是怎么来的，下面的代码向我们展现了是如何在`Schedulers`的构造函数中通过`RxJavaSchedulersHook.createIoScheduler()`初始化`ioScheduler`的。
+接着我们看看这个`ioScheduler`是怎么来的，下面的代码向我们展现了是如何在`Schedulers`的构造函数中通过`RxJavaSchedulersHook.createIoScheduler()`来初始化`ioScheduler`的。
 
 ```java
 private Schedulers() {
@@ -704,7 +647,6 @@ public Subscriber<? super T> call(Subscriber<? super T> child) {
 ```
 
 `OperatorObserveOn.call()`中创建了一个`ObserveOnSubscriber`并调用`init()`进行了初始化。
-
 
 ```java
 static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Action0 {
