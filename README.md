@@ -20,16 +20,21 @@
 
 [RxJava系列5(组合操作符)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%975\(%E7%BB%84%E5%90%88%E6%93%8D%E4%BD%9C%E7%AC%A6\)/RxJava%E7%B3%BB%E5%88%975\(%E7%BB%84%E5%90%88%E6%93%8D%E4%BD%9C%E7%AC%A6\).md)
 
-[\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)]()   
-<u>\[深度干货\]从宏观角度解读RxJava源码(RxJava系列7)</u>  
-<u>RxJava系列8(最佳实践)</u>  
+[\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%976\(%E4%BB%8E%E5%BE%AE%E8%A7%82%E8%A7%92%E5%BA%A6%E8%A7%A3%E8%AF%BBRxJava%E6%BA%90%E7%A0%81\)/%5B%E6%B7%B1%E5%BA%A6%E5%B9%B2%E8%B4%A7%5D%E4%BB%8E%E5%BE%AE%E8%A7%82%E8%A7%92%E5%BA%A6%E8%A7%A3%E8%AF%BBRxJava%E6%BA%90%E7%A0%81\(RxJava%E7%B3%BB%E5%88%976\).md)
+
+<u>\[深度干货\]从宏观角度解读RxJava源码(RxJava系列7)</u>
+
+<u>RxJava系列8(最佳实践)</u>
 
 ####设计模式
 
 [观察者模式](https://github.com/BaronZ88/Blog/blob/master/DesignPatterns/ObserverPattern/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F.md)
 
 ====
-GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
-知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-博客地址：[http://www.jianshu.com/users/cfdc52ea3399/latest_articles](http://www.jianshu.com/users/cfdc52ea3399/latest_articles)
+> 如果大家喜欢我这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+>   
+> * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
+> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+
 
