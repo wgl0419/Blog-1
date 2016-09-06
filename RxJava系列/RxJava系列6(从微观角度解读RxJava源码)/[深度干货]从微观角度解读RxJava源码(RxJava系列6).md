@@ -366,7 +366,7 @@ public void onNext(T t) {
 
 我承认太啰嗦了，花费了这么大的篇幅才将`map()`的转换原理解释清楚。我也是希望尽量的将每个细节都呈现出来方便大家理解，如果看我啰嗦了这么久还是没能理解，请看下面我画的这张执行流程图。
 
-![加入Map操作符后的执行流程](OperatorProcess2.jpg)
+![加入Map操作符后的执行流程](OperatorProcess3.jpg)
 
 ##三、线程调度原理分析
 在前面的文章中我介绍过RxJava可以很方便的通过`subscribeOn()`和`observeOn()`来指定数据流的每一部分运行在哪个线程。其中`subscribeOn()`指定了处理`Observable`的全部的过程(包括发射数据和通知)的线程；`observeOn()`指定了观察者的`onNext()`, `onError()`和`onCompleted()`执行的线程。接下来我们就分析分析源码，看看线程调度是如何实现的。
