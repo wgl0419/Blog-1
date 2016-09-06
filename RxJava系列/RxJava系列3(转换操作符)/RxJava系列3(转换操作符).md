@@ -1,13 +1,14 @@
 ##RxJava系列三（转换操作符）
 > 转载请注明出处：[http://www.jianshu.com/p/5970280703b9](http://www.jianshu.com/p/5970280703b9)
 
-[RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)  
-[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)  
-[RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)  
-[RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)  
-[RxJava系列5(组合操作符)](http://www.jianshu.com/p/546fe44a6e22)     
-<u>RxJava系列6(源码分析)</u>    
-<u>RxJava系列7(最佳实践)</u> 
+* [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)
+* [RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)
+* [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)
+* [RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)
+* [RxJava系列5(组合操作符)](http://www.jianshu.com/p/546fe44a6e22)
+* [\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)]()   
+* <u>\[深度干货\]从宏观角度解读RxJava源码(RxJava系列7)</u>  
+* <u>RxJava系列8(最佳实践)</u>  
 
 
 
@@ -210,3 +211,10 @@ Observable.concat(groupByCommunityNameObservable)
 	小区:竹园新村; 房源描述:顶层户型，两室一厅
 	
 转换类的操作符就先介绍到这，后续还会继续介绍组合、过滤类的操作符及源码分析，敬请期待！
+
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+>   
+> * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
+> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+

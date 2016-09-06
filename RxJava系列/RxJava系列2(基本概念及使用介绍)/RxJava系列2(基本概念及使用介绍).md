@@ -1,13 +1,14 @@
 ##RxJava系列二（基本概念及使用介绍）
 > 转载请注明出处：[http://www.jianshu.com/p/ba61c047c230](http://www.jianshu.com/p/ba61c047c230)
 
-[RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)  
-[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)  
-[RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)  
-[RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)  
-[RxJava系列5(组合操作符)](http://www.jianshu.com/p/546fe44a6e22)     
-<u>RxJava系列6(源码分析)</u>    
-<u>RxJava系列7(最佳实践)</u> 
+* [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)
+* [RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)
+* [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)
+* [RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)
+* [RxJava系列5(组合操作符)](http://www.jianshu.com/p/546fe44a6e22)
+* [\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)]()   
+* <u>\[深度干货\]从宏观角度解读RxJava源码(RxJava系列7)</u>  
+* <u>RxJava系列8(最佳实践)</u>  
 
 
 ***
@@ -304,4 +305,10 @@ Observable.from(getCommunitiesFromServer())
 上面这段代码大家应该有印象吧，没错正是我们上一篇文章中的例子。`subscribeOn(Schedulers.io())`指定了获取小区列表、处理房源信息等一系列事件都是在IO线程中运行，`observeOn(AndroidSchedulers.mainThread())`指定了在屏幕上展示房源的操作在UI线程执行。这就做到了在子线程获取房源，主线程展示房源。
 
 好了，RxJava系列的入门内容我们就聊到这。下一篇我们再继续介绍更多的API以及它们内部的原理。
+
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+>   
+> * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
+> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
 
