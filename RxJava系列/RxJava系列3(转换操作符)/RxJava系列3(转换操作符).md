@@ -1,15 +1,14 @@
 ##RxJava系列三（转换操作符）
-> 转载请注明出处：[http://www.jianshu.com/p/5970280703b9](http://www.jianshu.com/p/5970280703b9)
+> 转载请注明出处：[https://zhuanlan.zhihu.com/p/21926591](https://zhuanlan.zhihu.com/p/21926591)
 
-* [RxJava系列1(简介)](http://www.jianshu.com/p/ec9849f2e510)
-* [RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)
-* [RxJava系列3(转换操作符)](http://www.jianshu.com/p/5970280703b9)
-* [RxJava系列4(过滤操作符)](http://www.jianshu.com/p/3a188b995daa)
-* [RxJava系列5(组合操作符)](http://www.jianshu.com/p/546fe44a6e22)
-* [\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)]()   
+* [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
+* [RxJava系列2(基本概念及使用介绍)](https://zhuanlan.zhihu.com/p/20687307)
+* [RxJava系列3(转换操作符)](https://zhuanlan.zhihu.com/p/21926591)
+* [RxJava系列4(过滤操作符)](https://zhuanlan.zhihu.com/p/21966621)
+* [RxJava系列5(组合操作符)](https://zhuanlan.zhihu.com/p/22039934)
+* [\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)](https://zhuanlan.zhihu.com/p/22338235)   
 * <u>\[深度干货\]从宏观角度解读RxJava源码(RxJava系列7)</u>  
 * <u>RxJava系列8(最佳实践)</u>  
-
 
 
 ***
