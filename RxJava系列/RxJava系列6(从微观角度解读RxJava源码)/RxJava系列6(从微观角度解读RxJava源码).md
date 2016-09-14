@@ -1,5 +1,5 @@
 ![](RxJava.jpg)
-#[深度干货]从微观角度解读RxJava源码(RxJava系列6)
+#RxJava系列6(从微观角度解读RxJava源码)
 > 转载请注明出处：[https://zhuanlan.zhihu.com/p/22338235](https://zhuanlan.zhihu.com/p/22338235)
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
@@ -7,8 +7,8 @@
 * [RxJava系列3(转换操作符)](https://zhuanlan.zhihu.com/p/21926591)
 * [RxJava系列4(过滤操作符)](https://zhuanlan.zhihu.com/p/21966621)
 * [RxJava系列5(组合操作符)](https://zhuanlan.zhihu.com/p/22039934)
-* [\[深度干货\]从微观角度解读RxJava源码(RxJava系列6)](https://zhuanlan.zhihu.com/p/22338235)   
-* <u>\[深度干货\]从宏观角度解读RxJava源码(RxJava系列7)</u>  
+* [RxJava系列6(从微观角度解读RxJava源码)](https://zhuanlan.zhihu.com/p/22338235)   
+* <u>RxJava系列7(从宏观角度解读RxJava源码)</u>  
 * <u>RxJava系列8(最佳实践)</u>  
 
 ***
