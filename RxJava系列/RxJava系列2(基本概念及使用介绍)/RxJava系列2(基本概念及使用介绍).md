@@ -27,7 +27,7 @@
 
 ![Observer](Observer.png)
 
-如果你对观察者模式很了解，那么强烈建议你先去学习下。关于观察者模式的详细介绍可以参考我之前的文章：[设计模式之观察者模式](http://www.jianshu.com/p/d55ee6e83d66)
+如果你对观察者模式不是很了解，那么强烈建议你先去学习下。关于观察者模式的详细介绍可以参考我之前的文章：[设计模式之观察者模式](http://www.jianshu.com/p/d55ee6e83d66)
 
 ###扩展的观察者模式
 
@@ -120,14 +120,14 @@ Observable observable = Observable.from(parameters);
 //onCompleted();
 ```
 
-**第三步：被观察者Observable订阅观察者Observable**（*ps:你没看错，不同于普通的观察者模式，这里是被观察者订阅观察者*）
+**第三步：被观察者Observable订阅观察者Observer**（*ps:你没看错，不同于普通的观察者模式，这里是被观察者订阅观察者*）
 	
 有了观察者和被观察者，Wimbledon就可以调用subscribe()订阅事件了，就像这样：
 	
 observable.subscribe(observer);
 	
 
-![observable.subscribe(observer)](subscribe.png)
+![observable.subscribe(observer)](subscribe1.png)
 	
 连在一起写就是这样：
 
