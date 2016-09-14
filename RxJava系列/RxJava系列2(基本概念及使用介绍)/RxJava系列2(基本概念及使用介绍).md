@@ -122,11 +122,12 @@ Observable observable = Observable.from(parameters);
 
 **第三步：被观察者Observable订阅观察者Observer**（*ps:你没看错，不同于普通的观察者模式，这里是被观察者订阅观察者*）
 	
-有了观察者和被观察者，Wimbledon就可以调用subscribe()订阅事件了，就像这样：
-	
-observable.subscribe(observer);
-	
+有了观察者和被观察者，我们就可以通过subscribe()来实现二者的订阅关系了。
 
+```java	
+observable.subscribe(observer);
+```
+	
 ![observable.subscribe(observer)](subscribe1.png)
 	
 连在一起写就是这样：
