@@ -143,3 +143,9 @@ return communities.stream()
           .collect(Collectors.toList());
 ```
 
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+>   
+> * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
+> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+
