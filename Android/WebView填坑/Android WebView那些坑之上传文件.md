@@ -1,6 +1,7 @@
 ###Android WebView那些坑之上传文件
 
-> 转载请注明出处：[http://www.jianshu.com/p/48e688ce801f](http://www.jianshu.com/p/48e688ce801f)
+> 转载请注明出处：[http://www.jianshu.com/p/48e688ce801f](http://www.jianshu.com/p/48e688ce801f)  
+> 欢迎大家关注我的知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron) 之后所有文章都会在知乎专栏上首发
 
 ***
 

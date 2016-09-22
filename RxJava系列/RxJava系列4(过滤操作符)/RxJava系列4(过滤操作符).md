@@ -72,8 +72,67 @@ Observable.from(communities)
 **`takeUntil(Observable)`**订阅并开始发射原始Observable，同时监视我们提供的第二个Observable。如果第二个Observable发射了一项数据或者发射了一个终止通知，`takeUntil()`返回的Observable会停止发射原始Observable并终止。
 ![takeUntil(Observable)](TakeUntilOperator.png)
 
+```java
+Observable<Long> observableA = Observable.interval(300, TimeUnit.MILLISECONDS);
+Observable<Long> observableB = Observable.interval(800, TimeUnit.MILLISECONDS);
+
+observableA.takeUntil(observableB)
+        .subscribe(new Subscriber<Long>() {
+            @Override
+            public void onCompleted() {
+                System.exit(0);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Long aLong) {
+                System.out.println(aLong);
+            }
+        });
+
+try {
+    Thread.sleep(Integer.MAX_VALUE);
+} catch (InterruptedException e) {
+    e.printStackTrace();
+}
+```
+
+程序输出：
+
+	0
+	1
+
+
 **`takeUntil(Func1)`**通过Func1中的call方法来判断是否需要终止发射数据。
 ![takeUntil(Func1)](TakeUntilPOperator.png)
+
+```java
+Observable.just(1, 2, 3, 4, 5, 6, 7)
+                .takeUntil(new Func1<Integer, Boolean>() {
+                    @Override
+                    public Boolean call(Integer integer) {
+                        return integer >= 5;
+                    }
+                }).subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer integer) {
+                System.out.println(integer);
+            }
+        });
+```
+
+程序输出：
+
+	1
+	2
+	3
+	4
+	5
+
 
 ###Skip
 **`skip(int)`**让我们可以忽略Observable发射的前n项数据。
