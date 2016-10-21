@@ -1,4 +1,4 @@
-#RxJava系列8(最佳实践)
+#RxJava系列7(最佳实践)
 > 转载请注明出处：[]()
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
@@ -7,16 +7,15 @@
 * [RxJava系列4(过滤操作符)](https://zhuanlan.zhihu.com/p/21966621)
 * [RxJava系列5(组合操作符)](https://zhuanlan.zhihu.com/p/22039934)
 * [RxJava系列6(从微观角度解读RxJava源码)](https://zhuanlan.zhihu.com/p/22338235)   
-* [RxJava系列7(从宏观角度解读RxJava源码)]()  
-* [RxJava系列8(最佳实践)]()  
+* [RxJava系列7(最佳实践)]()  
 
 ***
 
 ##前言
 
-有点标题党了，其实也谈不上什么最佳实践。最近公司实行996，时间和精力有限，因此这篇文章只是简单了介绍了下RxJava在生产环境中的使用。不过本篇中的每个例子我都配上了完整的代码
+有点标题党了，其实谈不上什么最佳实践。前段时间公司实行996，所以也没什么时间和精力来更新博客（好吧~我承认是我懒~）。因此这篇文章只是简单的通过两个例子介绍了RxJava在生产环境中的使用。不过本篇中的每个例子我都配上了完整的代码。
 
-原计划这一期是要介绍RxJava框架结构和设计思想的，但是考虑到Netflix将在十月底发布RxJava2.0正式版(加上万恶的996...)，精力有限；因此决定将RxJava框架结构和设计思想分析放到2.0正式版发布后再做。后续我也会有一系列的文章来介绍RxJava1.x和2.x的区别。
+> 按照计划这一期是要介绍RxJava框架结构和设计思想的，但是考虑到Netflix将在十月底发布RxJava2.0正式版；因此决定将RxJava框架结构和设计思想分析放到2.0正式版发布后再做。后续我也会有一系列的文章来介绍RxJava1.x和2.x的区别。
 
 ## 示例一、获取手机上已安装的App
 
@@ -88,20 +87,67 @@ Observable.create(new Observable.OnSubscribe<ApplicationInfo>() {
 
 ## 示例二、RxJava+Retrofit2实现获取天气数据
 
-RxJava+Retrofit2几乎是Android应用开发的标配了，这个例子中我们就来聊聊这二者是如何配合起来帮助我们快速开发的。
+RxJava + Retrofit2几乎是Android应用开发的标配了，这个例子中我们就来聊聊这二者是如何配合起来帮助我们快速开发的。
 
-Retrofit中一个标准的接口定义是这样的：
+Retrofit2中一个标准的接口定义是这样的：
 
 ```java
 @GET("weather")
-Observable<MiWeather> getMiWeather(@Query("cityId") String cityId);
+Observable<Weather> getWeather(@Query("cityId") String cityId);
 ```
 
+现在有了RxJava，一个基本的网络请求我们便可以这样实现：
 
-上面的实例代码均出自：[https://github.com/BaronZ88/WeatherStyle](https://github.com/BaronZ88/WeatherStyle)
+```java
+ApiClient.weatherService.getWeather(cityId)
+             	.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Weather>() {
+                    @Override
+                    public void call(Weather weather) {
+                        weatherView.displayWeatherInformation(weather);
+                    }
+                });
+```
+
+但有时候可能一开始我们并不知道cityId，我们只知道cityName。所以就需要我们先访问服务器，拿到对应城市名的cityId，然后通过这个cityId再去获取天气数据。
+
+同样的，我们需要定义一个获取cityId的接口：
+
+```java
+@GET("city")
+Observable<String> getCityIdByName(@Query("cityName") String cityName);
+```
+
+紧接着我们便可以使用无所不能的RxJava来实现需求了。
+
+```java
+ApiClient.weatherService.getCityIdByName("上海")
+			 .flatMap(new Func1<String, Observable<Weather>>() {
+			     @Override
+			     public Observable<Weather> call(String cityId) {
+			         return ApiClient.weatherService.getWeather(cityId);
+			     }
+			 }).subscribeOn(Schedulers.io())
+			 .observeOn(AndroidSchedulers.mainThread())
+			 .subscribe(new Action1<Weather>() {
+			     @Override
+			     public void call(Weather weather) {
+			         weatherView.displayWeatherInformation(weather);
+			     }
+			 });
+```
+
+哇哦！~ so easy！！！妈妈再也不用担心....
+
+源码地址：[https://github.com/BaronZ88/WeatherStyle](https://github.com/BaronZ88/WeatherStyle)
 
 > [WeatherStyle]((https://github.com/BaronZ88/WeatherStyle))这个项目还在开发中，这个项目不只包含了RxJava和Retrofit的使用，同时还包含MVP、ORMLite、RetroLambda、ButterKnife等等开源库的使用
 
+
+RxJava1.X的系列文章就到此结束了，由于本人对RxJava的理解有限，这一系列文章中如有错误还请大家指正。在使用RxJava过程中有任何疑问也欢迎大家和我交流。共同学习！共同进步！
+
+好啦，我们RxJava2见！~
 ***
 
 > 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。

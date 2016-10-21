@@ -7,8 +7,7 @@
 * [RxJava系列4(过滤操作符)](https://zhuanlan.zhihu.com/p/21966621)
 * [RxJava系列5(组合操作符)](https://zhuanlan.zhihu.com/p/22039934)
 * [RxJava系列6(从微观角度解读RxJava源码)](https://zhuanlan.zhihu.com/p/22338235)   
-* <u>RxJava系列7(从宏观角度解读RxJava源码)</u>  
-* <u>RxJava系列8(最佳实践)</u>  
+* <u>RxJava系列7(最佳实践)</u>  
 
 ***
 这一章我们接着介绍组合操作符，这类operators可以同时处理多个Observable来创建我们所需要的Observable。组合操作符主要包含： **`Merge`** **`StartWith`** **`Concat`** **`Zip`** **`CombineLatest`**  **`SwitchOnNext`** **`Join`**等等。

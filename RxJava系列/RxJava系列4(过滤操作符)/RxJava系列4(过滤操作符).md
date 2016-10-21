@@ -7,8 +7,7 @@
 * [RxJava系列4(过滤操作符)](https://zhuanlan.zhihu.com/p/21966621)
 * [RxJava系列5(组合操作符)](https://zhuanlan.zhihu.com/p/22039934)
 * [RxJava系列6(从微观角度解读RxJava源码)](https://zhuanlan.zhihu.com/p/22338235)   
-* <u>RxJava系列7(从宏观角度解读RxJava源码)</u>  
-* <u>RxJava系列8(最佳实践)</u>  
+* <u>RxJava系列7(最佳实践)</u>  
 
 ***
 前面一篇文章中我们介绍了转换类操作符，那么这一章我们就来介绍下过滤类的操作符。顾名思义，这类operators主要用于对事件数据的筛选过滤，只返回满足我们条件的数据。过滤类操作符主要包含： **`Filter`** **`Take`** **`TakeLast`** **`TakeUntil`** **`Skip`** **`SkipLast`** **`ElementAt`** **`Debounce`** **`Distinct`** **`DistinctUntilChanged`** **`First`** **`Last`**等等。
