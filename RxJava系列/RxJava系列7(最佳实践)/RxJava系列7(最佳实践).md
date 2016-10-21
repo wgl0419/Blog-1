@@ -1,5 +1,5 @@
 #RxJava系列7(最佳实践)
-> 转载请注明出处：[]()
+> 转载请注明出处：[https://zhuanlan.zhihu.com/p/23108381]()
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
 * [RxJava系列2(基本概念及使用介绍)](https://zhuanlan.zhihu.com/p/20687307)
@@ -76,6 +76,7 @@ Observable.create(new Observable.OnSubscribe<ApplicationInfo>() {
     });
 ```
 程序执行效果图：
+
 
 <div align="left">
 	<img src="pic1.png" width = "38%" alt="图片名称" align=center />
