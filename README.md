@@ -23,9 +23,7 @@
 
 [RxJava系列6(从微观角度解读RxJava源码)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%976(%E4%BB%8E%E5%BE%AE%E8%A7%82%E8%A7%92%E5%BA%A6%E8%A7%A3%E8%AF%BBRxJava%E6%BA%90%E7%A0%81)/RxJava%E7%B3%BB%E5%88%976(%E4%BB%8E%E5%BE%AE%E8%A7%82%E8%A7%92%E5%BA%A6%E8%A7%A3%E8%AF%BBRxJava%E6%BA%90%E7%A0%81).md)
 
-<u>RxJava系列7(从宏观角度解读RxJava源码)</u>
-
-<u>RxJava系列8(最佳实践)</u>
+[RxJava系列7(最佳实践)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%977(%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5)/RxJava%E7%B3%BB%E5%88%977(%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5).md)
 
 ##设计模式
 
