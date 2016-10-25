@@ -1,4 +1,4 @@
-###Java8新特性第2章(接口默认方法)
+# Java8新特性第2章(接口默认方法)
 > 转载请注明出处：[http://www.jianshu.com/p/2b6880cb9f37](http://www.jianshu.com/p/2b6880cb9f37)
 
 ***
