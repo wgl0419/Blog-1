@@ -1,4 +1,4 @@
-##RxJava系列二（基本概念及使用介绍）
+# RxJava系列二（基本概念及使用介绍）
 > 转载请注明出处：[https://zhuanlan.zhihu.com/p/20687307](https://zhuanlan.zhihu.com/p/20687307)
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
@@ -10,10 +10,10 @@
 * [RxJava系列7(最佳实践)](https://zhuanlan.zhihu.com/p/23108381)    
 
 ***
-###前言
+## 前言
 上一篇的示例代码中大家一定发现了Observable这个类。从纯Java的观点看，Observable类源自于经典的观察者模式。RxJava的异步实现正是基于观察者模式来实现的，而且是一种扩展的观察者模式。
 
-###观察者模式
+## 观察者模式
 观察者模式基于Subject这个概念，Subject是一种特殊对象，又叫做**主题**或者**被观察者**。当它改变时那些由它保存的一系列对象将会得到通知，而这一系列对象被称作Observer(**观察者**)。它们会对外暴漏了一个通知方法(比方说update之类的)，当Subject状态发生变化时会调用的这个方法。
 
 观察者模式很适合下面这些场景中的任何一个：
@@ -28,7 +28,7 @@
 
 如果你对观察者模式不是很了解，那么强烈建议你先去学习下。关于观察者模式的详细介绍可以参考我之前的文章：[设计模式之观察者模式](http://www.jianshu.com/p/d55ee6e83d66)
 
-###扩展的观察者模式
+## 扩展的观察者模式
 
 在RxJava中主要有4个角色：
 
@@ -41,7 +41,7 @@ Observable和Subject是两个“生产”实体，Observer和Subscriber是两个
 
 上一篇文章中我们说到RxJava中有个关键概念：**事件**。观察者`Observer`和被观察者`Observable`通过`subscribe()`方法实现订阅关系。从而`Observable` 可以在需要的时候发出**事件**来通知`Observer`。
 
-###RxJava如何使用
+## RxJava如何使用
 
 我自己在学习一种新技术的时候通常喜欢先去了解它是怎么用的，掌握了使用方法后再去深挖其原理。那么我们现在就来说说RxJava到底该怎么用。
 

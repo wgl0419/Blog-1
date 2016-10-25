@@ -1,4 +1,4 @@
-##RxJava系列五（组合操作符）
+# RxJava系列五（组合操作符）
 > 转载请注明出处：[https://zhuanlan.zhihu.com/p/22039934](https://zhuanlan.zhihu.com/p/22039934)
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
@@ -12,7 +12,7 @@
 ***
 这一章我们接着介绍组合操作符，这类operators可以同时处理多个Observable来创建我们所需要的Observable。组合操作符主要包含： **`Merge`** **`StartWith`** **`Concat`** **`Zip`** **`CombineLatest`**  **`SwitchOnNext`** **`Join`**等等。
 
-###Merge
+### Merge
 **`merge(Observable, Observable)`**将两个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。你可以简单的将它理解为两个Obsrvable合并成了一个Observable，合并后的数据是无序的。
 
 ![merge(Observable, Observable)](MergeOperator.png)
@@ -58,7 +58,7 @@ Observable.merge(letterSequence, numberSequence)
 
 ![merge(Observable[])](MergeIOOperator.png)
 
-###StartWith
+### StartWith
 **`startWith(T)`**用于在源Observable发射的数据前插入数据。使用**`startWith(Iterable<T>)`**我们还可以在源Observable发射的数据前插入Iterable。官方示意图：
 ![startWith(T) startWith(Iterable<T>)](StartWithOperator.png)
 
@@ -66,7 +66,7 @@ Observable.merge(letterSequence, numberSequence)
 源Observable发射数据的前面）。官方示意图：
 ![startWith(Observable<T>)](StartWithOOperator.png)
 
-###Concat
+### Concat
 **`concat(Observable<? extends T>, Observable<? extends T>)`** **`concat(Observable<？ extends Observable<T>>`)**用于将多个obserbavle发射的的数据进行合并发射，concat严格按照顺序发射数据，前一个Observable没发射玩是不会发射后一个Observable的数据的。它和merge、startWitch和相似，不同之处在于：
 
 1. merge:合并后发射的数据是无序的；
@@ -111,7 +111,7 @@ Observable.concat(letterSequence, numberSequence)
 
 	A B C D E F G H 0 1 2 3 4 
 
-###Zip
+### Zip
 **`zip(Observable, Observable, Func2)`**用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。当其中一个Observable发送数据结束或者出现异常后，另一个Observable也将停在发射数据。
 ![zip(Observable, Observable, Func2)](ZipOperator.png)
 
@@ -156,7 +156,7 @@ Observable.zip(letterSequence, numberSequence, new Func2<String, Long, String>()
 
 	A0 B1 C2 D3 E4
 
-###CombineLatest
+### CombineLatest
 **`comnineLatest(Observable, Observable, Func2)`**用于将两个Observale最近发射的数据已经Func2函数的规则进展组合。下面是官方提供的原理图：
 ![comnineLatest(Observable, Observable, Func2)](CombineLatestOperator.png)
 
@@ -219,14 +219,14 @@ Observable.combineLatest(
 	小区名:南辉小区, 经纬度:(22.273, 53.623)
 
 
-###SwitchOnNext
+### SwitchOnNext
 **`switchOnNext(Observable<? extends Observable<? extends T>>`**用来将一个发射多个小Observable的源Observable转化为一个Observable，然后发射这多个小Observable所发射的数据。如果一个小的Observable正在发射数据的时候，源Observable又发射出一个新的小Observable，则前一个Observable发射的数据会被抛弃，直接发射新
 的小Observable所发射的数据。
 
 结合下面的原理图大家应该很容易理解，我们可以看到下图中的黄色圆圈就被丢弃了。
 ![switchOnNext(Observable<? extends Observable<? extends T>>)](SwitchOnNextOperator.png)
 
-###Join
+### Join
 **`join(Observable, Func1, Func1, Func2)`**我们先介绍下join操作符的4个参数：
 
 * Observable：源Observable需要组合的Observable,这里我们姑且称之为目标Observable；

@@ -1,5 +1,4 @@
-![](RxJava.jpg)
-#RxJava系列6(从微观角度解读RxJava源码)
+# RxJava系列6(从微观角度解读RxJava源码)
 > 转载请注明出处：[https://zhuanlan.zhihu.com/p/22338235](https://zhuanlan.zhihu.com/p/22338235)
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
@@ -12,7 +11,7 @@
 
 ***
 
-##前言
+## 前言
 通过前面五个篇幅的介绍，相信大家对RxJava的基本使用以及操作符应该有了一定的认识。但是知其然还要知其所以然；所以从这一章开始我们聊聊源码，分析RxJava的实现原理。本文我们主要从三个方面来分析RxJava的实现：
 
 * RxJava基本流程分析
@@ -21,7 +20,7 @@
 
 > 本章节基于**RxJava1.1.9**版本的源码
 
-##一、RxJava执行流程分析
+## 一、RxJava执行流程分析
 
 在[RxJava系列2(基本概念及使用介绍)](http://www.jianshu.com/p/ba61c047c230)中我们介绍过，一个最基本的RxJava调用是这样的：
 
@@ -56,7 +55,7 @@ Observable.create(new Observable.OnSubscribe<String>() {
 * **Subscriber** （观察者）
 * **subscribe()** （实现观察者与被观察者订阅关系的方法）
 
-###1、Observable.create()源码分析
+### 1、Observable.create()源码分析
 
 首先我们来看看`Observable.create()`的实现:
 
@@ -89,7 +88,7 @@ public static <T> Observable.OnSubscribe<T> onCreate(Observable.OnSubscribe<T> o
 
 至此我们做下逻辑梳理：**`Observable.create()`方法构造了一个被观察者`Observable`对象，同时将new出来的`OnSubscribe`赋值给了该`Observable`的成员变量`onSubscribe`。**
 
-###2、Subscriber源码分析
+### 2、Subscriber源码分析
 
 接着我们看下观察者`Subscriber`的源码，为了增加可读性，我去掉了源码中的注释和部分代码。
 
@@ -133,7 +132,7 @@ public interface Subscription {
 
 `Subscriber`实现了`Subscription`接口，从而对外提供`isUnsubscribed()`和`unsubscribe()`方法。前者用于判断是否已经取消订阅；后者用于将订阅事件列表(*也就是当前观察者的成员变量`subscriptions`*)中的所有`Subscription`取消订阅，并且不再接受观察者`Observable`发送的后续事件。
 
-###3、subscribe()源码分析
+### 3、subscribe()源码分析
 前面我们分析了观察者和被观察者相关的源码，那么接下来便是整个订阅流程中最最关键的环节了。
 
 ```java
@@ -175,7 +174,7 @@ static <T> Subscription subscribe(Subscriber<? super T> subscriber, Observable<T
 
 ![RxJava基本流程分析](OperatorProcess1.jpg)
 
-##二、操作符原理分析
+## 二、操作符原理分析
 之前我们介绍过几十个操作符，要一一分析它们的源码显然不太现实。在这里我抛砖引玉，选取一个相对简单且常用的`map`操作符来分析。
 
 我们先来看一个`map`操作符的简单应用：
@@ -367,7 +366,7 @@ public void onNext(T t) {
 
 ![加入Map操作符后的执行流程](OperatorProcess3.jpg)
 
-##三、线程调度原理分析
+## 三、线程调度原理分析
 在前面的文章中我介绍过RxJava可以很方便的通过`subscribeOn()`和`observeOn()`来指定数据流的每一部分运行在哪个线程。其中`subscribeOn()`指定了处理`Observable`的全部的过程(包括发射数据和通知)的线程；`observeOn()`指定了观察者的`onNext()`, `onError()`和`onCompleted()`执行的线程。接下来我们就分析分析源码，看看线程调度是如何实现的。
 
 在分析源码前我们先看看一段常见的通过RxJava实现的线程调度代码：
@@ -398,7 +397,7 @@ Observable.create(new Observable.OnSubscribe<String>() {
 });
 ```
 
-###1、subscribeOn()源码分析
+### 1、subscribeOn()源码分析
 
 ```java
 public final Observable<T> subscribeOn(Scheduler scheduler) {
@@ -585,7 +584,7 @@ public ScheduledAction scheduleActual(final Action0 action, long delayTime, Time
 ```
 `scheduleActual()`中的`ScheduledAction`实现了`Runnable`接口，通过线程池`executor`最终实现了线程切换。上面便是`subscribeOn(Schedulers.io())`实现线程切换的全部过程。
 
-###2、observeOn()源码分析
+### 2、observeOn()源码分析
 
 `observeOn()`切换线程是通过`lift`来实现的，相比`subscribeOn()`在实现原理上相对复杂些。不过本质上最终还是创建了一个新的`Observable`。
 
@@ -739,7 +738,7 @@ static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Actio
 ![RxJava执行流程](OperatorProcess.jpg)
 
 
-##总结
+## 总结
 这一章以**执行流程**、**操作符实现**以及**线程调度**三个方面为切入点剖析了RxJava源码。下一章将站在更宏观的角度来分析整个RxJava的框架结构、设计思想等等。敬请期待~~ :)
 
 > 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。

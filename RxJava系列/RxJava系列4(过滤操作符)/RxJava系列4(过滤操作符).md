@@ -1,4 +1,4 @@
-##RxJava系列四（过滤操作符）
+# RxJava系列四（过滤操作符）
 > 转载请注明出处：[https://zhuanlan.zhihu.com/p/21966621](https://zhuanlan.zhihu.com/p/21966621)
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
@@ -12,7 +12,7 @@
 ***
 前面一篇文章中我们介绍了转换类操作符，那么这一章我们就来介绍下过滤类的操作符。顾名思义，这类operators主要用于对事件数据的筛选过滤，只返回满足我们条件的数据。过滤类操作符主要包含： **`Filter`** **`Take`** **`TakeLast`** **`TakeUntil`** **`Skip`** **`SkipLast`** **`ElementAt`** **`Debounce`** **`Distinct`** **`DistinctUntilChanged`** **`First`** **`Last`**等等。
 
-###Filter
+### Filter
 **`filter(Func1)`**用来过滤观测序列中我们不想要的值，只返回满足条件的值，我们看下原理图：
 ![filter(Func1)](FilterOperator.png)
 
@@ -33,7 +33,7 @@ Observable.from(communities)
 }); 
 ```
 
-###Take
+### Take
 **`take(int)`**用一个整数n作为一个参数，从原始的序列中发射前n个元素.
 ![take(int)](TakeOperator.png)
 
@@ -50,7 +50,7 @@ Observable.from(communities)
         });
 ```     
 
-###TakeLast
+### TakeLast
 **`takeLast(int)`**同样用一个整数n作为参数，只不过它发射的是观测序列中后n个元素。
 ![takeLast(int)](TakeLastNOperator.png)
 
@@ -67,7 +67,7 @@ Observable.from(communities)
         });
 ```
 
-###TakeUntil
+### TakeUntil
 **`takeUntil(Observable)`**订阅并开始发射原始Observable，同时监视我们提供的第二个Observable。如果第二个Observable发射了一项数据或者发射了一个终止通知，`takeUntil()`返回的Observable会停止发射原始Observable并终止。
 ![takeUntil(Observable)](TakeUntilOperator.png)
 
@@ -150,22 +150,22 @@ Observable.from(communities)
         });
 ```        
 
-###SkipLast
+### SkipLast
 **`skipLast(int)`**忽略Observable发射的后n项数据。
 ![skipLast(int)](SkipLastOperator.png)
 
-###ElementAt
+### ElementAt
 **`elementAt(int)`**用来获取元素Observable发射的事件序列中的第n项数据，并当做唯一的数据发射出去。
 ![elementAt(int)](ElementAtOperator.png)
 
-###Debounce
+### Debounce
 **`debounce(long, TimeUnit)`**过滤掉了由Observable发射的速率过快的数据；如果在一个指定的时间间隔过去了仍旧没有发射一个，那么它将发射最后的那个。通常我们用来结合RxBing(Jake Wharton大神使用RxJava封装的Android UI组件)使用，防止button重复点击。
 ![debounce(long, TimeUnit)](DebounceOperator.png)
 
 **`debounce(Func1)`**可以根据Func1的call方法中的函数来过滤，Func1中的中的call方法返回了一个临时的Observable，如果原始的Observable在发射一个新的数据时，上一个数据根据Func1的call方法生成的临时Observable还没结束，那么上一个数据就会被过滤掉。
 ![debounce(Func1)](DebounceFOperator.png)
 
-###Distinct
+### Distinct
 **`distinct()`**的过滤规则是只允许还没有发射过的数据通过，所有重复的数据项都只会发射一次。
 ![distinct()](DistinctOperator.png)
 
@@ -222,7 +222,7 @@ Observable.from(houses)
 	小区:中粮·海景壹号; 房源描述:中粮海景壹号新出大平层！总价4500W起
 	小区:竹园新村; 房源描述:满五唯一，黄金地段
 
-###DistinctUntilChanged
+### DistinctUntilChanged
 **`distinctUntilChanged()`**和`distinct()`类似，只不过它判定的是Observable发射的当前数据项和前一个数据项是否相同。
 ![distinctUntilChanged()](DistinctUntilChangedOperator.png)
 
@@ -273,7 +273,7 @@ Observable.from(houses)
 	小区:中粮·海景壹号; 房源描述:南北通透，豪华五房
 
 
-###First
+### First
 **`first()`**顾名思义，它是的Observable只发送观测序列中的第一个数据项。
 ![first()](FirstOperator.png)
 
@@ -319,7 +319,7 @@ Observable.from(houses)
 
 	小区:竹园新村; 房源描述:满五唯一，黄金地段
 
-###Last
+### Last
 **`last()`**只发射观测序列中的最后一个数据项。
 ![last()](LastOperator.png)
 

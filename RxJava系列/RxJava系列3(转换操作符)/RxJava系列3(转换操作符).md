@@ -1,4 +1,4 @@
-##RxJava系列三（转换操作符）
+# RxJava系列三（转换操作符）
 > 转载请注明出处：[https://zhuanlan.zhihu.com/p/21926591](https://zhuanlan.zhihu.com/p/21926591)
 
 * [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
@@ -19,7 +19,7 @@
 
 这一章我们主要讲讲转换类操作符。所有这些Operators都作用于一个可观测序列，然后变换它发射的值，最后用一种新的形式返回它们。概念实在是不好理解，下面我们结合实际的例子一一介绍。
 
-####Map
+### Map
 
 **`map(Func1)`**函数接受一个Func1类型的参数(就像这样`map(Func1<? super T, ? extends R> func)`),然后吧这个Func1应用到每一个由Observable发射的值上，将发射的只转换为我们期望的值。这种狗屁定义我相信你也听不懂，我们来看一下官方给出的原理图：
 
@@ -45,7 +45,7 @@ Observable.just(1, 2, 3, 4, 5)
            
  > Func1构造函数中的两个参数分别是Observable发射值当前的类型和map转换后的类型，上面这个例子中发射值当前的类型是Integer,转换后的类型是String。
 
-####FlatMap
+### FlatMap
 **`flatMap(Func1)`**函数同样也是做转换的，但是作用却不一样。flatMap不太好理解，我们直接看例子（*我们公司是个房产平台，那我就拿房子举例*）：假设我们有一组小区数据`Community[] communites`,现在我们要输出每个小区的名字；我们可以这样实现:
 
 ```java
@@ -111,11 +111,11 @@ flatMap(Func1)的原理是这样的：
 最后我们来看看flatMap的原理图：
 ![flatMap(Func1)](FlatMapOperator.png)
 
-####ConcatMap
+### ConcatMap
 **`concatMap(Func1)`**解决了`flatMap()`的交叉问题，它能够把发射的值连续在一起，就像这样：
 ![concatMap(Func1)](ConcatMapOperator.png)
 
-####flatMapIterable
+### flatMapIterable
 **`flatMapIterable(Func1)`**和`flatMap()`几乎是一样的，不同的是`flatMapIterable()`它转化的多个Observable是使用Iterable作为源数据的。
 ![flatMapIterable(Func1)](FlatMapIterableOperator.png)
 
@@ -136,11 +136,11 @@ Observable.from(communities)
         });
 ```
 
-####SwitchMap
+### SwitchMap
 **`switchMap(Func1)`**和`flatMap(Func1)`很像，除了一点：每当源`Observable`发射一个新的数据项（Observable）时，它将取消订阅并停止监视之前那个数据项产生的`Observable`，并开始监视当前发射的这一个。
 ![switchMap(Func1)](SwitchMapOperator.png)
 
-####Scan
+### Scan
 **`scan(Func2)`**对一个序列的数据应用一个函数，并将这个函数的结果发射出去作为下个数据应用合格函数时的第一个参数使用。
 ![scan(Func2)](ScanOperator.png)
 
@@ -165,7 +165,7 @@ Observable.just(1, 2, 3, 4, 5)
 
 	1 3 6 10 15  
 
-####GroupBy
+### GroupBy
 **`groupBy(Func1)`**将原始Observable发射的数据按照key来拆分成一些小的Observable，然后这些小Observable分别发射其所包含的的数据，和SQL中的groupBy类似。实际使用中，我们需要提供一个生成key的规则（也就是Func1中的call方法），所有key相同的数据会包含在同一个小的Observable中。另外我们还可以提供一个函数来对这些数据进行转化，有点类似于集成了flatMap。
 ![groupBy(Func1)](GroupByOperator.png)
 
