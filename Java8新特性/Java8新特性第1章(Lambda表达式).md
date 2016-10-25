@@ -1,5 +1,5 @@
 # Java8新特性第1章(Lambda表达式)
-> 转载请注明出处：[http://www.jianshu.com/p/6e400da4a239](http://www.jianshu.com/p/6e400da4a239)
+> 转载请注明出处：[https://zhuanlan.zhihu.com/p/20540175](https://zhuanlan.zhihu.com/p/20540175)
 
 ***
 
