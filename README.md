@@ -1,7 +1,7 @@
 # Blog
 个人博客中的一些文章
 
-##Java8新特性
+## Java8新特性
 
 [Java8新特性第1章(Lambda表达式)](https://github.com/BaronZ88/Blog/blob/master/Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7%E7%AC%AC1%E7%AB%A0\(Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F\).md)
 
@@ -9,7 +9,7 @@
 
 [Java8新特性第3章(Stream API)](https://github.com/BaronZ88/Blog/blob/master/Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7%E7%AC%AC3%E7%AB%A0\(Stream%20API\).md)
 
-##RxJava系列
+## RxJava系列
 
 [RxJava系列1(简介)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%971\(%E7%AE%80%E4%BB%8B\)/RxJava%E7%B3%BB%E5%88%971\(%E7%AE%80%E4%BB%8B\).md)
 
@@ -25,11 +25,12 @@
 
 [RxJava系列7(最佳实践)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%977(%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5)/RxJava%E7%B3%BB%E5%88%977(%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5).md)
 
-##设计模式
+## 设计模式
 
 [观察者模式](https://github.com/BaronZ88/Blog/blob/master/DesignPatterns/ObserverPattern/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F.md)
 
 ====
+
 > 如果大家喜欢我这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
