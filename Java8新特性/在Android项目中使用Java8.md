@@ -30,9 +30,9 @@
 以下是构建 Android Dalvik 可执行文件可用的两种工具链的对比：
 
 * 旧版 javac 工具链：  
-  javac (.java --> .class) --> dx (.class --> .dex)
+  <font color="ff0000">`javac (.java --> .class) --> dx (.class --> .dex)`</font>
 * 新版 Jack 工具链：  
-  Jack (.java --> .jack --> .dex)
+  <font color="ff0000">`Jack (.java --> .jack --> .dex)`</font>
 	
 ## 配置
 
