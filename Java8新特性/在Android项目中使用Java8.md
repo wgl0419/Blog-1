@@ -23,7 +23,7 @@
 
 简单的说就是现在你的项目要想使用Stream API、接口默认方法和重复注解就要求你的minSdkVersion>=24，而Lambda表达式和方法引用则对minSdkVersion无要求。关于这些新特的使用及分析可以看看我之前的文章。
 
-## 启用Java8和Jack编译
+## Jack(Java Android Compiler Kit)
 
 要想在Android项目中使用Java8的新特性，需要将你的Android Studio升级到2.1及以上版本，并采用新的Jack(Java Android Compiler Kit)编译。新的 Android 工具链将 Java 源语言编译成 Android 可读取的 Dalvik 可执行文件字节码，且有其自己的 .jack 库格式，在一个工具中提供了大多数工具链功能：重新打包、压缩、模糊化以及 Dalvik 可执行文件分包。
 
@@ -34,7 +34,7 @@
 * 新版 Jack 工具链：  
   Jack (.java --> .jack --> .dex)
 	
-## 配置Gradle
+## 配置
 
 为了在项目中使用Java8，我们还需要项目module中的gradle.build文件中加入如下代码：
 
@@ -64,9 +64,30 @@ android {
 }
 ```
 
+## 使用
+
+进行上述配置后便可以在项目中使用Java8的新特性了。比如之前我们实现button的点击事件时需要这这样写：
+
+```java
+button.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+		v.setText("lalala");
+   	}
+});
+```
+
+现在我们便可以使用Java8的Lambda表达式来实现了：
+
+```java
+button.setOnClickListener(v -> v.setText("lalala"));
+```
+
+现在大家可以在Android项目中尽情的探索更多Java8的新特性了。  :)
+
 ## 总结
 
-当前Jack编译器还有诸多限制，要想在Android项目中使用完整的Java8新特性还需时日。期待Google爸爸尽快优化吧！
+当前Jack编译器还有诸多限制，比如在使用新的Java工具链时会禁用Instant Run以及前面提到的比分新特性对我们的最低支持版本和编译版本有要求等等；要想在Android项目中使用完整的Java8新特性还需时日。期待Google爸爸尽快优化吧！
 
 参考资料：
 * [https://developer.android.com/guide/platform/j8-jack.html](https://developer.android.com/guide/platform/j8-jack.html)

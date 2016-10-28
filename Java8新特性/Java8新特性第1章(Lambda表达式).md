@@ -31,7 +31,9 @@ button.setOnClickListener(new View.OnClickListener() {
 
 令人高兴的是Java8为我们带来了Lambda,下面我们看看利用Lambda如何实现上面的功能：
 
+```java
 button.setOnClickListener(v -> v.setText("lalala"));
+```
 
 怎么样？！五行代码用一行就搞定了！！！
 

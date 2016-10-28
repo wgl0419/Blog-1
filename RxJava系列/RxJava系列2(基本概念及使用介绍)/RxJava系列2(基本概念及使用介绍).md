@@ -242,7 +242,8 @@ private static <T> Subscription subscribe(Subscriber<? super T> subscriber, 				
 
 > subscribe()的参数除了可以是Observer和Subscriber以外还可以是Action1、Action0；这是一种更简单的回调，只有一个call(T)方法；由于太简单这里就不做详细介绍了！
 
-###异步
+## 异步
+
 上一篇文章中开篇就讲到RxJava就是来处理异步任务的。但是默认情况下我们在哪个线程调用subscribe()就在哪个线程生产事件，在哪个线程生产事件就在哪个线程消费事件。那怎么做到异步呢？RxJava为我们提供Scheduler用来做线程调度，我们来看看RxJava提供了哪些Scheduler。
 
 
