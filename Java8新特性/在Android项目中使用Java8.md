@@ -30,9 +30,9 @@
 以下是构建 Android Dalvik 可执行文件可用的两种工具链的对比：
 
 * 旧版 javac 工具链：  
-  <font color="ff0000">`javac (.java --> .class) --> dx (.class --> .dex)`</font>
+  <font color="ff0000"> `javac (.java --> .class) --> dx (.class --> .dex)` </font>
 * 新版 Jack 工具链：  
-  <font color="ff0000">`Jack (.java --> .jack --> .dex)`</font>
+  <font color="ff0000"> `Jack (.java --> .jack --> .dex)` </font>
 	
 ## 配置
 
@@ -66,7 +66,7 @@ android {
 
 ## 使用
 
-进行上述配置后便可以在项目中使用Java8的新特性了。比如之前我们实现button的点击事件时需要这这样写：
+进行上述配置后大家就可以在Android项目中尽情的探索使用Java8的新特性了。比如之前我们实现button的点击事件时需要这这样写：
 
 ```java
 button.setOnClickListener(new View.OnClickListener() {
@@ -83,11 +83,17 @@ button.setOnClickListener(new View.OnClickListener() {
 button.setOnClickListener(v -> v.setText("lalala"));
 ```
 
-现在大家可以在Android项目中尽情的探索更多Java8的新特性了。  :)
+如果你项目的minSdkVersion>=24，我们还可以使用Stream API。比方说有一个形状集合shapes，现在我们想把所有蓝色的形状提取到新的List里。通过Stream API则可以很轻易的办到：
+
+```java
+List<Shape> blue = shapes.stream()
+						  .filter(s -> s.getColor() == BLUE)
+						  .collect(Collectors.toList());
+```
 
 ## 总结
 
-当前Jack编译器还有诸多限制，比如在使用新的Java工具链时会禁用Instant Run以及前面提到的比分新特性对我们的最低支持版本和编译版本有要求等等；要想在Android项目中使用完整的Java8新特性还需时日。期待Google爸爸尽快优化吧！
+Java8的新特性并不是本文的重点，对此有兴趣的同学可以去翻看我之前的文章。当前Jack编译器还有诸多限制，比如在使用新的Jack工具链时会禁用Instant Run以及前面提到的新特性对我们的最低支持版本和编译版本有要求等等(我猜想Jack对Buck、Layoutcast、Freeline等编译方案也会有影响，没做过验证，有了解的同学可以在评论区留言和大家交流下)；总之要想在Android项目中愉快的使用Java8全部的新特性还需时日。期待Google爸爸尽快优化吧！
 
 参考资料：
 * [https://developer.android.com/guide/platform/j8-jack.html](https://developer.android.com/guide/platform/j8-jack.html)
