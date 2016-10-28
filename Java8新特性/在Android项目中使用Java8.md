@@ -1,5 +1,5 @@
 # 在Android项目中使用Java8
-> 转载请注明出处：[]()
+> 转载请注明出处：[https://zhuanlan.zhihu.com/p/23279894](https://zhuanlan.zhihu.com/p/23279894)
 
 ***
 
