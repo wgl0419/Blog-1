@@ -2,7 +2,11 @@
 
 #### Java内置的3种标准注解
 
-<table class="table table-striped">
+<table class="table table-striped" width="70%">
+	<tr>
+		<th>标准注解</th>
+		<th>描述</th>
+	</tr>
 	<tr>
 		<td>@Override</td>
 		<td><h6>表示当前的方法定义将覆盖超类中的方法。如果你不小心拼写错误，或者方法签名对不上被覆盖的方法，编译器就会发出错误提示。</h6></td>
@@ -22,7 +26,7 @@
 <table class="table table-striped">
 	<tr>
 		<th>元注解</th>
-		<th>解释</th>
+		<th>描述</th>
 	</tr>
 	<tr>
 		<td>@Target</td>
