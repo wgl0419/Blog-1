@@ -1,4 +1,4 @@
-# 手把手教你使用Java注解实现ButterKnife
+# 手把手教你使用Java注解实现ButterKnife（待完成...）
 
 #### Java内置的3种标准注解
 
