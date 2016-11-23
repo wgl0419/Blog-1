@@ -1,8 +1,12 @@
 # 手把手教你使用Java注解实现ButterKnife（待完成...）
 
+既然是使用注解(Annotation)来实现ButterKnife那么不可避免的就要先来谈谈Java注解了。网上关于Java注解的文章已经数不胜数，但是能把注解简单明了介绍清楚的还真没有（起码我还没找到）。
+
+什么是注解呢？
+
 #### Java内置的3种标准注解
 
-<table class="table table-striped" width="70%">
+<table class="table table-striped">
 	<tr>
 		<th>标准注解</th>
 		<th>描述</th>
