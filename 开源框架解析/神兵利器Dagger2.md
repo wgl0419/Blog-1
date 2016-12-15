@@ -1,5 +1,7 @@
 # 神兵利器Dagger2
 
+> 这可能是东半球最好的Dagger2入门教程了
+
 ## 一、简介
 
 Dagger-匕首，鼎鼎大名的Square公司旗下又一把利刃（没错！还有一把黄油刀，唤作ButterKnife）；故此给本篇取名神兵利器Dagger2。
@@ -75,7 +77,7 @@ public class Car{
 
 ## 三、为什么需要依赖注入
 
-我们之所是要依赖注入，最重要的就是为了保证灵活性、为了解耦，达到高内聚低耦合的目的，保证代码的健壮性、灵活性和可维护性。
+我们之所是要依赖注入，最重要的就是为了解耦，达到高内聚低耦合的目的，保证代码的健壮性、灵活性和可维护性。
 
 下面我们看看同一个业务的两种实现方案：
 
@@ -156,9 +158,121 @@ public class CarTest{
 
 又如开篇我在简介中说到的，Dagger是一种半静态半运行时的DI框架。很多时候它依赖注入需要通过反射来实现，这无论在大型的服务端应用还是在Android应用上都不是最优方案。升级版的Dagger2解决了这一问题，从半静态变为完全静态，从Map式的API变成申明式API（@Module），生成的代码更优雅高效；而且一旦出错我们在编译期间就能发现。所以Dagger2对开发者的更加友好了，当然Dagger2也因此丧失了一些灵活性，但总体来说利还是远远大于弊的。
 
-前面提到这种A B C D E连续依赖的问题，一旦E的创建方式发生了改变就会引发连锁反应，可能会导致A B C D都需要做针对性的修改；但是骚年，你以为为这仅仅是工作量的问题吗？更可怕的是昂我们创建A时西药按顺序先创建E D C B四个对象，而且必须保证顺序上是正确的。Dagger2就很好的解决了这一问题（不只是Dagger2，在其他DI框架中开发者同样不需要关注这些问题）。
+前面提到这种A B C D E连续依赖的问题，一旦E的创建方式发生了改变就会引发连锁反应，可能会导致A B C D都需要做针对性的修改；但是骚年，你以为为这仅仅是工作量的问题吗？更可怕的是我们创建A时需要按顺序先创建E D C B四个对象，而且必须保证顺序上是正确的。Dagger2就很好的解决了这一问题（不只是Dagger2，在其他DI框架中开发者同样不需要关注这些问题）。
 
 ## 五、Dagger2注解
+
+开篇我们就提到Dagger2是基于Java注解来实现依赖注入的，那么在正式使用之前我们需要先了解下Dagger2中的注解：
+
+* @Inject：@Inject有两个作用，一是用来标记需要依赖的变量，以此告诉Dagger2为它提供依赖；二是用来标记构造函数，Dagger2通过Inject注解可以在需要这个类实例的时候来找到这个构造函数并把相关实例构造出来，以此来为被Inject标记了的变量提供依赖；
+
+* @Module：@Module用于标注专门用来提供依赖的类。有的人可能有些疑惑，看了上面的@Inject，需要在构造函数上标记才能提供依赖，那么如果我们需要提供的类构造函数无法修改怎么办，比如一些jar包里的类，我们无法修改源码。这时候就需要使用Module了。Module可以给不能修改源码的类提供依赖，当然，能用Inject标注的通过Module也可以提供依赖；
+
+* @Provide：@Provide用于标注Module所标注的类中的一个方法，该方法在需要提供依赖时被调用，从而把预先提供好的对象当做依赖给标注了@Injection的变量赋值；
+
+* @Component：@Component用于标注接口，是依赖需求方和依赖提供方之间的桥梁。被Component标注的接口在编译时会生成该接口的实现类（如果@Component标注的接口为CarComponent，则编译期生成的实现类为DaggerCarComponent）,我们通过调用这个实现类的方法完成注入； 
+
+* @Qulifier：@Qulifier用于自定义注解，也就是说@Qulifier就如同Java提供的几种基本元注解一样用来标记注解类。我们在使用@Module来标注提供依赖的方法时，方法名我们是可以随便定义的（虽然我们定义方法名一般以provide开头，但这并不是强制的，只是为了增加可读性而已）。那么Dagger2怎么知道这个方法是为谁提供依赖呢？答案就是返回值的类型，Dagger2根据返回值的类型来决定为哪个被@Inject标记了的变量赋值。但是问题来了，一旦有多个一样的返回类型Dagger2就懵逼了。@Qulifier的存在正式为了解决这个问题，我们使用@Qulifier来定义自己的注解，然后通过自定义的注解去标注提供依赖的方法和依赖需求方（也就是被@Inject标注的变量）；这样Dagger2就知道为谁提供依赖了。
+
+* @Scope：
+
+## 六、Dagger2的简单使用
+
+关于Dagger2的依赖配置就不在这里占用篇幅去描述了，大家可以到它的github主页下去查看官方教程[https://github.com/google/dagger](https://github.com/google/dagger)
+
+前面我们详(luo)细(suo)的介绍了什么是依赖注入以及怎样实现依赖注入；下面来看看如何使用Dagger2来实现依赖注入。我们还是拿前面的Car和Engine来举例。
+
+```Java
+public class Car {
+
+    @Inject
+    Engine engine;
+
+    public Car() {
+        DaggerCarComponent.builder().build().inject(this);
+    }
+
+    public Engine getEngine() {
+        return this.engine;
+    }
+}
+```
+
+```Java
+public class Engine {
+    
+    @Inject
+    Engine(){}
+    
+    public void run(){
+        System.out.println("引擎转起来了~~~");
+    }
+}
+```
+
+```Java
+@Component
+public interface CarComponent {
+    void inject(Car car);
+}
+```
+
+如果创建Engine的构造函数需要参数呢？比如说制造一台引擎是需要齿轮(Gear)的。
+
+```Java
+public class Car {
+
+    @Inject
+    Engine engine;
+
+    public Car() {
+        DaggerCarComponent.builder()
+                .markCarModule(new MarkCarModule())
+                .build().inject(this);
+    }
+
+    public Engine getEngine() {
+        return this.engine;
+    }
+}
+```
+
+```Java
+public class Engine {
+    
+    public Engine(String gear){ }
+    
+    public void run(){
+        System.out.println("引擎转起来了~~~");
+    }
+}
+```
+
+```Java
+@Module
+public class MarkCarModule {
+
+    public MarkCarModule(){ }
+
+    @Provides
+    Engine provideEngine(){
+        return new Engine("gear");
+    }
+}
+```
+
+```Java
+@Component(modules = {MarkCarModule.class})
+public interface CarComponent {
+    void inject(Car car);
+}
+```
+
+## 七、Dagger2原理分析
+
+## 八、总结
+
+关于Dagger2在实际项目中的应用可以参照这个开源项目 [https://github.com/BaronZ88/MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)
 
 
 
