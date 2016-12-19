@@ -1,7 +1,5 @@
 # 神兵利器Dagger2
 
-> 这可能是东半球最啰嗦的Dagger2入门文章了
-
 ## 一、简介
 
 Dagger-匕首，鼎鼎大名的Square公司旗下又一把利刃（没错！还有一把黄油刀，唤作ButterKnife）；故此给本篇取名神兵利器Dagger2。
