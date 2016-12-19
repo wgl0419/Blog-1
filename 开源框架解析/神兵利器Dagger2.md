@@ -500,7 +500,7 @@ bingo！我们确实通过@Scope实现了局部的单例。
 
 前面啰里啰嗦的介绍了Dagger2的基本使用，接下来我们再分析分析实现原理。这里不会分析Dagger2根据注解生成各种代码的原理，关于Java注解以后有机会再写一篇文章来介绍。后面主要分析的是Dagger2生成的各种类如何帮我们实现依赖注入，为了便于理解我这里选了前面相对简单的**案例B**来做分析。
 
-Dagger2编译期生成的代码位于`build/generated/source/apt/debug/你的项目包名/`下面:
+Dagger2编译期生成的代码位于`build/generated/source/apt/debug/your package name/`下面:
 ![Generated Code](generated_code.png)
 
 首先我们看看Dagger2依据依赖提供方`MarkCarModule`生成的对应工厂类`MarkCarModule_ProvideEngineFactory`。为了方便大家理解对比，后面我一律会把自己写的类和Dagger2生成的类一并放出来。
