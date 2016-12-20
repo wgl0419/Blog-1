@@ -646,7 +646,7 @@ public final class Car_MembersInjector implements MembersInjector<Car> {
 
 这篇文章只是通过一些简单的例子介绍了Dagger2的相关概念及使用，实际项目中的应用远比这里的例子要复杂。关于Dagger2在实际项目中的应用可以参照这个开源项目 [https://github.com/BaronZ88/MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)（项目采用MVP架构，其中View层和Presenter层的解耦就是通过Dagger2来实现的）。
 
-> [MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)基于MVP架构，采用时下各主流开源库实现。开发此项目主要是为展示各种开源库的使用方式以及Android项目的架构方案，并作为团队开发规范的一部分。项目中每一个字母、每一个命名、每一行代码都是经过仔细考究的。但是由于时间精力有限，项目UI未做严格要求。本着精益求精、为大家提供更好开源项目和更美天气应用的原则，因此在这里呼吁有兴趣的开发和UED同学一起来完成这个项目。
+> [MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)是一款开源天气App，开发此项目主要是为展示各种开源库的使用方式以及Android项目的架构方案，并作为团队开发规范的一部分。项目中每一个字母、每一个命名、每一行代码都是经过仔细考究的；但是由于时间精力有限，项目UI未做严格要求。本着精益求精、提供更好开源项目和更美天气应用的原则，因此期望有兴趣的开发和UED同学可以一起来完成这个项目。
 
 
 
