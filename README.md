@@ -27,6 +27,10 @@
 
 [RxJava系列7(最佳实践)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%977(%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5)/RxJava%E7%B3%BB%E5%88%977(%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5).md)
 
+## 开源框架解析
+
+[神兵利器Dagger2](https://github.com/BaronZ88/Blog/blob/master/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6%E8%A7%A3%E6%9E%90/Dagger2/%E7%A5%9E%E5%85%B5%E5%88%A9%E5%99%A8Dagger2.md)
+
 ## 设计模式
 
 [观察者模式](https://github.com/BaronZ88/Blog/blob/master/DesignPatterns/ObserverPattern/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F.md)
