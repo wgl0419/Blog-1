@@ -1,14 +1,12 @@
 # 神兵利器Dagger2
 
-## 一、简介
-
 Dagger-匕首，鼎鼎大名的Square公司旗下又一把利刃（没错！还有一把黄油刀，唤作ButterKnife）；故此给本篇取名神兵利器Dagger2。
 
 Dagger2起源于Dagger，是一款基于Java注解来实现的完全在编译阶段完成依赖注入的开源库，主要用于模块间解耦、提高代码的健壮性和可维护性。Dagger2在编译阶段通过apt利用Java注解自动生成Java代码，然后结合手写的代码来自动帮我们完成依赖注入的工作。
 
 起初Square公司受到Guice的启发而开发了Dagger，但是Dagger这种半静态半运行时的框架还是有些性能问题（虽说依赖注入是完全静态的，但是其有向无环图(Directed Acyclic Graph)还是基于反射来生成的，这无论在大型的服务端应用还是在Android应用上都不是最优方案）。因此Google工程师Fork了Dagger项目，对它进行了改造。于是变演变出了今天我们要讨论的Dagger2，所以说Dagger2其实就是高配版的Dagger。
 
-## 二、依赖注入（Dependency Injection）
+## 依赖注入（Dependency Injection）
 
 那么什么是依赖注入呢？在解释这个概念前我们先看一小段代码：
 
@@ -73,7 +71,7 @@ public class Car{
 
 前两种注入方式需要我们编写大量的模板代码，而机智的Dagger2则是通过Java注解在编译期来实现依赖注入的。
 
-## 三、为什么需要依赖注入
+## 为什么需要依赖注入
 
 我们之所是要依赖注入，最重要的就是为了解耦，达到高内聚低耦合的目的，保证代码的健壮性、灵活性和可维护性。
 
@@ -148,7 +146,7 @@ public class CarTest{
 
 方案A明显丧失了灵活性，一切依赖都是在Car类的内部创建，Car与Engine和Wheel严重耦合。一旦Engine或者Wheel的创建方式发生了改变，我们就必须要去修改Car类的构造函数（比如说现在创建Wheel实例的构造函数改变了，需要传入Rubber（橡胶）了）；另外我们也没办法替换动态的替换依赖实例（比如我们想把Car的Wheel（轮胎）从邓禄普（轮胎品牌）换成米其林（轮胎品牌）的）。这类问题在大型的商业项目中则更加严重，往往A依赖B、B依赖C、C依赖D、D依赖E；一旦稍有改动便牵一发而动全身，想想都可怕！而依赖注入则很好的帮我们解决了这一问题。
 
-## 四、为什么是Dagger2
+## 为什么是Dagger2
 
 无论是构造函数注入还是接口注入，都避免不了要编写大量的模板代码。机智的猿猿们当然不开心做这些重复性的工作，于是各种依赖注入框架应用而生。但是这么多的依赖注入框架为什么我们却偏爱Dagger2呢？我们先从Spring中的控制反转（IOC）说起。
 
@@ -158,7 +156,7 @@ public class CarTest{
 
 前面提到这种A B C D E连续依赖的问题，一旦E的创建方式发生了改变就会引发连锁反应，可能会导致A B C D都需要做针对性的修改；但是骚年，你以为为这仅仅是工作量的问题吗？更可怕的是我们创建A时需要按顺序先创建E D C B四个对象，而且必须保证顺序上是正确的。Dagger2就很好的解决了这一问题（不只是Dagger2，在其他DI框架中开发者同样不需要关注这些问题）。
 
-## 五、Dagger2注解
+## Dagger2注解
 
 开篇我们就提到Dagger2是基于Java注解来实现依赖注入的，那么在正式使用之前我们需要先了解下Dagger2中的注解。Dagger2使用过程中我们通常接触到的注解主要包括：@Inject, @Module, @Provides, @Component, @Qulifier, @Scope, @Singleten。
 
@@ -186,7 +184,7 @@ public class CarTest{
 	* a：若存在参数，则从步骤1开始依次初始化每一个参数
 	* b：若不存在，则直接初始化该类实例，完成一次依赖注入。
 
-## 六、Dagger2使用入门
+## Dagger2使用入门
 
 前面长篇大论的基本都在介绍概念，下面我们看看Dagger2的基本应用。关于Dagger2的依赖配置就不在这里占用篇幅去描述了，大家可以到它的github主页下去查看官方教程[https://github.com/google/dagger](https://github.com/google/dagger)。接下来我们还是拿前面的Car和Engine来举例。
 
@@ -494,7 +492,7 @@ Create Engine
 
 bingo！我们确实通过@Scope实现了局部的单例。
 
-## 七、Dagger2原理分析
+## Dagger2原理分析
 
 前面啰里啰嗦的介绍了Dagger2的基本使用，接下来我们再分析分析实现原理。这里不会分析Dagger2根据注解生成各种代码的原理，关于Java注解以后有机会再写一篇文章来介绍。后面主要分析的是Dagger2生成的各种类如何帮我们实现依赖注入，为了便于理解我这里选了前面相对简单的**案例B**来做分析。
 
@@ -644,7 +642,7 @@ public final class Car_MembersInjector implements MembersInjector<Car> {
 
 `Car_MembersInjector`中的`create()`用于实例化自己，这个方法前面我们看到是在`DaggerCarComponent`中调用的。`injectMembers(Car instance)`将`engineProvider.get()`的返回值赋给了依赖需求方Car的engine变量，而`engineProvider.get()`正是本节一开始我们提到的`MarkCarModule_ProvideEngineFactory`中的`get()`方法。至此整个依赖注入的流程就完成了。更复杂的应用场景会生成更加复杂的代码，但原理都和前面分析的大同小异。
 
-## 八、总结
+## 总结
 
 这篇文章只是通过一些简单的例子介绍了Dagger2的相关概念及使用，实际项目中的应用远比这里的例子要复杂。关于Dagger2在实际项目中的应用可以参照这个开源项目 [https://github.com/BaronZ88/MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)（项目采用MVP架构，其中View层和Presenter层的解耦就是通过Dagger2来实现的）。
 
