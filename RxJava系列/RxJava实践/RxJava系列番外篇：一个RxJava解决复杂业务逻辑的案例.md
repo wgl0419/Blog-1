@@ -14,7 +14,7 @@
 
 ```Java
 Observable<Weather> observableForGetWeatherData;
-//从数据库获取天气数据
+//首先创建一个从数据库获取天气数据的Observable
 Observable<Weather> observableForGetWeatherFromDB = Observable.create(new Observable.OnSubscribe<Weather>() {
     @Override
     public void call(Subscriber<? super Weather> subscriber) {
@@ -31,7 +31,7 @@ Observable<Weather> observableForGetWeatherFromDB = Observable.create(new Observ
 if (!NetworkUtils.isNetworkConnected(context)) {
     observableForGetWeatherData = observableForGetWeatherFromDB;
 } else {
-    //从服务端获取天气数据
+    //接着创建一个从网络获取天气数据的Observable
     Observable<Weather> observableForGetWeatherFromNetWork = null;
     switch (configuration.getDataSourceType()) {
         case ApiConstants.WEATHER_DATA_SOURCE_TYPE_KNOW:
@@ -68,7 +68,7 @@ if (!NetworkUtils.isNetworkConnected(context)) {
                 }
             });
 
-    //使用concat操作符将
+    //使用concat操作符将两个Observable合并
     observableForGetWeatherData = Observable.concat(observableForGetWeatherFromDB, observableForGetWeatherFromNetWork)
             .filter(new Func1<Weather, Boolean>() {
                 @Override
@@ -105,11 +105,11 @@ observableForGetWeatherData.subscribeOn(Schedulers.io())
         });
 ```
 
-上面的代码看起来比较复杂，我们采用表达式简化下代码：
+上面的代码看起来比较复杂，我们采用Lambda表达式简化下代码：
 
 ```Java
 Observable<Weather> observableForGetWeatherData;
-//从数据库获取天气数据
+//首先创建一个从数据库获取天气数据的Observable
 Observable<Weather> observableForGetWeatherFromDB = Observable.create(new Observable.OnSubscribe<Weather>() {
     @Override
     public void call(Subscriber<? super Weather> subscriber) {
@@ -126,7 +126,7 @@ Observable<Weather> observableForGetWeatherFromDB = Observable.create(new Observ
 if (!NetworkUtils.isNetworkConnected(context)) {
     observableForGetWeatherData = observableForGetWeatherFromDB;
 } else {
-    //从服务端获取天气数据
+    //接着创建一个从网络获取天气数据的Observable
     Observable<Weather> observableForGetWeatherFromNetWork = null;
     switch (configuration.getDataSourceType()) {
         case ApiConstants.WEATHER_DATA_SOURCE_TYPE_KNOW:
@@ -148,7 +148,7 @@ if (!NetworkUtils.isNetworkConnected(context)) {
                 }
             }));
 
-    //使用concat操作符将
+    //使用concat操作符将两个Observable合并
     observableForGetWeatherData = Observable.concat(observableForGetWeatherFromDB, observableForGetWeatherFromNetWork)
             .filter(weather -> weather != null && !TextUtils.isEmpty(weather.getCityId()))
             .distinct(weather -> weather.getRealTime().getTime())//如果天气数据发布时间一致，我们再认为是相同的数据从丢弃掉
