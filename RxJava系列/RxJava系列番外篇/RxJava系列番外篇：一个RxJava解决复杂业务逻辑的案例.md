@@ -1,6 +1,14 @@
 # RxJava系列番外篇：一个RxJava解决复杂业务逻辑的案例
 
-之前写过一系列RxJava1.x的文章，也承诺过会尽快有RxJava2.0的介绍。无奈实际项目中还未真正的使用RxJava2，不敢妄动笔墨。所以这次还是给大家分享一个使用RxJava1.x解决问题的案例，希望对大家在使用RxJava的时候有一点点启发。
+之前写过一系列RxJava1的文章，也承诺过会尽快有RxJava2的介绍。无奈实际项目中还未真正的使用RxJava2，不敢妄动笔墨。所以这次还是给大家分享一个使用RxJava1解决问题的案例，希望对大家在使用RxJava的时候有一点点启发。对RxJava还不了解的同学可以先去看看我之前的RxJava系列文章：
+
+* [RxJava系列1(简介)](https://zhuanlan.zhihu.com/p/20687178)
+* [RxJava系列2(基本概念及使用介绍)](https://zhuanlan.zhihu.com/p/20687307)
+* [RxJava系列3(转换操作符)](https://zhuanlan.zhihu.com/p/21926591)
+* [RxJava系列4(过滤操作符)](https://zhuanlan.zhihu.com/p/21966621)
+* [RxJava系列5(组合操作符)](https://zhuanlan.zhihu.com/p/22039934)
+* [RxJava系列6(从微观角度解读RxJava源码)](https://zhuanlan.zhihu.com/p/22338235)   
+* [RxJava系列7(最佳实践)](https://zhuanlan.zhihu.com/p/23108381)  
 
 ## 业务场景
 
@@ -182,9 +190,10 @@ observableForGetWeatherData.subscribeOn(Schedulers.io())
 
 > 本文中的代码在[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)中的`WeatherDataRepository`类中有同样的实现，文章中为了更完整的将整个实现过程呈现出来，对代码做了部分改动。
 > 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、在GitHub Follow我。
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、Github以及简书。
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
+> * 简书：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
 
 
