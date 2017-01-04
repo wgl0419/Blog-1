@@ -186,7 +186,7 @@ observableForGetWeatherData.subscribeOn(Schedulers.io())
 1. 上述代码是最佳实现方案吗？还有什么更加合理的做法？
 2. 我们在`observableForGetWeatherData`中使用`distinct`和`takeUntil`过滤筛选天气数据的时候网络请求会不会已经发出去了？这样做还有意义吗？
 
-欢迎大家在留言中一起讨论。
+欢迎大家留言讨论。
 
 > 本文中的代码在[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)中的`WeatherDataRepository`类中有同样的实现，文章中为了更完整的将整个实现过程呈现出来，对代码做了部分改动。
 > 
