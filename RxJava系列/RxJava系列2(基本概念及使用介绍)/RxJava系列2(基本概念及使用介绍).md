@@ -306,9 +306,8 @@ Observable.from(getCommunitiesFromServer())
 
 好了，RxJava系列的入门内容我们就聊到这。下一篇我们再继续介绍更多的API以及它们内部的原理。
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
-> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 

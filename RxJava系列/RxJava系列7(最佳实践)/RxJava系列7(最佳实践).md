@@ -151,11 +151,10 @@ RxJava1.X的系列文章就到此结束了，由于本人对RxJava的理解有�
 好啦，我们RxJava2见！~
 ***
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
-> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 
 
 

@@ -367,10 +367,9 @@ Observable.from(houses)
 
 这一章我们就先聊到这，更多的过滤类操作符的介绍大家可以去查阅官方文档和源码；在下一章我们将继续介绍组合类操作符。
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
-> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 
 

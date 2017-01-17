@@ -210,9 +210,8 @@ Observable.concat(groupByCommunityNameObservable)
 	
 转换类的操作符就先介绍到这，后续还会继续介绍组合、过滤类的操作符及源码分析，敬请期待！
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
-> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 
