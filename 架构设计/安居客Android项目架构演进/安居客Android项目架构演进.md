@@ -11,7 +11,7 @@
 
 这一时期代码结构混乱、层次不清，各业务技术方案不统一，冗余代码充斥着项目的各个角落；甚至连包结构都是乱的，项目架构更是无从谈起。大家只不过是不停地往上堆砌代码添加新功能罢了。于是我进入公司的第一件事就是向Leader申请梳理了整个项目的包结构。
 
-而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、第三方地图的封装AnjukeMapSDK等等。这之后安居客项目架构大致演变成了这样：
+而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、第三方地图的封装AnjukeMapSDK等等。这之后安居客项目架构大致演变成了这样：
 <div align="center">
 	<img src="merge2.png" width = "90%" alt="图片名称" align=center />
 </div>
@@ -26,7 +26,7 @@
 
 ### 2.1 MVP的设计与实现
 
-第一节末的我提到原始的架构慢慢浮现出了新的问题：
+第一节末我提到原始的架构慢慢浮现出了新的问题,包括：
 
 * Activity和Fragment越来越多的同时承担了Controller和View的职责，导致他们变得及其臃肿且难以维护；
 * 由于Controller和View的揉合，导致单元测试起来很困难；
@@ -44,7 +44,7 @@
 
 * **View Layer**: 只负责UI的绘制呈现，包含Framgment和一些自定义的UI组件，Activity在项目中不再负责View的职责，仅仅是一个全局的控制者，负责创建View和Presenter的实例；
 * **Module Layer**: 负责检索、存储、操作数据，包括来自网络、数据库、磁盘文件和SharedPreferences的数据；
-* **Presenter Layer**: 作为View和Module的之间的纽带，它从Model层中获取数据，然后调用View的接口控制View；<!--在我们的架构中Presenter只和Data Repository打交道，Data Repository负责从RetrofitService、DatabaseHelper、PreferenceHelper和FileManager中获取数据；-->
+* **Presenter Layer**: 作为View和Module的之间的纽带，它从Model层中获取数据，然后调用View的接口去控制View；<!--在我们的架构中Presenter只和Data Repository打交道，Data Repository负责从RetrofitService、DatabaseHelper、PreferenceHelper和FileManager中获取数据；-->
 * **Contact**: 我们仿照Google的Demo加入契约类Contact来统一管理View和Presenter的接口，使View和Presenter中的功能一目了然，利于维护；
 * **Basic Component Layer**: 供整个项目调用的基础组件层，包括开源的网络库、ORM、图片加载框架和自研的AnjukeMapSDK、UIComponent、CommonUtils等等。
 
@@ -68,7 +68,7 @@
 
 现在的安居客有是三个业务团队：安居客用户App、经纪人App、集客家App。为了避免各个业务团队重复造轮子，团队中也需要有一定的技术沉淀，因此组件化是必须的。根据业务相关性，我们将这些组件分为：基础组件和业务组件。后面在介绍模块化的时候会进一步介绍。
 
-组件化的带来了哪些好处：
+组件化的带来的好处不言而喻：
 
 * 避免重复造轮子，节省开发维护成本；
 * 降低项目复杂性，提升开发效率；
@@ -76,7 +76,7 @@
 
 ### 3.2 模块化
 
-自从oasisfeng在去年的MDCC2016上分享了模块化的经验后，模块化在Android社区越来越多的被提起。我们自然也不落俗的去做了一些研究和探索。安居客现在面临很多问题：例如全量编译时间太长（我这台13款的MacBook Pro打一次包得花十多分钟）；新房、二手房、租房等等模块间耦合严重，不利于多团队并行开发测试；另外在17年初公司重新将租房App捡起推广，我也不想单独让人来开发维护一个三年前的项目，希望能直接从现在的安居客用户端总拆分出租房模块最为一个单独的app发布上线。这样看来模块化似乎是一个不错的选择。
+自从oasisfeng在去年的MDCC2016上分享了模块化的经验后，模块化在Android社区越来越多的被提起。我们自然也不落俗的去做了一些研究和探索。安居客现在面临很多问题：例如全量编译时间太长（我这台13款的MacBook Pro打一次包得花十多分钟）；例如新房、二手房、租房等等模块间耦合严重，不利于多团队并行开发测试；另外在17年初公司重新将租房App捡起推广，我也不想单独让人来开发维护一个三年前的项目，希望能直接从现在的安居客用户端总拆分出租房模块最为一个单独的app发布上线。这样看来模块化似乎是一个不错的选择。
 
 所以我们做模块化的目的大致是这样的：
 
@@ -85,18 +85,20 @@
 * 多团队间并行开发、测试
 * 解决好租App需要单独维护的问题，降低研发成本
 
-先来看看安居客用户App的模块化设计图：
+> 15年Trinea还在安居客的时候开发了一套插件化框架，但受限于当时的团队规模及各种局限性，插件化对整个项目的改造太大，因此在安居客团队中插件化并未实施下来。而模块化其实是个很好的过渡方案，将项目按照模块才分后各业务模块间解耦，后续如有必要 ，再进行插件化改造只是水到渠成的事。
+
+来看看安居客用户App的模块化设计图：
 <div align="center">
 	<img src="modularization1.png" width = "100%" alt="图片名称" align=center />
 </div>
 
 整个项目分为三层，从下往上分别是：
 
-* Basic Component Layer: 基础组件层，顾名思义就是一些基础组件，包含了各种开源库以及我们自研的与业务无关的工具库；
+* Basic Component Layer: 基础组件层，顾名思义就是一些基础组件，包含了各种开源库以及和业务无关的各种自研库；
 * Business Component Layer: 业务组件层，这一项的所有组价都是业务相关的，例如上图中的支付组件AnjukePay、数据模拟组件DataSimulator等等；
 * Business Module Layer: 业务module层，例如安居客用户App我们就可以拆分成新房Module、二手房Module、IM Module等等，每个单独的Business Module都必须准遵守前面提到的MVP架构
 
-同时针对模块化我们有些自己的规定:
+同时针对模块化我们也需要定义一些自己的游戏规则:
 
 * 对于Business Module Layer，各业务模块之间的通讯使用隐式的Intent来实现（后面我们可以开发自己的路由框架Router）
 * 对于Business Component Layer，单一业务组件只能对应某一项具体的业务，对于有个性化需求的对外部提供接口让调用方定制
@@ -127,7 +129,7 @@ if(isBuildModule.toBoolean()){
 <div align="center">
 	<img src="modularization4.png" width = "100%" alt="图片名称" align=center />
 </div>
-以上就是我对安居客三年来Android技术架构演变历程的简单总结，不足之处还希望能得到大家的批评指正。至于模块化，还属于探索设计和Demo开发阶段，后面Demo完善后我会把Demo放到GitHub并且再写一篇文章详细介绍模块化的设计和实现细节。
+以上就是我对安居客三年来Android技术架构演变历程的简单总结，不足之处希望大家批评指正。至于模块化，还属于探索设计和Demo开发阶段，后面Demo完善后我会把Demo放到GitHub并且再写一篇文章详细介绍模块化的设计和实现细节。
 
 
 参考资料：
@@ -142,5 +144,4 @@ if(isBuildModule.toBoolean()){
 > 如果你喜欢我的文章，就关注下知乎专栏或者GitHub上添个star吧！这样我会有持续写下去的动力。
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88) 
-
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
