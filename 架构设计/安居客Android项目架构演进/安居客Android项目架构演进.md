@@ -31,9 +31,9 @@
 ### MVP的设计与实现
 
 在研究了Google推出的基于MVP架构的Demo后，我们发现MVP架构能解决现在所面临过的很多问题，于是我们学习并引入到了我们的项目中来，并针对性的做了部分调整。下图呈现的是安居客MVP方案：
-<div align="center"><img src="mvp1.png" width = "100%" alt="图片名称" align=center /></div>
+<div align="center"><img src="mvp1.png" width = "80%" alt="图片名称" align=center /></div>
 
-<div align="center"><img src="mvp2.png" width = "100%" alt="图片名称" align=center /></div>
+<!--<div align="center"><img src="mvp2.png" width = "80%" alt="图片名称" align=center /></div>-->
 
 > 基于此架构我在GitHub上开源了一个项目[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)，有兴趣的小伙伴可以去clone下来看看，如果觉得对你有帮助就给个star吧。  :)
 
@@ -82,7 +82,7 @@
 > 15年Trinea还在安居客的时候开发了一套插件化框架，但受限于当时的团队规模并且插件化对整个项目的改造太大，因此在安居客团队中插件化并未实施下来。而模块化其实是个很好的过渡方案，将项目按照模块拆分后各业务模块间解耦的问题不存在了，后续如有必要，再进行插件化改造只不过是水到渠成的事。
 
 来看看安居客用户App的模块化设计图：
-<div align="center"><img src="modularization1.png" width = "100%" alt="图片名称" align=center /></div>
+<div align="center"><img src="modularization1.png" width = "80%" alt="图片名称" align=center /></div>
 
 整个项目分为三层，从下往上分别是：
 
@@ -108,19 +108,13 @@ if(isBuildModule.toBoolean()){
 ```
 
 最后大家看看安居客模块化的整体架构设计图：
-<div align="center">
-	<img src="modularization2.png" width = "100%" alt="图片名称" align=center />
-</div>
+<div align="center"><img src="modularization2.png" width = "80%" alt="图片名称" align=center /></div>
 
 单模块示意图1：
-<div align="center">
-	<img src="modularization3.png" width = "100%" alt="图片名称" align=center />
-</div>
+<div align="center"><img src="modularization3.png" width = "80%" alt="图片名称" align=center /></div>
 
 单模块示意图2：
-<div align="center">
-	<img src="modularization4.png" width = "100%" alt="图片名称" align=center />
-</div>
+<div align="center"><img src="modularization4.png" width = "80%" alt="图片名称" align=center /></div>
 以上就是我对安居客三年来Android技术架构演变历程的简单总结，不足之处希望大家批评指正。至于模块化，还属于探索设计和Demo开发阶段，后面Demo完善后我会把Demo放到GitHub并且再写一篇文章详细介绍模块化的设计和实现细节。
 
 
