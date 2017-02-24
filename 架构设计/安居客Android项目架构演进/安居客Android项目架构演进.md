@@ -2,18 +2,16 @@
 
 入职安居客三年多，从一个只需要完成功能模块的工程师到现在成为Android团队Team Leader，见证了Android端一路走来的发展历程。因此有心将这些记录下来与大家分享，也算是对自己三年来的工作总结。希望对大家有所帮助，更希望能得到大家宝贵的建议。
 
-## 过去：三网合并留下的烂摊子
+## 过去：三网合并
 
 三年前入职安居客的时候，安居客在业务上刚完成了三网合并（新房、好租和商业地产三个平台三个网站合成anjuke.com）,因此app端也将原先的新房、二手房、好租和商业地产多个App合并成为了现在的安居客App。所谓的合并也差不多就是将多个项目的代码拷贝到了一起组成了新的Anjuke Project。下面这张图能更加直观的呈现当时的状况。
 <div align="center"><img src="merge1.png" width = "70%" alt="图片名称" align=center /></div>
 
 这一时期代码结构混乱、层次不清，各业务技术方案不统一，冗余代码充斥着项目的各个角落；甚至连包结构都是乱的，项目架构更是无从谈起。大家只不过是不停地往上堆砌代码添加新功能罢了。于是我进入公司的第一件事就是向Leader申请梳理了整个项目的包结构。
 
-而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、基于第三方地图封装的MapSDK等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的架构。如下图：
-<div align="center"><img src="merge2.png" width = "50%" alt="图片名称" align=center /></div>
+而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、基于第三方地图封装的MapSDK等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的架构。如下图：<div align="center"><img src="merge2.png" width = "50%" alt="图片名称" align=center /></div>
 
-其中业务层是一种非标准的MVC架构，Activity和Fragment承担了View和Controller的职责：
-<div align="center"><img src="merge3.png" width = "80%" alt="图片名称" align=center /></div>
+其中业务层是一种非标准的MVC架构，Activity和Fragment承担了View和Controller的职责：<div align="center"><img src="merge3.png" width = "70%" alt="图片名称" align=center /></div>
 
 前面这种分层的架构本身是没太大问题的，即使到了现在我们的业务项目也是基于这种分层的架构来构建的，只不过在不断的迭代中我们做了些许调整（分层架构后面在介绍组件化和模块化的时候会详细介绍）。但是慢慢我们发现，随着业务的不断迭代业务层这种非标准的MVC架构带来了种种影响团队开发效率的问题：
 
@@ -30,10 +28,9 @@
 
 ### MVP的设计与实现
 
-在研究了Google推出的基于MVP架构的Demo后，我们发现MVP架构能解决现在所面临过的很多问题，于是我们学习并引入到了我们的项目中来，并针对性的做了部分调整。下图呈现的是安居客MVP方案：
-<div align="center"><img src="mvp1.png" width = "80%" alt="图片名称" align=center /></div>
+在研究了Google推出的基于MVP架构的Demo后，我们发现MVP架构能解决现在所面临过的很多问题，于是我们学习并引入到了我们的项目中来，并针对性的做了部分调整。下图呈现的是安居客MVP方案：<div align="center"><img src="mvp1.png" width = "90%" alt="图片名称" align=center /></div>
 
-<!--<div align="center"><img src="mvp2.png" width = "80%" alt="图片名称" align=center /></div>-->
+以前面提到的三层架构的方案来看是这样的：<div align="center"><img src="mvp2.png" width = "50%" alt="图片名称" align=center /></div>
 
 > 基于此架构我在GitHub上开源了一个项目[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)，有兴趣的小伙伴可以去clone下来看看，如果觉得对你有帮助就给个star吧。  :)
 
@@ -42,7 +39,7 @@
 * **Presenter Layer**: 作为View和Module的之间的纽带，它从Model层中获取数据，然后调用View的接口去控制View；
 * **Contact**: 我们参照Google的Demo加入契约类Contact来统一管理View和Presenter的接口，使View和Presenter中的功能一目了然，利于维护；
 
-同时我们我项目中引入了RxJava，很好的解决了前面提到的嵌套回调的问题。还能简化复杂业务场景下的代码逻辑。（当然RxJava的好处远远不止这么一点，对RxJava不了解的同学可以去翻翻我之前[一系列关于RxJava的文章](https://zhuanlan.zhihu.com/p/20687178?refer=baron)），我们也将网络库升级到了Retrofit2+OKHttp3，它们和RxJava之间能更好的配合。
+并且这一时期我们项目中引入了RxJava，很好的解决了前面提到的嵌套回调的问题，同时能够帮助我们简化复杂业务场景下的代码逻辑（当然RxJava的好处远远不止这么一点，对RxJava不了解的同学可以去翻翻我之前[一系列关于RxJava的文章](https://zhuanlan.zhihu.com/p/20687178?refer=baron)）。我们也将网络库升级到了Retrofit2+OKHttp3，它们和RxJava之间能更好的配合。
 
 ### MVP带来的新问题及解决方案
 
@@ -54,7 +51,7 @@
 
 ## 组件化与模块化
 
-去年底我们Android团队内部成立了技术小组，基础组件的开发是技术小组很重要的一部分工作。所以组件化是我们正在做的事；模块化更多的是现有的方案受到来自业物上的挑战以及受到了oasisfeng以及整个大环境的启发，现在还属于设计和Demo开发的阶段。
+去年底我们Android团队内部成立了技术小组，基础组件的开发是技术小组很重要的一部分工作。所以组件化是我们正在做的事；模块化更多的是现有的方案受到来自业务上的挑战以及受到了oasisfeng在MDCC上的分享和整个大环境的启发，现在还属于设计和Demo开发的阶段。
 
 ### 组件化
 
@@ -81,8 +78,7 @@
 
 > 15年Trinea还在安居客的时候开发了一套插件化框架，但受限于当时的团队规模并且插件化对整个项目的改造太大，因此在安居客团队中插件化并未实施下来。而模块化其实是个很好的过渡方案，将项目按照模块拆分后各业务模块间解耦的问题不存在了，后续如有必要，再进行插件化改造只不过是水到渠成的事。
 
-来看看安居客用户App的模块化设计图：
-<div align="center"><img src="modularization1.png" width = "80%" alt="图片名称" align=center /></div>
+来看看安居客用户App的模块化设计图：<div align="center"><img src="modularization1.png" width = "80%" alt="图片名称" align=center /></div>
 
 整个项目分为三层，从下往上分别是：
 
@@ -97,7 +93,7 @@
 * 合理控制各组件和各业务模块的拆分粒度，太小的公有模块不足以构成单独组件或者模块的，我们先放到类似于CommonBusuness的组件中，在后期不断的重构迭代中视情况进行进一步的拆分（这一点的灵感来源于Trinea的文章）;
 * 各Layer间严禁反向依赖，横向依赖关系由各业务leader和技术小组商讨决定。
 
-每个单独的Business Module都可以单独编译成APK。在开发阶段需要单独打包编译，项目发布的时候又需要它作为项目的一个module来整体打包。简单的说就是开发时是application，发布时是library。因此需要你在业务module的gradle配置文件中加入如下代码：
+对于模块化项目，每个单独的business module都可以单独编译成APK。在开发阶段需要单独打包编译，项目发布的时候又需要它作为项目的一个module来整体编译打包。简单的说就是开发时是application，发布时是library。因此需要你在business module的gradle配置文件中加入如下代码：
 
 ```groovy
 if(isBuildModule.toBoolean()){
@@ -107,14 +103,13 @@ if(isBuildModule.toBoolean()){
 }
 ```
 
-最后大家看看安居客模块化的整体架构设计图：
-<div align="center"><img src="modularization2.png" width = "80%" alt="图片名称" align=center /></div>
+最后大家看看安居客模块化的整体架构设计图：<div align="center"><img src="modularization2.png" width = "80%" alt="图片名称" align=center /></div>
 
-单模块示意图1：
-<div align="center"><img src="modularization3.png" width = "80%" alt="图片名称" align=center /></div>
 
-单模块示意图2：
-<div align="center"><img src="modularization4.png" width = "80%" alt="图片名称" align=center /></div>
+单模块示意图1：<div align="center"><img src="modularization3.png" width = "80%" alt="图片名称" align=center /></div>
+
+
+单模块示意图2：<div align="center"><img src="modularization4.png" width = "80%" alt="图片名称" align=center /></div>
 以上就是我对安居客三年来Android技术架构演变历程的简单总结，不足之处希望大家批评指正。至于模块化，还属于探索设计和Demo开发阶段，后面Demo完善后我会把Demo放到GitHub并且再写一篇文章详细介绍模块化的设计和实现细节。
 
 
@@ -127,7 +122,7 @@ if(isBuildModule.toBoolean()){
 * [https://github.com/MDCC2016/Android-Session-Slides/blob/master/02-From.Containerization.To.Modularity.pdf](https://github.com/MDCC2016/Android-Session-Slides/blob/master/02-From.Containerization.To.Modularity.pdf)
 
 
-> 如果你喜欢我的文章，就关注下知乎专栏或者GitHub上添个star吧！这样我会有持续写下去的动力。
+> 如果你喜欢我的文章，就关注下我的知乎专栏或者在GitHub上添个star吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
