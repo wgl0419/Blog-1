@@ -5,13 +5,13 @@
 ## 三网合并
 
 三年前入职时安居客在业务上刚完成了三网合并（新房、二手房、好租和商业地产多个平台多个网站合成现在的anjuke.com，这在公司的历史上称之为三网合并）,因此app端也将原先的新房、二手房、好租和商业地产多个app合并成为了现在的安居客app。所谓的合并也差不多就是将多个项目的代码拷贝到了一起组成了新的Anjuke Project。下面这张图能更加直观的呈现当时的状况。
-<div align="center"><img src="merge1.png" width = "70%" alt="图片名称" align=center /></div>
+<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge1.png" width = "100%" alt="图片名称" align=center /></div>
 
 这一时期代码结构混乱、层次不清，各业务技术方案不统一，冗余代码充斥项目的各个角落；甚至连基本的包结构也是胡乱不堪，项目架构更是无从谈起。大家只不过是不停地往上堆砌代码添加新功能罢了。于是我进入公司的第一件事就是向Leader申请梳理了整个项目的结构。
 
-而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、基于第三方地图封装的MapSDK、即时聊天模块ChatLibrary等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的三层架构。如下图：<div align="center"><img src="merge2.png" width = "50%" alt="图片名称" align=center /></div>
+而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、基于第三方地图封装的MapSDK、即时聊天模块ChatLibrary等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的三层架构。如下图：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge2.png" width = "100%" alt="图片名称" align=center /></div>
 
-其中业务层是一种非标准的MVC架构，Activity和Fragment承担了View和Controller的职责：<div align="center"><img src="merge3.png" width = "70%" alt="图片名称" align=center /></div>
+其中业务层是一种非标准的MVC架构，Activity和Fragment承担了View和Controller的职责：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge3.png" width = "100%" alt="图片名称" align=center /></div>
 
 前面这种分层的架构本身是没太大问题的，即使到了现在我们的业务项目也已然是基于这种分层的架构来构建的，只不过在不断的迭代中我们做了些许调整（分层架构后面在介绍组件化和模块化的时候会详细介绍）。但是随着业务的不断迭代,我们慢慢发现业务层这种非标准的MVC架构带来了种种影响团队开发效率的问题：
 
@@ -28,16 +28,16 @@
 
 ### MVP的设计与实现
 
-在研究了Google推出的基于MVP架构的demo后，我们发现MVP架构能解决现在所面临过的很多问题，于是我们学习并引入到了我们的项目中来，并针对性的做了部分调整。下图呈现的是安居客MVP方案：<div align="center"><img src="mvp1.png" width = "90%" alt="图片名称" align=center /></div>
+在研究了Google推出的基于MVP架构的demo后，我们发现MVP架构能解决现在所面临过的很多问题，于是我们学习并引入到了我们的项目中来，并针对性的做了部分调整。下图呈现的是安居客MVP方案：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/mvp1.png" width = "100%" alt="图片名称" align=center /></div>
 
-以前面提到的三层架构的方案来看是这样的：<div align="center"><img src="mvp2.png" width = "50%" alt="图片名称" align=center /></div>
+以前面提到的三层架构的方案来看是这样的：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/mvp2.png" width = "100%" alt="图片名称" align=center /></div>
 
 > 基于此架构我在GitHub上开源了一个项目[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)，有兴趣的小伙伴可以去clone下来看看，如果觉得对你有帮助就给个star吧。  :)
 
 * **View Layer**: 只负责UI的绘制呈现，包含Fragment和一些自定义的UI组件，View层需要实现ViewInterface接口。Activity在项目中不再负责View的职责，仅仅是一个全局的控制者，负责创建View和Presenter的实例；
 * **Model Layer**: 负责检索、存储、操作数据，包括来自网络、数据库、磁盘文件和SharedPreferences的数据；
 * **Presenter Layer**: 作为View Layer和Module Layer的之间的纽带，它从model层中获取数据，然后调用View的接口去控制View；
-* **Contact**: 我们参照Google的demo加入契约类Contact来统一管理View和Presenter的接口，使得某一功能模块的接口能更加直观的呈现出来，这样做是有利于后期维护的。
+* **Contract**: 我们参照Google的demo加入契约类Contract来统一管理View和Presenter的接口，使得某一功能模块的接口能更加直观的呈现出来，这样做是有利于后期维护的。
 
 另外这套MVP架构还为我们带来了一个额外的好处：**我们有了足够明确的开发规范和标准**。细致到了每一个类应该放到哪个包下，哪个类具体应该负责什么职责等等。这对于我们的Code Review、接手他人的功能模块等都提供了极大的便利。前面提到的[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)就是为了定规范定标准而开发的。
 
@@ -80,7 +80,7 @@
 
 > 15年Trinea还在安居客的时候开发了一套插件化框架，但受限于当时的团队规模并且插件化对整个项目的改造太大，因此在安居客团队中插件化并未实施下来。而模块化其实是个很好的过渡方案，将项目按照模块拆分后各业务模块间解耦的问题不存在了，后续如有必要，再进行插件化改造只不过是水到渠成的事。
 
-来看看安居客用户app的模块化设计图：<div align="center"><img src="modularization1.png" width = "80%" alt="图片名称" align=center /></div>
+来看看安居客用户app的模块化设计图：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/modularization1.png" width = "100%" alt="图片名称" align=center /></div>
 
 整个项目分为三层，从下往上分别是：
 
@@ -106,11 +106,11 @@ if(isBuildModule.toBoolean()){
 }
 ```
 
-如果我们需要把租房模块打包成一个单独的租房app，像下面这样就好：<div align="center"><img src="modularization2.png" width = "80%" alt="图片名称" align=center /></div>
+如果我们需要把租房模块打包成一个单独的租房app，像下面这样就好：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/modularization2.png" width = "100%" alt="图片名称" align=center /></div>
 
-我们可以把Basic Component Layer和Business Component Layer放在一起看做是Anjuke SDK，新的业务或者项目只需要依赖Anjuke SDK就好（这一点同样是受到了[Trinea](www.trinea.cn)文章的启发）。甚至我们可以做得更极致一些，开发一套自己的组件管理平台，业务方可以根据自己的需求选择自己需要的组件，定制业务专属的Anjuke SDK。业务端和Anjuke SDK的关系如下图所示：<div align="center"><img src="modularization3.png" width = "80%" alt="图片名称" align=center /></div>
+我们可以把Basic Component Layer和Business Component Layer放在一起看做是Anjuke SDK，新的业务或者项目只需要依赖Anjuke SDK就好（这一点同样是受到了[Trinea](www.trinea.cn)文章的启发）。甚至我们可以做得更极致一些，开发一套自己的组件管理平台，业务方可以根据自己的需求选择自己需要的组件，定制业务专属的Anjuke SDK。业务端和Anjuke SDK的关系如下图所示：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/modularization3.png" width = "100%" alt="图片名称" align=center /></div>
 
-最后看看安居客模块化的整体设计图：<div align="center"><img src="modularization4.png" width = "90%" alt="图片名称" align=center /></div>
+最后看看安居客模块化的整体设计图：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/modularization4.png" width = "100%" alt="图片名称" align=center /></div>
 
 模块化拆分对于安居客这种比较大型的商业项目而言，由于历史比较久远很多代码都运行五六年了；各个业务相互交叉耦合严重，所以实施起来还是有很大难度的。过程中难免会有预料不到的坑，这就需要我们对各个业务有较深的理解同时也要足够的耐心和细致。虽然辛苦，但是一旦完成模块化拆分对整个团队及公司业务上的帮助是很大的。
 
