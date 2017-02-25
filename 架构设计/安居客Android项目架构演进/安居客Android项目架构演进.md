@@ -1,17 +1,16 @@
 # 安居客Android项目架构演进
-
+![](http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/header.jpg)
 入职安居客三年从工程师到Team Leader，见证了Android团队一路走来的发展历程。因此有心将这些记录下来与大家分享，也算是对自己三年来一部分工作的总结。希望对大家有所帮助，更希望能得到大家宝贵的建议。
 
 ## 三网合并
 
-三年前入职时安居客在业务上刚完成了三网合并（新房、二手房、好租和商业地产多个平台多个网站合成现在的anjuke.com，这在公司的历史上称之为三网合并）,因此app端也将原先的新房、二手房、好租和商业地产多个app合并成为了现在的安居客app。所谓的合并也差不多就是将多个项目的代码拷贝到了一起组成了新的Anjuke Project。下面这张图能更加直观的呈现当时的状况。
-<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge1.png" width = "100%" alt="图片名称" align=center /></div>
+三年前入职时安居客在业务上刚完成了三网合并（新房、二手房、好租和商业地产多个平台多个网站合成现在的anjuke.com，这在公司的历史上称之为三网合并）,因此app端也将原先的新房、二手房、好租和商业地产多个app合并成为了现在的安居客app。所谓的合并也差不多就是将多个项目的代码拷贝到了一起组成了新的Anjuke Project。下面这张图能更加直观的呈现当时的状况：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge1.1.png" width = "70%" alt="图片名称" align=center /></div>
 
 这一时期代码结构混乱、层次不清，各业务技术方案不统一，冗余代码充斥项目的各个角落；甚至连基本的包结构也是胡乱不堪，项目架构更是无从谈起。大家只不过是不停地往上堆砌代码添加新功能罢了。于是我进入公司的第一件事就是向Leader申请梳理了整个项目的结构。
 
-而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、基于第三方地图封装的MapSDK、即时聊天模块ChatLibrary等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的三层架构。如下图：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge2.png" width = "100%" alt="图片名称" align=center /></div>
+而后随着项目的迭代，我们不断引入了Retrofit、UniversalImageLoader、OKHttp、ButterKnife等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、基于第三方地图封装的MapSDK、即时聊天模块ChatLibrary等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的三层架构。如下图：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge2.1.png" width = "50%" alt="图片名称" align=center /></div>
 
-其中业务层是一种非标准的MVC架构，Activity和Fragment承担了View和Controller的职责：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge3.png" width = "100%" alt="图片名称" align=center /></div>
+其中业务层是一种非标准的MVC架构，Activity和Fragment承担了View和Controller的职责：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge3.1.png" width = "85%" alt="图片名称" align=center /></div>
 
 前面这种分层的架构本身是没太大问题的，即使到了现在我们的业务项目也已然是基于这种分层的架构来构建的，只不过在不断的迭代中我们做了些许调整（分层架构后面在介绍组件化和模块化的时候会详细介绍）。但是随着业务的不断迭代,我们慢慢发现业务层这种非标准的MVC架构带来了种种影响团队开发效率的问题：
 
@@ -30,7 +29,7 @@
 
 在研究了Google推出的基于MVP架构的demo后，我们发现MVP架构能解决现在所面临过的很多问题，于是我们学习并引入到了我们的项目中来，并针对性的做了部分调整。下图呈现的是安居客MVP方案：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/mvp1.png" width = "100%" alt="图片名称" align=center /></div>
 
-以前面提到的三层架构的方案来看是这样的：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/mvp2.png" width = "100%" alt="图片名称" align=center /></div>
+以前面提到的三层架构的方案来看是这样的：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/mvp2.1.png" width = "50%" alt="图片名称" align=center /></div>
 
 > 基于此架构我在GitHub上开源了一个项目[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)，有兴趣的小伙伴可以去clone下来看看，如果觉得对你有帮助就给个star吧。  :)
 
