@@ -1,11 +1,5 @@
 ###Android WebView那些坑之上传文件
 
-> 转载请注明出处：[http://www.jianshu.com/p/48e688ce801f](http://www.jianshu.com/p/48e688ce801f)  
-> 欢迎大家关注我的知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron) 之后所有文章都会在知乎专栏上首发
-
-***
-
-
 最近公司项目需要在`WebView`上调用手机系统相册来上传图片，开发过程中发现在很多机器上无法正常唤起系统相册来选择图片。
 
 解决问题之前我们先来说说`WebView`上传文件的逻辑：当我们在Web页面上点击选择文件的控件(`<input type="file">`)时，会回调`WebChromeClient`下的`openFileChooser()`（5.0及以上系统回调`onShowFileChooser()`）。这个时候我们在`openFileChooser`方法中通过`Intent`打开系统相册或者支持该`Intent`的第三方应用来选择图片。like this：
@@ -198,7 +192,7 @@
 
 源码地址:https://github.com/BaronZ88/WebViewSample
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
