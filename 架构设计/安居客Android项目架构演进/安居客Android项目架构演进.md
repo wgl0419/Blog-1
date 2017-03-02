@@ -125,7 +125,7 @@ if(isBuildModule.toBoolean()){
 * [https://github.com/MDCC2016/Android-Session-Slides/blob/master/02-From.Containerization.To.Modularity.pdf](https://github.com/MDCC2016/Android-Session-Slides/blob/master/02-From.Containerization.To.Modularity.pdf)
 
 
-> 如果你喜欢我的文章，就关注下我的知乎专栏或者在GitHub上添个star吧！
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)

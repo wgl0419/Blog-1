@@ -21,11 +21,11 @@
 
 ### Map
 
-**`map(Func1)`**函数接受一个Func1类型的参数(就像这样`map(Func1<? super T, ? extends R> func)`),然后吧这个Func1应用到每一个由Observable发射的值上，将发射的只转换为我们期望的值。这种狗屁定义我相信你也听不懂，我们来看一下官方给出的原理图：
+**`map(Func1)`**函数接受一个Func1类型的参数(就像这样`map(Func1<? super T, ? extends R> func)`),然后吧这个Func1应用到每一个由Observable发射的值上，将发射的值转换为我们期望的值。这种狗屁定义我相信你也听不懂，我们来看一下官方给出的原理图：
 
 ![map(Func1)](MapOperator.png)
 
-假设我们需要将一组数字装换成字符串，我们可以通过map这样实现：
+假设我们需要将一组数字转换成字符串，我们可以通过map这样实现：
 
 ```java
 Observable.just(1, 2, 3, 4, 5)
@@ -210,7 +210,7 @@ Observable.concat(groupByCommunityNameObservable)
 	
 转换类的操作符就先介绍到这，后续还会继续介绍组合、过滤类的操作符及源码分析，敬请期待！
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)

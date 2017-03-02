@@ -79,7 +79,7 @@ Observable.create(new Observable.OnSubscribe<ApplicationInfo>() {
 
 
 <div align="left">
-	<img src="pic1.png" width = "38%" alt="图片名称" align=center />
+	<img src="http://ocjtywvav.bkt.clouddn.com/rxjava/7/pic1.png" width = "38%" alt="图片名称" align=center />
 </div>
 
 完整的代码我放到了GitHub上，有兴趣大家可以去clone下来自己运行看看。
@@ -151,7 +151,7 @@ RxJava1.X的系列文章就到此结束了，由于本人对RxJava的理解有�
 好啦，我们RxJava2见！~
 ***
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)

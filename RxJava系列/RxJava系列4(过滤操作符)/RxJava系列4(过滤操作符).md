@@ -14,7 +14,7 @@
 
 ### Filter
 **`filter(Func1)`**用来过滤观测序列中我们不想要的值，只返回满足条件的值，我们看下原理图：
-![filter(Func1)](FilterOperator.png)
+![filter(Func1)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/FilterOperator.png)
 
 还是拿前面文章中的小区`Community[] communities`来举例，假设我需要赛选出所有房源数大于10个的小区，我们可以这样实现：
 
@@ -35,7 +35,7 @@ Observable.from(communities)
 
 ### Take
 **`take(int)`**用一个整数n作为一个参数，从原始的序列中发射前n个元素.
-![take(int)](TakeOperator.png)
+![take(int)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/TakeOperator.png)
 
 现在我们需要取小区列表`communities`中的前10个小区
 
@@ -52,7 +52,7 @@ Observable.from(communities)
 
 ### TakeLast
 **`takeLast(int)`**同样用一个整数n作为参数，只不过它发射的是观测序列中后n个元素。
-![takeLast(int)](TakeLastNOperator.png)
+![takeLast(int)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/TakeLastNOperator.png)
 
 获取小区列表`communities`中的后3个小区
 
@@ -69,7 +69,7 @@ Observable.from(communities)
 
 ### TakeUntil
 **`takeUntil(Observable)`**订阅并开始发射原始Observable，同时监视我们提供的第二个Observable。如果第二个Observable发射了一项数据或者发射了一个终止通知，`takeUntil()`返回的Observable会停止发射原始Observable并终止。
-![takeUntil(Observable)](TakeUntilOperator.png)
+![takeUntil(Observable)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/TakeUntilOperator.png)
 
 ```java
 Observable<Long> observableA = Observable.interval(300, TimeUnit.MILLISECONDS);
@@ -107,7 +107,7 @@ try {
 
 
 **`takeUntil(Func1)`**通过Func1中的call方法来判断是否需要终止发射数据。
-![takeUntil(Func1)](TakeUntilPOperator.png)
+![takeUntil(Func1)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/TakeUntilPOperator.png)
 
 ```java
 Observable.just(1, 2, 3, 4, 5, 6, 7)
@@ -135,7 +135,7 @@ Observable.just(1, 2, 3, 4, 5, 6, 7)
 
 ###Skip
 **`skip(int)`**让我们可以忽略Observable发射的前n项数据。
-![skip(int)](SkipOperator.png)
+![skip(int)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/SkipOperator.png)
 
 过滤掉小区列表`communities`中的前5个小区
 
@@ -152,7 +152,7 @@ Observable.from(communities)
 
 ### SkipLast
 **`skipLast(int)`**忽略Observable发射的后n项数据。
-![skipLast(int)](SkipLastOperator.png)
+![skipLast(int)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/SkipLastOperator.png)
 
 ### ElementAt
 **`elementAt(int)`**用来获取元素Observable发射的事件序列中的第n项数据，并当做唯一的数据发射出去。
@@ -160,14 +160,14 @@ Observable.from(communities)
 
 ### Debounce
 **`debounce(long, TimeUnit)`**过滤掉了由Observable发射的速率过快的数据；如果在一个指定的时间间隔过去了仍旧没有发射一个，那么它将发射最后的那个。通常我们用来结合RxBing(Jake Wharton大神使用RxJava封装的Android UI组件)使用，防止button重复点击。
-![debounce(long, TimeUnit)](DebounceOperator.png)
+![debounce(long, TimeUnit)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/DebounceOperator.png)
 
 **`debounce(Func1)`**可以根据Func1的call方法中的函数来过滤，Func1中的中的call方法返回了一个临时的Observable，如果原始的Observable在发射一个新的数据时，上一个数据根据Func1的call方法生成的临时Observable还没结束，那么上一个数据就会被过滤掉。
-![debounce(Func1)](DebounceFOperator.png)
+![debounce(Func1)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/DebounceFOperator.png)
 
 ### Distinct
 **`distinct()`**的过滤规则是只允许还没有发射过的数据通过，所有重复的数据项都只会发射一次。
-![distinct()](DistinctOperator.png)
+![distinct()](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/DistinctOperator.png)
 
 过滤掉一段数字中的重复项：
 
@@ -187,7 +187,7 @@ Observable.just(2, 1, 2, 2, 3, 4, 3, 4, 5, 5)
 	2 1 3 4 5 
 
 **`distinct(Func1)`**参数中的Func1中的call方法会根据Observable发射的值生成一个Key，然后比较这个key来判断两个数据是不是相同；如果判定为重复则会和`distinct()`一样过滤掉重复的数据项。
-![distinct(Func1)](DistinctKeyOperator.png)
+![distinct(Func1)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/DistinctKeyOperator.png)
 
 假设我们要过滤掉一堆房源中小区名重复的小区：
 
@@ -224,7 +224,7 @@ Observable.from(houses)
 
 ### DistinctUntilChanged
 **`distinctUntilChanged()`**和`distinct()`类似，只不过它判定的是Observable发射的当前数据项和前一个数据项是否相同。
-![distinctUntilChanged()](DistinctUntilChangedOperator.png)
+![distinctUntilChanged()](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/DistinctUntilChangedOperator.png)
 
 同样还是上面过滤数字的例子：
 
@@ -244,7 +244,7 @@ Observable.just(2, 1, 2, 2, 3, 4, 3, 4, 5, 5)
 	2 1 2 3 4 3 4 5 
 
 **`distinctUntilChanged(Func1)`**和`distinct(Func1)`一样，根据Func1中call方法产生一个Key来判断两个相邻的数据项是否相同。
-![distinctUntilChanged(Func1)](DistinctUntilChangedKeyOperator.png)
+![distinctUntilChanged(Func1)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/DistinctUntilChangedKeyOperator.png)
 
 我们还是拿前面的过滤房源的例子：
 
@@ -275,7 +275,7 @@ Observable.from(houses)
 
 ### First
 **`first()`**顾名思义，它是的Observable只发送观测序列中的第一个数据项。
-![first()](FirstOperator.png)
+![first()](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/FirstOperator.png)
 
 获取房源列表`houses`中的第一套房源：
 
@@ -295,7 +295,7 @@ Observable.from(houses)
 	小区:中粮·海景壹号; 房源描述:中粮海景壹号新出大平层！总价4500W起
 
 **`first(Func1)`**只发送符合条件的第一个数据项。
-![first(Func1)](FirstNOperator.png)
+![first(Func1)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/FirstNOperator.png)
 
 现在我们要获取房源列表`houses`中小区名为*竹园新村*的第一套房源。
 
@@ -321,7 +321,7 @@ Observable.from(houses)
 
 ### Last
 **`last()`**只发射观测序列中的最后一个数据项。
-![last()](LastOperator.png)
+![last()](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/LastOperator.png)
 
 获取房源列表中的最后一套房源：
 
@@ -341,7 +341,7 @@ Observable.from(houses)
 	小区:中粮·海景壹号; 房源描述:南北通透，豪华五房
 
 **`last(Func1)`**只发射观测序列中符合条件的最后一个数据项。
-![last(Func1)](LastPOperator.png)
+![last(Func1)](http://ocjtywvav.bkt.clouddn.com/rxjava/operator/filter/LastPOperator.png)
 
 获取房源列表`houses`中小区名为*竹园新村*的最后一套房源：
 
@@ -367,7 +367,7 @@ Observable.from(houses)
 
 这一章我们就先聊到这，更多的过滤类操作符的介绍大家可以去查阅官方文档和源码；在下一章我们将继续介绍组合类操作符。
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)

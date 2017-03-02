@@ -1,6 +1,10 @@
 # Blog
 个人博客中的一些文章
 
+## 架构设计
+
+[安居客Android项目架构演进](https://github.com/BaronZ88/Blog/blob/master/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E5%AE%89%E5%B1%85%E5%AE%A2Android%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/%E5%AE%89%E5%B1%85%E5%AE%A2Android%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B.md)
+
 ## Java8新特性
 
 [Java8新特性第1章(Lambda表达式)](https://github.com/BaronZ88/Blog/blob/master/Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7%E7%AC%AC1%E7%AB%A0\(Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F\).md)
@@ -39,10 +43,9 @@
 
 ====
 
-> 如果大家喜欢我这一系列的文章，欢迎关注我的知乎专栏、GitHub、简书博客。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
-> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)  
-> * 简书博客：[http://www.jianshu.com/users/cfdc52ea3399](http://www.jianshu.com/users/cfdc52ea3399) 
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 
 

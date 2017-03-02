@@ -648,5 +648,10 @@ public final class Car_MembersInjector implements MembersInjector<Car> {
 
 > [MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)是一款开源天气App，开发此项目主要是为展示各种开源库的使用方式以及Android项目的架构方案，并作为团队开发规范的一部分。项目中每一个字母、每一个命名、每一行代码都是经过仔细考究的；但是由于时间精力有限，项目UI未做严格要求。本着精益求精、提供更好开源项目和更美天气应用的原则，因此期望有兴趣的开发和UED同学可以一起来完成这个项目。
 
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
+>   
+> * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
+
 
 

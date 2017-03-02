@@ -203,7 +203,7 @@ Comparator<User> comparator = Comparator.comparing(User::getUserName);
 * 构造方法引用：Class::new
 * 数组构造方法引用：TypeName[]::new
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)

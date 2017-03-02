@@ -190,7 +190,7 @@ observableForGetWeatherData.subscribeOn(Schedulers.io())
 
 > 本文中的代码在[MinimalistWeather](https://github.com/BaronZ88/MinimalistWeather)中的`WeatherDataRepository`类中有同样的实现，文章中为了更完整的将整个实现过程呈现出来，对代码做了部分改动。
 > 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)

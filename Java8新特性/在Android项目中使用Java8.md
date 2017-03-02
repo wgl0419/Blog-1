@@ -99,9 +99,8 @@ Java8的新特性并不是本文的重点，对此有兴趣的同学可以去翻
 * [https://developer.android.com/guide/platform/j8-jack.html](https://developer.android.com/guide/platform/j8-jack.html)
 * [https://medium.com/@sergii/java-8-in-android-n-preview-76184e2ab7ad](https://medium.com/@sergii/java-8-in-android-n-preview-76184e2ab7ad)
 
-===
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)

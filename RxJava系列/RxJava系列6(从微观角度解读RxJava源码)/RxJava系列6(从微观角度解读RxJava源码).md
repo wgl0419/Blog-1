@@ -172,7 +172,7 @@ static <T> Subscription subscribe(Subscriber<? super T> subscriber, Observable<T
 
 最后我用张图来总结下之前的分析结果：
 
-![RxJava基本流程分析](OperatorProcess1.jpg)
+![RxJava基本流程分析](http://ocjtywvav.bkt.clouddn.com/rxjava/6/OperatorProcess1.jpg)
 
 ## 二、操作符原理分析
 之前我们介绍过几十个操作符，要一一分析它们的源码显然不太现实。在这里我抛砖引玉，选取一个相对简单且常用的`map`操作符来分析。
@@ -364,7 +364,7 @@ public void onNext(T t) {
 
 我承认太啰嗦了，花费了这么大的篇幅才将`map()`的转换原理解释清楚。我也是希望尽量的将每个细节都呈现出来方便大家理解，如果看我啰嗦了这么久还是没能理解，请看下面我画的这张执行流程图。
 
-![加入Map操作符后的执行流程](OperatorProcess3.jpg)
+![加入Map操作符后的执行流程](http://ocjtywvav.bkt.clouddn.com/rxjava/6/OperatorProcess3.jpg)
 
 ## 三、线程调度原理分析
 在前面的文章中我介绍过RxJava可以很方便的通过`subscribeOn()`和`observeOn()`来指定数据流的每一部分运行在哪个线程。其中`subscribeOn()`指定了处理`Observable`的全部的过程(包括发射数据和通知)的线程；`observeOn()`指定了观察者的`onNext()`, `onError()`和`onCompleted()`执行的线程。接下来我们就分析分析源码，看看线程调度是如何实现的。
@@ -735,17 +735,16 @@ static final class ObserveOnSubscriber<T> extends Subscriber<T> implements Actio
 
 好了，我们最后再看看**示例C**对应的执行流程图，帮助大家加深理解。
 
-![RxJava执行流程](OperatorProcess.jpg)
+![RxJava执行流程](http://ocjtywvav.bkt.clouddn.com/rxjava/6/OperatorProcess.jpg)
 
 
 ## 总结
 这一章以**执行流程**、**操作符实现**以及**线程调度**三个方面为切入点剖析了RxJava源码。下一章将站在更宏观的角度来分析整个RxJava的框架结构、设计思想等等。敬请期待~~ :)
 
-> 如果大家喜欢这一系列的文章，欢迎关注我的知乎专栏和GitHub。
+> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
 >   
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
-
 
 
 
