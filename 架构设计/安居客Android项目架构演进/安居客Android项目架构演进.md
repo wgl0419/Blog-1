@@ -8,7 +8,7 @@
 
 这一时期代码结构混乱、层次不清，各业务技术方案不统一，冗余代码充斥项目的各个角落；甚至连基本的包结构也是胡乱不堪，项目架构更是无从谈起。大家只不过是不停地往上堆砌代码添加新功能罢了。于是我进入公司的第一件事就是向 Leader 申请梳理了整个项目的结构。
 
-而后随着项目的迭代，我们不断引入了 Retrofit、UniversalImageLoader、OKHttp、ButterKnife 等一系列成熟的开源库，同时我们也开发了自己的UI组件库UIComponent、基础工具库CommonUtils、基于第三方地图封装的 MapSDK、即时聊天模块 ChatLibrary 等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的三层架构。如下图：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge2.1.png" width = "50%" alt="图片名称" align=center /></div>
+而后随着项目的迭代，我们不断引入了 Retrofit、UniversalImageLoader、OKHttp、ButterKnife 等一系列成熟的开源库，同时我们也开发了自己的 UI 组件库 UIComponent、基础工具库 CommonUtils、基于第三方地图封装的 MapSDK、即时聊天模块 ChatLibrary 等等。这之后安居客项目架构大致演变成了由基础组件层、业务组件层和业务层组成的三层架构。如下图：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge2.1.png" width = "50%" alt="图片名称" align=center /></div>
 
 其中业务层是一种非标准的 MVC 架构，Activity 和 Fragment 承担了 View 和 Controller 的职责：<div align="center"><img src="http://ocjtywvav.bkt.clouddn.com/Blog/Framework/Android/merge3.1.png" width = "85%" alt="图片名称" align=center /></div>
 
