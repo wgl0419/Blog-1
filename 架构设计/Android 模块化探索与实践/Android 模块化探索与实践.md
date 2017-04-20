@@ -38,9 +38,21 @@
 
 ![Android 模块化设计方案](modularization1.1.png)
 
-从下至上依次为*基础组件层（包含各种基础组件）*、*业务组件层（和业务相关的组件）*、*业务模块层（各业务模块）*。我们在谈模块化的时候，其实就是将业务模块层的各个功能业务拆分层独立的业务模块。
+整个项目分为三层，从下往上分别是：
 
-所以我们进行模块化的第一步就是业务模块划分，但是模块划分并没有一个业界通用的标准，因此划分的粒度需要根据项目情况进行合理把控，这就需要对业务和项目有较为透彻的理解。拿安居客来举例，我们会将项目划分为新房模块、二手房模块、IM 模块等等。
+* Basic Component Layer: 基础组件层，顾名思义就是一些基础组件，包含了各种开源库以及和业务无关的各种自研工具库；
+* Business Component Layer: 业务组件层，这一层的所有组件都是业务相关的，例如上图中的支付组件 AnjukePay、数据模拟组件 DataSimulator 等等；
+* Business Module Layer: 业务 Module 层，在 Android Studio 中每块业务对应一个单独的 Module。例如安居客用户 App 我们就可以拆分成新房 Module、二手房 Module、IM Module 等等，每个单独的 Business Module 都必须准遵守前面提到的 MVP 架构。
+
+同时针对模块化我们也需要定义一些自己的游戏规则:
+
+* 对于 Business Module Layer，各业务模块之间的通讯跳转采用路由框架 Router 来实现（后面会介绍 Router 框架的实现）;
+* 对于 Business Component Layer，单一业务组件只能对应某一项具体的业务，对于有个性化需求的对外部提供接口让调用方定制;
+* 合理控制各组件和各业务模块的拆分粒度，太小的公有模块不足以构成单独组件或者模块的，我们先放到类似于 CommonBusiness 的组件中，在后期不断的重构迭代中视情况进行进一步的拆分;
+* 上层的公有业务或者功能模块可以逐步下放到下层，合理把握好度就好；
+* 各 Layer 间严禁反向依赖，横向依赖关系由各业务 Leader 和技术小组商讨决定。
+
+我们在谈模块化的时候，其实就是将业务模块层的各个功能业务拆分层独立的业务模块。所以我们进行模块化的第一步就是业务模块划分，但是模块划分并没有一个业界通用的标准，因此划分的粒度需要根据项目情况进行合理把控，这就需要对业务和项目有较为透彻的理解。拿安居客来举例，我们会将项目划分为新房模块、二手房模块、IM 模块等等。
 
 每个业务模块在 Android Studio 中的都是一个 Module ,因此在命名方面我们要求每个业务模块都以 Module 为后缀。如下图所示：<div align="left"><img src="modules.png" width = "50%" alt="图片名称" align=center /></div>
 
@@ -126,7 +138,7 @@ realease 模式下的 AndroidManifest.xml :
 </manifest>
 ```
 
-## 模块间跳转通讯 ([Router](https://github.com/BaronZ88/Router))
+## 模块间跳转通讯（Router）
 
 对业务进行模块化拆分后，为了使各业务模块间解耦，因此各个 Bussiness Module 都是独立的模块，它们之间是没有依赖关系。那么各个模块间的跳转通讯如何实现呢？
 
@@ -332,12 +344,50 @@ RouterInjector.inject(this);
 
 > 由于篇幅限制，加上为了便于理解，这里只贴出了极少部分 [Router](https://github.com/BaronZ88/Router) 框架的源码。希望进一步了解 Router 实现原理的可以到 GiuHub 去翻阅源码，[Router](https://github.com/BaronZ88/Router) 的实现还比较简陋，后面会进一步完善功能和文档，之后也会有单独的文章详细介绍。源码地址：[https://github.com/BaronZ88/Router](https://github.com/BaronZ88/Router)
 
-## 遇到的问题
+## 问题及建议
 
-### 各组件、模块的依赖管理
+### 资源名冲突
 
-### 业务耦合
+对于多个 Bussines Module 中资源名冲突的问题，可以通过在 build.gradle 定义前缀的方式解决：
+
+```groovy
+defaultConfig {
+   ...
+   resourcePrefix "new_house_"
+   ...
+}
+```
+
+而对于 Module 中有些资源不想被外部访问的，我们可以创建 res/values/public.xml，添加到 public.xml 中的 resource 则可被外部方位，未添加的则视为私有：
+
+```xml
+<resources>
+    <public name="new_house_app_name" type="string"/>
+</resources>
+```
+
+### 重复依赖
+
+模块化的过程中我们常常会遇到重复依赖的问题，如果是通过 aar 依赖， gradle 会自动帮我们找出新版本，而抛弃老版本的重复依赖。如果是以 project 的方式依赖，则在打包的时候会出现重复类。对于这种情况我们可以在 build.gradle 中将 compile 改为 provided，只在最终的项目中 compile 对应的 project ；
+
+其实从前面的安居客模块化设计图上能看出来，我们的设计方案能一定程度上规避重复依赖的问题。比如我们所有的第三方库的依赖都会放到 OpenSoureLibraries 中，其他需要用到相关类库的项目，只需要依赖 OpenSoureLibraries 就好了。
 
 ### 模块化过程中的建议
+
+对于大型的商业项目，在重构过程中可能会遇到业务耦合严重，难以拆分的问题。我的建议是不急着将各业务模块拆分成不同的 module ，可以先在原乡的项目中根据业务分包，在一定程度上将各业务解耦后拆分到不同的 package 中。比如之前新房和二手房由于同属于 app module，因此他们之前是通过隐式的 intent 跳转的，现在可以先将他们改为通过 Router 来实现跳转。又比如新房和二手房中公用的模块可以先下放到 Business Component Layer 或者 Basic Component Layer 中。在这一系列工作完成后再将各个业务拆分成多个 module 。
+
+又如前面提到的，太小的公有模块不足以构成单独组件或者模块的，我们先放到类似于 CommonBusiness 的组件中，在后期不断的重构迭代中视情况进行进一步的拆分。
+
+以上就是我在模块化探索实践方面的一些经验，不住之处还望大家指出。
+
+* 模块化示例 ModularizationProject 源码地址：[ModularizationProject]()
+* 路由框架 Router 源码地址：[https://github.com/BaronZ88/Router](https://github.com/BaronZ88/Router)
+
+> 如果你喜欢我的文章，就关注下我的 [**知乎专栏**](https://zhuanlan.zhihu.com/baron) 或者在 [**GitHub**](https://github.com/BaronZ88) 上添个 Star 吧！
+>   
+> * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
+> * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
+
+
 
 
