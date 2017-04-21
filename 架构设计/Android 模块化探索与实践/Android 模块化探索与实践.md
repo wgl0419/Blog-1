@@ -77,57 +77,38 @@ sourceSets {
 debug 模式下的 AndroidManifest.xml :
 
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.baronzhang.android.newhouse">
-
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/new_house_ic_launcher"
-        android:label="@string/new_house_app_name"
-        android:supportsRtl="true"
-        android:theme="@style/NewHouseAppTheme">
-        <activity
-            android:name="com.baronzhang.android.newhouse.NewHouseMainActivity"
-            android:label="@string/new_house_label_home_page">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-    </application>
-
-</manifest>
+<application
+   ...
+   >
+   <activity
+       android:name="com.baronzhang.android.newhouse.NewHouseMainActivity"
+       android:label="@string/new_house_label_home_page">
+       <intent-filter>
+           <action android:name="android.intent.action.MAIN" />
+           <category android:name="android.intent.category.LAUNCHER" />
+       </intent-filter>
+   </activity>
+</application>
 ```
 
 realease 模式下的 AndroidManifest.xml :
 
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.baronzhang.android.newhouse">
-
-    <application
-        android:allowBackup="true"
-        android:supportsRtl="true">
-        <activity
-            android:name="com.baronzhang.android.newhouse.NewHouseMainActivity"
-            android:label="@string/new_house_label_home_page">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <action android:name="android.intent.action.VIEW" />
-                <data
-                    android:host="com.baronzhang.android.newhouse"
-                    android:scheme="router" />
-            </intent-filter>
-        </activity>
-
-    </application>
-
-</manifest>
+<application
+   ...
+   >
+   <activity
+       android:name="com.baronzhang.android.newhouse.NewHouseMainActivity"
+       android:label="@string/new_house_label_home_page">
+       <intent-filter>
+           <category android:name="android.intent.category.DEFAULT" />
+           <category android:name="android.intent.category.BROWSABLE" />
+           <action android:name="android.intent.action.VIEW" />
+           <data android:host="com.baronzhang.android.newhouse"
+               android:scheme="router" />
+       </intent-filter>
+   </activity>
+</application>
 ```
 
 同时针对模块化我们也定义了一些自己的游戏规则:
@@ -167,12 +148,9 @@ startActivity(intent);
 用于定义跳转 URI 的注解 FullUri：
 
 ```java
-@Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FullUri {
-
-    //完整的Intent URI
     String value();
 }
 ```
@@ -180,11 +158,9 @@ public @interface FullUri {
 用于定义跳转传参的 UriParam（ UriParam 注解的参数用于拼接到 URI 后面）：
 
 ```java
-@Documented
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UriParam {
-
     String value();
 }
 ```
@@ -192,11 +168,9 @@ public @interface UriParam {
 用于定义跳转传参的 IntentExtrasParam（ IntentExtrasParam 注解的参数最终通过 Intent 来传递）：
 
 ```java
-@Documented
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IntentExtrasParam {
-
     String value();
 }
 ```
@@ -205,35 +179,20 @@ public @interface IntentExtrasParam {
 
 ```java
 public final class Router {
-
-    private Context context;
-
-    public Router(Context context) {
-        this.context = context;
-    }
-
+    ...
     public <T> T create(final Class<T> service) {
 
         return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class[]{service}, new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-                StringBuilder urlBuilder = new StringBuilder();
-
+                        
                 FullUri fullUri = method.getAnnotation(FullUri.class);
-                CombinationUri combinationUri = method.getAnnotation(CombinationUri.class);
-
-                if (fullUri != null) {
-                    urlBuilder.append(fullUri.value());
-                } else {
-                    throw new IllegalArgumentException("");
-                }
-
-                Annotation[][] parameterAnnotations = method.getParameterAnnotations();//获取注解参数
-
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append(fullUri.value());
+                //获取注解参数
+                Annotation[][] parameterAnnotations = method.getParameterAnnotations();
                 HashMap<String, Object> serializedParams = new HashMap<>();
-
-					  //拼接跳转 URI
+			    //拼接跳转 URI
                 int position = 0;
                 for (int i = 0; i < parameterAnnotations.length; i++) {
                     Annotation[] annotations = parameterAnnotations[i];
@@ -242,16 +201,13 @@ public final class Router {
 
                     Annotation annotation = annotations[0];
                     if (annotation instanceof UriParam) {
-                        urlBuilder.append(position == 0 ? "?" : "&");
-                        position++;
-                        UriParam uriParam = (UriParam) annotation;
-                        urlBuilder.append(uriParam.value()).append("=").append(args[i]);
+                        //拼接 URI 后的参数
+                        ...
                     } else if (annotation instanceof IntentExtrasParam) {
-                        IntentExtrasParam intentExtrasParam = (IntentExtrasParam) annotation;
-                        serializedParams.put(intentExtrasParam.value(), args[i]);
+                        //Intent 传参处理
+                        ...
                     }
                 }
-
                 //执行Activity跳转操作
                 performJump(urlBuilder.toString(), serializedParams);
                 return null;
@@ -268,7 +224,8 @@ public final class Router {
 public interface RouterService {
 
     @FullUri("router://com.baronzhang.android.router.FourthActivity")
-    void startUserActivity(@UriParam("cityName") String cityName, @IntentExtrasParam("user") User user);
+    void startUserActivity(@UriParam("cityName") 
+    		String cityName, @IntentExtrasParam("user") User user);
     
 }
 ```
@@ -287,7 +244,6 @@ public interface RouterService {
 首先定义我们的参数注解 InjectUriParam ：
 
 ```java
-@Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.CLASS)
 public @interface InjectUriParam {
@@ -300,10 +256,8 @@ public @interface InjectUriParam {
 ```java
 @AutoService(Processor.class)
 public class InjectProcessor extends AbstractProcessor {
-
     ...
-
-    @Override
+   @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
 
         //解析注解
@@ -311,20 +265,10 @@ public class InjectProcessor extends AbstractProcessor {
 
         //解析完成后，生成的代码的结构已经有了，它们存在InjectingClass中
         for (Map.Entry<TypeElement, TargetClass> entry : targetClassMap.entrySet()) {
-
-            TypeElement typeElement = entry.getKey();
-            TargetClass targetClass = entry.getValue();
-
-            JavaFile javaFile = targetClass.brewJava();
-            try {
-                javaFile.writeTo(filer);
-            } catch (IOException e) {
-                error(typeElement, "Unable to write injecting for type %s: %s", typeElement, e.getMessage());
-            }
+            ...
         }
         return false;
     }
-   
     ...
 }
 ```
@@ -363,7 +307,7 @@ defaultConfig {
 
 ```xml
 <resources>
-    <public name="new_house_app_name" type="string"/>
+    <public name="new_house_settings" type="string"/>
 </resources>
 ```
 
