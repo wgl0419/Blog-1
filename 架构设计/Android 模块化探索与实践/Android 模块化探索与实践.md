@@ -4,7 +4,7 @@
 
 万维网发明人 Tim Berners-Lee 谈到设计原理时说过：“简单性和模块化是软件工程的基石；分布式和容错性是互联网的生命。” 由此可见模块化之于软件工程领域的重要性。
 
-从16年开始，模块化在 Android 社区越来越多的被提及。随着移动平台的不断发展，移动平台上的软件体积也变得臃肿庞大，为了降低大型软件复杂性和耦合度，同时也为了适应模块重用、多团队并行开发测试等等因素，模块化在 Android 平台上变得势在必行。阿里 Android 团队在年初开源了他们的容器化框架 Atlas 就很大程度说明了当前 Android 平台开发大型商业项目所面临的问题。
+从16年开始，模块化在 Android 社区越来越多的被提及。随着移动平台的不断发展，移动平台上的软件体积也变得臃肿庞大，为了降低大型软件复杂性和耦合度，同时也为了适应模块重用、多团队并行开发测试等等需求，模块化在 Android 平台上变得势在必行。阿里 Android 团队在年初开源了他们的容器化框架 Atlas 就很大程度说明了当前 Android 平台开发大型商业项目所面临的问题。
 
 ## 二、什么是模块化
 
@@ -48,7 +48,7 @@
 
 每个业务模块在 Android Studio 中的都是一个 Module ,因此在命名方面我们要求每个业务模块都以 Module 为后缀。如下图所示：<div align="center"><img src="modules.png" width = "50%" alt="图片名称" align=center /></div>
 
-对于模块化项目，每个单独的 Business Module 都可以单独编译成 APK。在开发阶段需要单独打包编译，项目发布的时候又需要它作为项目的一个 Module 来整体编译打包。简单的说就是开发时是 Application，发布时是 Library。因此需要你在 Business Module 的 build.gradle 中加入如下代码：
+对于模块化项目，每个单独的 Business Module 都可以单独编译成 APK。在开发阶段需要单独打包编译，项目发布的时候又需要它作为项目的一个 Module 来整体编译打包。简单的说就是开发时是 Application，发布时是 Library。因此需要在 Business Module 的 build.gradle 中加入如下代码：
 
 ```groovy
 if(isBuildModule.toBoolean()){
@@ -57,6 +57,12 @@ if(isBuildModule.toBoolean()){
     apply plugin: 'com.android.library'
 }
 ```
+
+> isBuildModule 在项目更目录的 gradle.properties 中定义:
+> 
+> ```java
+> isBuildModule=false
+> ```
 
 同样 Manifest.xml 也需要有两套：
 
@@ -123,14 +129,14 @@ realease 模式下的 AndroidManifest.xml :
 
 对业务进行模块化拆分后，为了使各业务模块间解耦，因此各个 Bussiness Module 都是独立的模块，它们之间是没有依赖关系。那么各个模块间的跳转通讯如何实现呢？
 
-比如业务上要求从**新房的列表页**跳转到**二手房的列表页**，那么由于是 NewHouseModule 和 SecondHouseModule 之间并不相互依赖，我们通过想如下这种方式实现 Activity 跳转显然是不可能的实现的。
+比如业务上要求从**新房的列表页**跳转到**二手房的列表页**，那么由于是 NewHouseModule 和 SecondHouseModule 之间并不相互依赖，我们通过想如下这种显式跳转的方式来实现 Activity 跳转显然是不可能的实现的。
 
 ```Java
 Intent intent = new Intent(NewHouseListActivity.this, SecondHouseListActivity.class);
 startActivity(intent);
 ```
 
-有的同学可能会想到用显示跳转来实现：
+有的同学可能会想到用隐式跳转，通过 Intent 匹配规则来实现：
 
 ```
 Intent intent = new Intent(Intent.ACTION_VIEW, "<scheme>://<host>:<port>/<path>");
@@ -239,7 +245,15 @@ public interface RouterService {
 
 ### 4.2 Injector
 
-参数注入器（Injector）部分通过 Java 编译时注解来实现，实现思路和 ButterKnife 这类编译时注解框架类似。
+通过 Router 跳转到目标 Activity 后，我们需要在目标 Activity 中获取通过 Intent 传过来的参数：
+
+```java
+getIntent().getIntExtra("intParam", 0);
+
+getIntent().getData().getQueryParameter("preActivity");
+```
+
+为了简化这部分工作，路由框架 Router 中提供了 Injector 模块在编译时生成上述代码。参数注入器（Injector）部分通过 Java 编译时注解来实现，实现思路和 ButterKnife 这类编译时注解框架类似。
 
 首先定义我们的参数注解 InjectUriParam ：
 
@@ -319,9 +333,11 @@ defaultConfig {
 
 ### 5.3 模块化过程中的建议
 
-对于大型的商业项目，在重构过程中可能会遇到业务耦合严重，难以拆分的问题。我的建议是不急着将各业务模块拆分成不同的 module ，可以先在原乡的项目中根据业务分包，在一定程度上将各业务解耦后拆分到不同的 package 中。比如之前新房和二手房由于同属于 app module，因此他们之前是通过隐式的 intent 跳转的，现在可以先将他们改为通过 Router 来实现跳转。又比如新房和二手房中公用的模块可以先下放到 Business Component Layer 或者 Basic Component Layer 中。在这一系列工作完成后再将各个业务拆分成多个 module 。
+对于大型的商业项目，在重构过程中可能会遇到业务耦合严重，难以拆分的问题。**我们需要先理清业务，再动手拆分业务模块。**比如可以先在原乡的项目中根据业务分包，在一定程度上将各业务解耦后拆分到不同的 package 中。比如之前新房和二手房由于同属于 app module，因此他们之前是通过隐式的 intent 跳转的，现在可以先将他们改为通过 Router 来实现跳转。又比如新房和二手房中公用的模块可以先下放到 Business Component Layer 或者 Basic Component Layer 中。在这一系列工作完成后再将各个业务拆分成多个 module 。
 
-又如前面提到的，太小的公有模块不足以构成单独组件或者模块的，我们先放到类似于 CommonBusiness 的组件中，在后期不断的重构迭代中视情况进行进一步的拆分。
+模块化重构需要渐进式的展开，不可一触而就，不要想着将整个项目推翻重写。线上成熟稳定的业务代码，是经过了时间和大量用户考验的；全部推翻重写往往费时费力，实际的效果通常也很不理想，各种问题层出不穷得不偿失。对于这种项目的模块化重构，我们需要一点点的改进重构，可以分散到每次的业务迭代中去，逐步淘汰掉陈旧的代码。
+
+各业务模块间肯定会有公用的部分，按照我前面的设计图，公用的部分我们会根据业务相关性下放到业务组件层（Business Component Layer）或者基础组件层（Common Component Layer）。对于太小的公有模块不足以构成单独组件或者模块的，我们先放到类似于 CommonBusiness 的组件中，在后期不断的重构迭代中视情况进行进一步的拆分。过程中完美主义可以有，切记不可过度。
 
 以上就是我在模块化探索实践方面的一些经验，不住之处还望大家指出。
 
