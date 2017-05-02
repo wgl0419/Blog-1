@@ -1,10 +1,12 @@
 # Android 模块化探索与实践
 
+> 本文首发于《程序员》杂志五月刊
+
 ## 一、前言
 
 万维网发明人 Tim Berners-Lee 谈到设计原理时说过：“简单性和模块化是软件工程的基石；分布式和容错性是互联网的生命。” 由此可见模块化之于软件工程领域的重要性。
 
-从16年开始，模块化在 Android 社区越来越多的被提及。随着移动平台的不断发展，移动平台上的软件体积也变得臃肿庞大，为了降低大型软件复杂性和耦合度，同时也为了适应模块重用、多团队并行开发测试等等需求，模块化在 Android 平台上变得势在必行。阿里 Android 团队在年初开源了他们的容器化框架 Atlas 就很大程度说明了当前 Android 平台开发大型商业项目所面临的问题。
+从 2016 年开始，模块化在 Android 社区越来越多的被提及。随着移动平台的不断发展，移动平台上的软件体积也变得臃肿庞大，为了降低大型软件复杂性和耦合度，同时也为了适应模块重用、多团队并行开发测试等等需求，模块化在 Android 平台上变得势在必行。阿里 Android 团队在年初开源了他们的容器化框架 Atlas 就很大程度说明了当前 Android 平台开发大型商业项目所面临的问题。
 
 ## 二、什么是模块化
 
@@ -58,7 +60,7 @@ if(isBuildModule.toBoolean()){
 }
 ```
 
-> isBuildModule 在项目更目录的 gradle.properties 中定义:
+> isBuildModule 在项目根目录的 gradle.properties 中定义:
 > 
 > ```java
 > isBuildModule=false
@@ -138,7 +140,7 @@ startActivity(intent);
 
 有的同学可能会想到用隐式跳转，通过 Intent 匹配规则来实现：
 
-```
+```Java
 Intent intent = new Intent(Intent.ACTION_VIEW, "<scheme>://<host>:<port>/<path>");
 startActivity(intent);
 ```
