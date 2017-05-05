@@ -2,6 +2,8 @@
 
 > 本文首发于《程序员》杂志五月刊，此版本有部分纠错与调整
 
+![](header.jpg)
+
 ## 一、前言
 
 万维网发明人 Tim Berners-Lee 谈到设计原理时说过：“简单性和模块化是软件工程的基石；分布式和容错性是互联网的生命。” 由此可见模块化之于软件工程领域的重要性。
@@ -48,7 +50,7 @@
 
 我们在谈模块化的时候，其实就是将业务模块层的各个功能业务拆分层独立的业务模块。所以我们进行模块化的第一步就是业务模块划分，但是模块划分并没有一个业界通用的标准，因此划分的粒度需要根据项目情况进行合理把控，这就需要对业务和项目有较为透彻的理解。拿安居客来举例，我们会将项目划分为新房模块、二手房模块、IM 模块等等。
 
-每个业务模块在 Android Studio 中的都是一个 Module ,因此在命名方面我们要求每个业务模块都以 Module 为后缀。如下图所示：<div align="left"><img src="modules.png" width = "50%" alt="图片名称" align=center /></div>
+每个业务模块在 Android Studio 中的都是一个 Module ,因此在命名方面我们要求每个业务模块都以 Module 为后缀。如下图所示：<div align="left"><img src="modules.png" width = "40%" alt="图片名称" align=center /></div>
 
 对于模块化项目，每个单独的 Business Module 都可以单独编译成 APK。在开发阶段需要单独打包编译，项目发布的时候又需要它作为项目的一个 Module 来整体编译打包。简单的说就是开发时是 Application，发布时是 Library。因此需要在 Business Module 的 build.gradle 中加入如下代码：
 
@@ -80,7 +82,7 @@ sourceSets {
 }
 ```
 
-如图：<div align="left"><img src="manifest.png" width = "55%" alt="图片名称" align=center /></div>
+如图：<div align="left"><img src="manifest.png" width = "45%" alt="图片名称" align=center /></div>
 
 debug 模式下的 AndroidManifest.xml :
 
@@ -145,7 +147,9 @@ Intent intent = new Intent(Intent.ACTION_VIEW, "<scheme>://<host>:<port>/<path>"
 startActivity(intent);
 ```
 
-但是这种代码写起来比较繁琐，且容易出错，出错也不太容易定位问题。因此一个简单易用、解放开发的路由框架是必须的了。我自己实现的路由框架分为**路由（Router）**和**参数注入器（Injector）**两部分：<div align="left"><img src="router.png" width = "60%" alt="图片名称" align=center /></div>
+但是这种代码写起来比较繁琐，且容易出错，出错也不太容易定位问题。因此一个简单易用、解放开发的路由框架是必须的了。<div align="left"><img src="router2.png" width = "45%" alt="图片名称" align=center /></div>
+
+我自己实现的路由框架分为**路由（Router）**和**参数注入器（Injector）**两部分：<div align="left"><img src="router.png" width = "45%" alt="图片名称" align=center /></div>
 
 > Router 提供 Activity 跳转传参的功能；Injector 提供参数注入功能，通过编译时生成代码的方式在 Activity 获取获取传递过来的参数，简化开发。
 
@@ -333,7 +337,7 @@ defaultConfig {
 
 ### 5.2 重复依赖
 
-模块化的过程中我们常常会遇到重复依赖的问题，如果是通过 aar 依赖， gradle 会自动帮我们找出新版本，而抛弃老版本的重复依赖。如果是以 project 的方式依赖，则在打包的时候会出现重复类。对于这种情况我们可以在 build.gradle 中将 compile 改为 provided，只在最终的项目中 compile 对应的 project ；
+模块化的过程中我们常常会遇到重复依赖的问题，如果是通过 aar 依赖， gradle 会自动帮我们找出新版本，而抛弃老版本的重复依赖。如果是以 project 的方式依赖，则在打包的时候会出现重复类。对于这种情况我们可以在 build.gradle 中将 compile 改为 provided，只在最终的项目中 compile 对应的 library ；
 
 其实从前面的安居客模块化设计图上能看出来，我们的设计方案能一定程度上规避重复依赖的问题。比如我们所有的第三方库的依赖都会放到 OpenSoureLibraries 中，其他需要用到相关类库的项目，只需要依赖 OpenSoureLibraries 就好了。
 
