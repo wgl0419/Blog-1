@@ -4,13 +4,15 @@
 
 ## 前言
 
-Retrofit 是 Android 和 Java 平台上一款优秀且使用广泛的 Http 客户端，GitHub 上 21K+ 的 Star 和 4.3K+ 的 Fork 充分证明了 Retrofit 的风靡程度。
+Retrofit 是 Android 和 Java 平台上一款优秀且被广泛使用的 Http 客户端，GitHub 上 21K+ 的 Star 和 4.3K+ 的 Fork 充分证明了 Retrofit 的风靡程度。
 
-Retrofit 在 Android 平台如此流行与它及其简介的调用方式和优秀的可扩展、可配置性是分不开的。我们客户端在和服务端交互的时候通常采用 Json 格式来传递数据，客户端拿到服务端传递过来的 Json 格式的数据后需要对它进行解析；Json 解析库有很多：Gson、Jackson、FastJson等等。Retrofit 优秀的可配置性可以让我们客户端程序员随意选择心怡的 Json 解析库，Retrofit 针对 Gson 和 Jackson 都提供相应的 Converter；可能由于 FastJson 是国内程序员开发的原因，Retrofit 对于 FastJson 并没有提供对应的 Converter ，这对于使用 FastJson 的开发者是不友好的。
+Retrofit 在 Android 平台如此流行与它及其简介的调用方式和优秀的可扩展、可配置性是分不开的。我们客户端在和服务端交互的时候通常采用 Json 格式来传递数据，客户端拿到服务端传递过来的 Json 格式的数据后需要对它进行解析；Retrofit2 并未提供 Json 解析功能，但可提供接口让客户端程序员配置 Json Converter以选择自己喜欢的 Json 解析库。
+
+Json 解析库有很多：Gson、Jackson、FastJson等等。Retrofit 优秀的可配置性可以让我们客户端程序员随意选择心怡的 Json 解析库，Retrofit 针对 Gson 和 Jackson 都提供相应的 Converter；可能由于 FastJson 是国内程序员开发的原因，Retrofit 对于 FastJson 并没有提供对应的 Converter ，这对于使用 FastJson 的开发者是不友好的。
 
 ## 使用
 
-好在 Retrofit 提供了接口来让开发者实现自己的 Json Converter 。实现 Converter 虽然简单，但每次使用 Retrofit2 + FastJson 组合时都实现一套显然是没必要的，于是我使用 FastJson 实现了一个 Converter: [Retrofit2-FastJson-Converter](https://github.com/BaronZ88/Retrofit2-FastJson-Converter) 。有同样需求的同学只需要使用我这个 Converter 库就好啦，不行再去自定义。使用方式如下：
+好在 Retrofit 提供了接口来让开发者实现自己的 Json Converter 。实现 Converter 虽然简单，但每次使用 Retrofit2 + FastJson 组合时都实现一套显然是没必要的。我使用 FastJson 实现了一个 Converter: [Retrofit2-FastJson-Converter](https://github.com/BaronZ88/Retrofit2-FastJson-Converter) ，有同样需求的同学只需要使用我这个 Converter 库就好啦，不必再去自定义。使用方式如下：
 
 ### 1、添加依赖配置
 
