@@ -1,4 +1,4 @@
-# Android 工程师必须掌握的 Binder 机制
+# 写给 Android 应用工程师的 Binder 原理剖析
 
 ![](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/header.jpg)
 
@@ -374,4 +374,6 @@ public class Proxy implements BookManager {
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 > * 个人博客：[http://baronzhang.com](http://baronzhang.com)
+
+![](http://ocjtywvav.bkt.clouddn.com/blog/common/qrcode500.png)
 
