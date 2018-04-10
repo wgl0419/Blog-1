@@ -1,6 +1,6 @@
 # 写给 Android 应用工程师的 Binder 原理剖析
 
-![](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/header.jpg)
+![](header.jpg)
 
 ## 一. 前言
 
@@ -12,7 +12,7 @@ Binder 之复杂远远不是一篇文章就能说清楚的，本文想站在一�
 
 简单介绍下什么是 Binder。Binder 是一种进程间通信机制，基于开源的 OpenBinder 实现；OpenBinder 起初由 Be Inc. 开发，后由 Plam Inc. 接手。从字面上来解释 Binder 有胶水、粘合剂的意思，顾名思义就是粘和不同的进程，使之实现通信。对于 Binder 更全面的定义，等我们介绍完 Binder 通信原理后再做详细说明。
 
-### 1.1 为什么必须理解 Binder ？
+### 2.1 为什么必须理解 Binder ？
 
 作为 Android 工程师的你，是不是常常会有这样的疑问：
 
@@ -26,7 +26,7 @@ Binder 之复杂远远不是一篇文章就能说清楚的，本文想站在一�
 
 我们知道 Android 应用程序是由 Activity、Service、Broadcast Receiver 和 Content Provide 四大组件中的一个或者多个组成的。有时这些组件运行在同一进程，有时运行在不同的进程。这些进程间的通信就依赖于 Binder IPC 机制。不仅如此，Android 系统对应用层提供的各种服务如：ActivityManagerService、PackageManagerService 等都是基于 Binder IPC 机制来实现的。Binder 机制在 Android 中的位置非常重要，毫不夸张的说理解 Binder 是迈向 Android 高级工程的第一步。
 
-### 1.2 为什么是 Binder ?
+### 2.2 为什么是 Binder ?
 
 Android 系统是基于 Linux 内核的，Linux 已经提供了管道、消息队列、共享内存和 Socket 等 IPC 机制。那为什么 Android 还要提供 Binder 来实现 IPC 呢？主要是基于**性能**、**稳定性**和**安全性**几方面的原因。
 
@@ -61,15 +61,15 @@ Android 系统是基于 Linux 内核的，Linux 已经提供了管道、消息�
 |稳定性|基于 C/S 架构，职责明确、架构清晰，因此稳定性好|
 |安全性|为每个 APP 分配 UID，进程的 UID 是鉴别进程身份的重要标志|
 
-## 二. Linux 下传统的进程间通信原理
+## 三. Linux 下传统的进程间通信原理
 
 了解 Linux IPC 相关的概念和原理有助于我们理解 Binder 通信原理。因此，在介绍 Binder 跨进程通信原理之前，我们先聊聊 Linux 系统下传统的进程间通信是如何实现。
 
-### 2.1 基本概念介绍
+### 3.1 基本概念介绍
 
 这里我们先从 Linux 中进程间通信涉及的一些基本概念开始介绍，然后逐步展开，向大家说明传统的进程间通信的原理。
 
-![Linux 背景知识](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/linux_ipc_1.png)
+![Linux 背景知识](linux_ipc_1.png)
 
 上图展示了 Liunx 中跨进程通信涉及到的一些基本概念：
 
@@ -87,7 +87,7 @@ Android 系统是基于 Linux 内核的，Linux 已经提供了管道、消息�
 
 > 简单的说就是，内核空间（Kernel）是系统内核运行的空间，用户空间（User Space）是用户程序运行的空间。为了保证安全性，它们之间是隔离的。
 
-![图片来自网络](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/process_space.png)
+![图片来自网络](process_space.png)
 
 #### 系统调用：用户态与内核态
 
@@ -106,24 +106,24 @@ copy_from_user() //将数据从用户空间拷贝到内核空间
 copy_to_user() //将数据从内核空间拷贝到用户空间
 ```
 
-### 2.2 Linux 下的传统 IPC 通信原理
+### 3.2 Linux 下的传统 IPC 通信原理
 
 理解了上面的几个概念，我们再来看看传统的 IPC 方式中，进程之间是如何实现通信的。
 
 通常的做法是消息发送方将要发送的数据存放在内存缓存区中，通过系统调用进入内核态。然后内核程序在内核空间分配内存，开辟一块内核缓存区，调用 copy_from_user() 函数将数据从用户空间的内存缓存区拷贝到内核空间的内核缓存区中。同样的，接收方进程在接收数据时在自己的用户空间开辟一块内存缓存区，然后内核程序调用 copy_to_user() 函数将数据从内核缓存区拷贝到接收进程的内存缓存区。这样数据发送方进程和数据接收方进程就完成了一次数据传输，我们称完成了一次进程间通信。如下图：
 
-![传统 IPC 通信原理](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/linux_ipc_2.png)
+![传统 IPC 通信原理](linux_ipc_2.png)
 
 这种传统的 IPC 通信方式有两个问题：
 
 1. 性能低下，一次数据传递需要经历：内存缓存区 --> 内核缓存区 --> 内存缓存区，需要 2 次数据拷贝；
 2. 接收数据的缓存区由数据接收进程提供，但是接收进程并不知道需要多大的空间来存放将要传递过来的数据，因此只能开辟尽可能大的内存空间或者先调用 API 接收消息头来获取消息体的大小，这两种做法不是浪费空间就是浪费时间。
 
-## 三. Binder 跨进程通信原理
+## 四. Binder 跨进程通信原理
 
 理解了 Linux IPC 相关概念和通信原理，接下来我们正式介绍下 Binder IPC 的原理。
 
-### 3.1 动态内核可加载模块 && 内存映射
+### 4.1 动态内核可加载模块 && 内存映射
 
 正如前面所说，跨进程通信是需要内核空间做支持的。传统的 IPC 机制如管道、Socket 都是内核的一部分，因此通过内核支持来实现进程间通信自然是没问题的。但是 Binder 并不是 Linux 系统内核的一部分，那怎么办呢？这就得益于 Linux 的**动态内核可加载模块**（Loadable Kernel Module，LKM）的机制；模块是具有独立功能的程序，它可以被单独编译，但是不能独立运行。它在运行时被链接到内核作为内核的一部分运行。这样，Android 系统就可以通过动态添加一个内核模块运行在内核空间，用户进程之间通过这个内核模块作为桥梁来实现通信。
 
@@ -137,7 +137,7 @@ Binder IPC 机制中涉及到的内存映射通过 mmap() 来实现，mmap() 是
 
 内存映射能减少数据拷贝次数，实现用户空间和内核空间的高效互动。两个空间各自的修改能直接反映在映射的内存区域，从而被对方空间及时感知。也正因为如此，内存映射能够提供对进程间通信的支持。
 
-### 3.2 Binder IPC 实现原理
+### 4.2 Binder IPC 实现原理
 
 Binder IPC 正是基于内存映射（mmap）来实现的，但是 mmap() 通常是用在有物理介质的文件系统上的。
 
@@ -153,38 +153,38 @@ Binder IPC 正是基于内存映射（mmap）来实现的，但是 mmap() 通常
 
 如下图：
 
-![Binder IPC 原理](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/binder_ipc_1.png)
+![Binder IPC 原理](binder_ipc_1.png)
 
-## 四. Binder 通信模型
+## 五. Binder 通信模型
 
 介绍完 Binder IPC 的底层通信原理，接下来我们看看实现层面是如何设计的。
 
 一次完整的进程间通信必然至少包含两个进程，通常我们称通信的双方分别为客户端进程（Client）和服务端进程（Server），由于进程隔离机制的存在，通信双方必然需要借助 Binder 来实现。
 
-### 4.1 Client/Server/ServiceManager/驱动
+### 5.1 Client/Server/ServiceManager/驱动
 
 前面我们介绍过，Binder 是基于 C/S 架构的。由一系列的组件组成，包括 Client、Server、ServiceManager、Binder 驱动。其中 Client、Server、Service Manager 运行在用户空间，Binder 驱动运行在内核空间。其中 Service Manager 和 Binder 驱动由系统提供，而 Client、Server 由应用程序来实现。Client、Server 和 ServiceManager 均是通过系统调用 open、mmap 和 ioctl 来访问设备文件 /dev/binder，从而实现与 Binder 驱动的交互来间接的实现跨进程通信。
 
-![](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/binder_ipc_2.png)
+![](binder_ipc_2.png)
 
 Client、Server、ServiceManager、Binder 驱动这几个组件在通信过程中扮演的角色就如同互联网中服务器（Server）、客户端（Client）、DNS域名服务器（ServiceManager）以及路由器（Binder 驱动）之前的关系。
 
 通常我们访问一个网页的步骤是这样的：首先在浏览器输入一个地址，如 www.google.com 然后按下回车键。但是并没有办法通过域名地址直接找到我们要访问的服务器，因此需要首先访问 DNS 域名服务器，域名服务器中保存了 www.google.com 对应的 ip 地址 10.249.23.13，然后通过这个 ip 地址才能放到到 www.google.com 对应的服务器。
 
-![互联网通信模型](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/binder_ipc_3.png)
+![互联网通信模型](binder_ipc_3.png)
 
 
 *[Android Binder 设计与实现](http://blog.csdn.net/universus/article/details/6211589)一文中对 Client、Server、ServiceManager、Binder 驱动有很详细的描述，以下是部分摘录：*
 
->**Binder 驱动**
+>**Binder 驱动**<br>
 > Binder 驱动就如同路由器一样，是整个通信的核心；驱动负责进程之间 Binder 通信的建立，Binder 在进程之间的传递，Binder 引用计数管理，数据包在进程之间的传递和交互等一系列底层支持。 <br>
-> **ServiceManager 与实名 Binder**
-> ServiceManager 和 DNS 类似，作用是将字符形式的 Binder 名字转化成 Client 中对该 Binder 的引用，使得 Client 能够通过 Binder 的名字获得对 Binder 实体的引用。注册了名字的 Binder 叫实名 Binder，就像网站一样除了除了有 IP 地址意外还有自己的网址。Server 创建了 Binder，并为它起一个字符形式，可读易记得名字，将这个 Binder 实体连同名字一起以数据包的形式通过 Binder 驱动发送给 ServiceManager ，通知 ServiceManager 注册一个名为“张三”的 Binder，它位于某个 Server 中。驱动为这个穿越进程边界的 Binder 创建位于内核中的实体节点以及 ServiceManager 对实体的引用，将名字以及新建的引用打包传给 ServiceManager。ServiceManger 收到数据后从中取出名字和引用填入查找表。<br>
-> 细心的读者可能会发现，ServierManager 是一个进程，Server 是另一个进程，Server 向 ServiceManager 中注册 Binder 必然涉及到进程间通信。当前实现进程间通信又要用到进程间通信，这就好像蛋可以孵出鸡的前提却是要先找只鸡下蛋！Binder 的实现比较巧妙，就是预先创造一只鸡来下蛋。ServiceManager 和其他进程同样采用 Bidner 通信，ServiceManager 是 Server 端，有自己的 Binder 实体，其他进程都是 Client，需要通过这个 Binder 的引用来实现 Binder 的注册，查询和获取。ServiceManager 提供的 Binder 比较特殊，它没有名字也不需要注册。当一个进程使用 BINDER_SET_CONTEXT_MGR 命令将自己注册成 ServiceManager 时 Binder 驱动会自动为它创建 Binder 实体（**这就是那只预先造好的那只鸡**）。其次这个 Binder 实体的引用在所有 Client 中都固定为 0 而无需通过其它手段获得。也就是说，一个 Server 想要向 ServiceManager 注册自己的 Binder 就必须通过这个 0 号引用和 ServiceManager 的 Binder 通信。类比互联网，0 号引用就好比是域名服务器的地址，你必须预先动态或者手工配置好。要注意的是，这里说的 Client 是相对于 ServiceManager 而言的，一个进程或者应用程序可能是提供服务的 Server，但对于 ServiceManager 来说它仍然是个 Client。<br>
-> **Client 获得实名 Binder 的引用**
+> **ServiceManager 与实名 Binder**<br>
+> ServiceManager 和 DNS 类似，作用是将字符形式的 Binder 名字转化成 Client 中对该 Binder 的引用，使得 Client 能够通过 Binder 的名字获得对 Binder 实体的引用。注册了名字的 Binder 叫实名 Binder，就像网站一样除了除了有 IP 地址意外还有自己的网址。Server 创建了 Binder，并为它起一个字符形式，可读易记得名字，将这个 Binder 实体连同名字一起以数据包的形式通过 Binder 驱动发送给 ServiceManager ，通知 ServiceManager 注册一个名为“张三”的 Binder，它位于某个 Server 中。驱动为这个穿越进程边界的 Binder 创建位于内核中的实体节点以及 ServiceManager 对实体的引用，将名字以及新建的引用打包传给 ServiceManager。ServiceManger 收到数据后从中取出名字和引用填入查找表。<br><br>
+> 细心的读者可能会发现，ServierManager 是一个进程，Server 是另一个进程，Server 向 ServiceManager 中注册 Binder 必然涉及到进程间通信。当前实现进程间通信又要用到进程间通信，这就好像蛋可以孵出鸡的前提却是要先找只鸡下蛋！Binder 的实现比较巧妙，就是预先创造一只鸡来下蛋。ServiceManager 和其他进程同样采用 Bidner 通信，ServiceManager 是 Server 端，有自己的 Binder 实体，其他进程都是 Client，需要通过这个 Binder 的引用来实现 Binder 的注册，查询和获取。ServiceManager 提供的 Binder 比较特殊，它没有名字也不需要注册。当一个进程使用 BINDER_SET_CONTEXT_MGR 命令将自己注册成 ServiceManager 时 Binder 驱动会自动为它创建 Binder 实体（**这就是那只预先造好的那只鸡**）。其次这个 Binder 实体的引用在所有 Client 中都固定为 0 而无需通过其它手段获得。也就是说，一个 Server 想要向 ServiceManager 注册自己的 Binder 就必须通过这个 0 号引用和 ServiceManager 的 Binder 通信。类比互联网，0 号引用就好比是域名服务器的地址，你必须预先动态或者手工配置好。要注意的是，这里说的 Client 是相对于 ServiceManager 而言的，一个进程或者应用程序可能是提供服务的 Server，但对于 ServiceManager 来说它仍然是个 Client。<br><br>
+> **Client 获得实名 Binder 的引用**<br>
 > Server 向 ServiceManager 中注册了 Binder 以后， Client 就能通过名字获得 Binder 的引用了。Client 也利用保留的 0 号引用向 ServiceManager 请求访问某个 Binder: 我申请访问名字叫张三的 Binder 引用。ServiceManager 收到这个请求后从请求数据包中取出 Binder 名称，在查找表里找到对应的条目，取出对应的 Binder 引用作为回复发送给发起请求的 Client。从面向对象的角度看，Server 中的 Binder 实体现在有两个引用：一个位于 ServiceManager 中，一个位于发起请求的 Client 中。如果接下来有更多的 Client 请求该 Binder，系统中就会有更多的引用指向该 Binder ，就像 Java 中一个对象有多个引用一样。
 
-### 4.2 Binder 通信过程
+### 5.2 Binder 通信过程
 
 至此，我们大致能总结出 Binder 通信过程：
 
@@ -194,9 +194,9 @@ Client、Server、ServiceManager、Binder 驱动这几个组件在通信过程�
 
 我们看到整个通信过程都需要 Binder 驱动的接入。下图能更加直观的展现整个通信过程(为了进一步抽象通信过程以及呈现上的方便，下图我们忽略了 Binder 实体及其引用的概念)：
 
-![Binder 通信模型](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/binder_ipc_4.png)
+![Binder 通信模型](binder_ipc_4.png)
 
-### 4.3 Binder 通信中的代理模式
+### 5.3 Binder 通信中的代理模式
 
 我们已经解释清楚 Client、Server 借助 Binder 驱动完成跨进程通信的实现机制了，但是还有个问题会让我们困惑。A 进程想要 B 进程中某个对象（object）是如何实现的呢？毕竟它们分属不同的进程，A 进程 没法直接使用 B 进程中的 object。
 
@@ -204,9 +204,9 @@ Client、Server、ServiceManager、Binder 驱动这几个组件在通信过程�
 
 当 Binder 驱动接收到 A 进程的消息后，发现这是个 objectProxy 就去查询自己维护的表单，一查发现这是 B 进程 object 的代理对象。于是就会去通知 B 进程调用 object 的方法，并要求 B 进程把返回结果发给自己。当驱动拿到 B 进程的返回结果后就会转发给 A 进程，一次通信就完成了。
 
-![](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/binder_ipc_5.png)
+![](binder_ipc_5.png)
 
-### 4.4 Binder 的完整定义
+### 5.4 Binder 的完整定义
 
 现在我们可以对 Binder 做个更加全面的定义了：
 
@@ -215,7 +215,7 @@ Client、Server、ServiceManager、Binder 驱动这几个组件在通信过程�
 * 从 Client 进程的角度看，Binder 指的是对 Binder 代理对象，是 Binder 实体对象的一个远程代理
 * 从传输过程的角度看，Binder 是一个可以跨进程传输的对象；Binder 驱动会对这个跨越进程边界的对象对一点点特殊处理，自动完成代理对象和本地对象之间的转换。
 
-## 五. 手动编码实现跨进程调用
+## 六. 手动编码实现跨进程调用
 
 通常我们在做开发时，实现进程间通信用的最多的就是 AIDL。当我们定义好 AIDL 文件，在编译时编译器会帮我们生成代码实现 IPC 通信。借助 AIDL 编译以后的代码能帮助我们进一步理解 Binder IPC 的通信原理。
 
@@ -225,7 +225,7 @@ Client、Server、ServiceManager、Binder 驱动这几个组件在通信过程�
 
 因此便于大家理解，下面我们来手动编写代码来实现跨进程调用。
 
-### 5.1 各 Java 类职责描述
+### 6.1 各 Java 类职责描述
 
 在正式编码实现跨进程调用之前，先介绍下实现过程中用到的一些类。了解了这些类的职责，有助于我们更好的理解和实现跨进程通信。
 
@@ -237,11 +237,11 @@ Client、Server、ServiceManager、Binder 驱动这几个组件在通信过程�
 
 * **Stub** : AIDL 的时候，编译工具会给我们生成一个名为 Stub 的静态内部类；这个类继承了 Binder, 说明它是一个 Binder 本地对象，它实现了 IInterface 接口，表明它具有 Server 承诺给 Client 的能力；Stub 是一个抽象类，具体的 IInterface 的相关实现需要开发者自己实现。
 
-### 5.2 实现过程讲解
+### 6.2 实现过程讲解
 
 一次跨进程通信必然会涉及到两个进程，在这个例子中 RemoteService 作为服务端进程，提供服务；ClientActivity 作为客户端进程，使用 RemoteService 提供的服务。如下图：
 
-![](http://ocjtywvav.bkt.clouddn.com/blog/android/binder/ipc_1.png)
+![](ipc_1.png)
 
 那么服务端进程具备什么样的能力？能为客户端提供什么样的服务呢？还记得我们前面介绍过的 IInterface 吗，它代表的就是服务端进程具体什么样的能力。因此我们需要定义一个 BookManager 接口，BookManager 继承自 IIterface，表明服务端具备什么样的能力。
 
@@ -375,5 +375,5 @@ public class Proxy implements BookManager {
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 > * 个人博客：[http://baronzhang.com](http://baronzhang.com)
 
-![](http://ocjtywvav.bkt.clouddn.com/blog/common/qrcode500.png)
+![](qrcode500.png)
 
