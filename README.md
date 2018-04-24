@@ -1,13 +1,18 @@
 # Blog
-个人博客中的一些文章
 
-## 架构设计
+> 公众号和专栏中的文章
+
+### Android
+
+[写给 Android 应用工程师的 Binder 原理剖析](https://github.com/BaronZ88/Blog/blob/master/Android/Binder/%E5%86%99%E7%BB%99%20Android%20%E5%BA%94%E7%94%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%20Binder%20%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90.md)
+
+### 架构设计
 
 [安居客 Android 项目架构演进](https://github.com/BaronZ88/Blog/blob/master/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E5%AE%89%E5%B1%85%E5%AE%A2Android%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/%E5%AE%89%E5%B1%85%E5%AE%A2Android%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B.md)
 
 [Android 模块化探索与实践](https://github.com/BaronZ88/Blog/blob/master/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/Android%20%E6%A8%A1%E5%9D%97%E5%8C%96%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E8%B7%B5/Android%20%E6%A8%A1%E5%9D%97%E5%8C%96%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E8%B7%B5.md)
 
-## Java8新特性
+### Java8新特性
 
 [Java8 新特性第1章(Lambda 表达式)](https://github.com/BaronZ88/Blog/blob/master/Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7%E7%AC%AC1%E7%AB%A0\(Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F\).md)
 
@@ -17,7 +22,7 @@
 
 [在 Android 项目中使用 Java8](https://github.com/BaronZ88/Blog/blob/master/Java8%E6%96%B0%E7%89%B9%E6%80%A7/%E5%9C%A8Android%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8Java8.md)
 
-## RxJava系列
+### RxJava系列
 
 [RxJava 系列1(简介)](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%971\(%E7%AE%80%E4%BB%8B\)/RxJava%E7%B3%BB%E5%88%971\(%E7%AE%80%E4%BB%8B\).md)
 
@@ -35,16 +40,23 @@
 
 [RxJava 系列番外篇：一个 RxJava 解决复杂业务逻辑的案例](https://github.com/BaronZ88/Blog/blob/master/RxJava%E7%B3%BB%E5%88%97/RxJava%E7%B3%BB%E5%88%97%E7%95%AA%E5%A4%96%E7%AF%87/RxJava%E7%B3%BB%E5%88%97%E7%95%AA%E5%A4%96%E7%AF%87%EF%BC%9A%E4%B8%80%E4%B8%AARxJava%E8%A7%A3%E5%86%B3%E5%A4%8D%E6%9D%82%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E7%9A%84%E6%A1%88%E4%BE%8B.md)
 
-## 开源框架解析
+### 开源框架解析
 
 [神兵利器 Dagger2](https://github.com/BaronZ88/Blog/blob/master/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6%E8%A7%A3%E6%9E%90/Dagger2/%E7%A5%9E%E5%85%B5%E5%88%A9%E5%99%A8Dagger2.md)
 
-## 设计模式
+### 设计模式
 
 [观察者模式](https://github.com/BaronZ88/Blog/blob/master/DesignPatterns/ObserverPattern/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F.md)
 
-> 如果你喜欢我的文章，就关注下我的**知乎专栏**或者在 GitHub 上添个 Star 吧！
+### 杂谈
+
+[我们和优秀工程师的差距在哪儿](https://github.com/BaronZ88/Blog/blob/master/%E6%9D%82%E8%B0%88/%E6%88%91%E4%BB%AC%E5%92%8C%E4%BC%98%E7%A7%80%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%B7%AE%E8%B7%9D%E5%9C%A8%E5%93%AA%E5%84%BF/%E6%88%91%E4%BB%AC%E5%92%8C%E4%BC%98%E7%A7%80%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%B7%AE%E8%B7%9D%E5%9C%A8%E5%93%AA%E5%84%BF.md)
+
+***
+
+> 如果你喜欢我的文章，就关注下我的微信公众号：**BaronTalk**、**知乎专栏** 或者 GitHub 吧！
 >   
+> * 微信公众号：**BaronTalk**
 > * 知乎专栏：[https://zhuanlan.zhihu.com/baron](https://zhuanlan.zhihu.com/baron)  
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 > * 个人博客：[http://baronzhang.com](http://baronzhang.com)
