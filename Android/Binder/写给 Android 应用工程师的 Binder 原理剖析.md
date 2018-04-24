@@ -255,7 +255,7 @@ public interface BookManager extends IInterface {
 }
 ```
 
-只定义服务端具备什么要的能力是不够的，既然是跨进程调用，那么接下来我们得实现一个跨进程调用对象 Stub。Stub 继承 Binder, 说明它是一个 Binder 本地对象；实现 IInterface 接口，表明具有 Server 承诺给 Client 的能力；Stub 是一个抽象类，具体的 IInterface 的相关实现需要调用方自己实现。
+只定义服务端具备什么样的能力是不够的，既然是跨进程调用，那么接下来我们得实现一个跨进程调用对象 Stub。Stub 继承 Binder, 说明它是一个 Binder 本地对象；实现 IInterface 接口，表明具有 Server 承诺给 Client 的能力；Stub 是一个抽象类，具体的 IInterface 的相关实现需要调用方自己实现。
 
 ```Java
 public abstract class Stub extends Binder implements BookManager {
@@ -339,7 +339,7 @@ public class Proxy implements BookManager {
 }
 ```
 
-我们看看 addBook() 的实现；在 Stub 类中，addBook(Book book) 是一个抽象方法，Client 端需要继承并实现它。
+我们看看 addBook() 的实现；在 Stub 类中，addBook(Book book) 是一个抽象方法，Server 端需要去实现它。
 
 * 如果 Client 和 Server 在同一个进程，那么直接就是调用这个方法。
 * 如果是远程调用，Client 想要调用 Server 的方法就需要通过 Binder 代理来完成，也就是上面的 Proxy。
@@ -375,5 +375,5 @@ public class Proxy implements BookManager {
 > * GitHub：[https://github.com/BaronZ88](https://github.com/BaronZ88)
 > * 个人博客：[http://baronzhang.com](http://baronzhang.com)
 
-![](qrcode500.png)
+![](http://ocjtywvav.bkt.clouddn.com/blog/common/qrcode500.png)
 

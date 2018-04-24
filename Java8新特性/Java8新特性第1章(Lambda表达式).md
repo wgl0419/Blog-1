@@ -56,14 +56,6 @@ Lambda表达式语法由`参数列表`、`->`和`函数体`组成。函数体既
 * __表达式__：表达式会被执行然后返回结果。它简化掉了`return`关键字。
 * __代码块__：顾名思义就是一坨代码，和普通方法中的语句一样。
 
-<!--lambda经常出现在嵌套环境中，如作为方法的参数：
-
-	Runnable runnable = () -> {doSomething();};
-	new Thread(runnable);
-	
-	//也可以这样写
-	new Thread(() -> {doSomething();});-->
-
 ## 二、目标类型
 通过前面的例子我们可以看到，lambda表达式没有名字，那我们怎么知道它的类型呢？答案是通过上下文推导而来的。例如，下面的表达式的类型是`OnClickListener`
 
@@ -186,13 +178,6 @@ Comparator<User> comparator = Comparator.comparing(User::getUserName);
 ```
 	
 这里的`User::getUserName`被看做是lambda表达式的简写形式。尽管方法引用不一定会把代码变得更紧凑，但它拥有更明确的语义--如果我们想要调用的方法拥有一个名字，那么我们就可以通过方法名调用它。
-
-<!--因为函数式接口的方法参数对应于隐式方法调用时的参数，所以被引用方法签名可以通过放宽类型，装箱以及组织到参数数组中的方式对其参数进行操作，就像在调用实际方法一样：
-
-	Consumer<Integer> b1 = System::exit;    // void exit(int status)
-	Consumer<String[]> b2 = Arrays:sort;    // void sort(Object[] a)
-	Consumer<String> b3 = MyProgram::main;  // void main(String... args)
-	Runnable r = Myprogram::mapToInt        // void main(String... args)-->
 
 方法引用有很多种，它们的语法如下：
 
